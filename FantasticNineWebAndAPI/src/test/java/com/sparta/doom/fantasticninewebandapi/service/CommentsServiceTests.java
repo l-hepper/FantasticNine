@@ -33,17 +33,23 @@ public class CommentsServiceTests {
     private ObjectId id2;
     private ObjectId movieId1;
     private ObjectId movieId2;
+    private Date startDate;
+    private Date endDate;
 
     @Autowired
     private CommentsService commentsService;
 
     @BeforeEach()
     public void setUp() {
+
+        Calendar calendar = Calendar.getInstance();
+
         id = new ObjectId();
         movieId1 = new ObjectId();
         commentOne = new Comments();
         commentOne.setId(id);
-        commentOne.setDate(new Date());
+        calendar.set(2001,Calendar.JANUARY,1,0,0,0);
+        commentOne.setDate(calendar.getTime());
         commentOne.setEmail("test@test.com");
         commentOne.setMovie_id(movieId1);
         commentOne.setText("This is some sample text");
@@ -53,11 +59,17 @@ public class CommentsServiceTests {
         id2 = new ObjectId();
         commentTwo = new Comments();
         commentTwo.setId(id);
-        commentTwo.setDate(new Date());
+        calendar.set(2002,Calendar.JANUARY,1,0,0,0);
+        commentTwo.setDate(calendar.getTime());
         commentTwo.setEmail("test2@test2.com");
         commentTwo.setMovie_id(movieId2);
         commentTwo.setText("This is some sample text again");
         commentTwo.setName("Testing Account2");
+
+        calendar.set(2001,Calendar.MAY,1,0,0,0);
+        startDate = calendar.getTime();
+        calendar.set(2002,Calendar.MAY,1,0,0,0);
+        endDate = calendar.getTime();
     }
 
     @Test
@@ -108,11 +120,17 @@ public class CommentsServiceTests {
     }
     @Test
     public void findCommentsByDateRange(){
+        List<Comments> expected = Arrays.asList(commentTwo);
+        List<Comments> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        List<Comments> actual = service.getCommentsByDateRange(startDate, endDate);
+        Assertions.assertEquals(expected, actual);
 
     }
     @Test
     public void updateComment(){
-
     }
     @Test
     public void deleteComment(){
@@ -120,8 +138,5 @@ public class CommentsServiceTests {
     }
     @Test
     public void createNewComment(){
-
     }
-
-
 }
