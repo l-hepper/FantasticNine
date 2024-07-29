@@ -35,8 +35,7 @@ public class CommentsApiController {
         comments = comments.stream().filter(c -> c.getMovie_id().equals(movie)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
-
-    @PostMapping("/{movie}/comments/create/")
-    public Comments createComment(@PathVariable("movie") ObjectId movieId, @RequestBody Comments comments) {
-    }
+//    @PostMapping("/{movie}/comments/create/")
+//    public Comments createComment(@PathVariable("movie") ObjectId movieId, @RequestBody Comments comments) {
+//    }
 }
