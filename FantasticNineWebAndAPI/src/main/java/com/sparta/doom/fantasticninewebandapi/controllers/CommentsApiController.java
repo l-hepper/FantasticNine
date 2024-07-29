@@ -5,11 +5,11 @@ import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,6 +29,14 @@ public class CommentsApiController {
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
+    @GetMapping("/movies/{movie}/comments/{date1}/{date2}")
+    public ResponseEntity<CollectionModel<Comments>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
+            ,@PathVariable Date date1,@PathVariable Date date2) {
+        List<Comments> comments = commentsService.getCommentsByMovieId(movie);
+        comments = comments.stream().filter(c-> commentsService.getCommentsByDateRange(date1,date2).contains(c)).toList();
+        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    }
+
     @GetMapping("/movies/{movie}/comments/{name}")
     public ResponseEntity<CollectionModel<Comments>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("name") String username) {
         List<Comments> comments = commentsService.getCommentsByName(username);
@@ -40,6 +48,15 @@ public class CommentsApiController {
     public ResponseEntity<CollectionModel<Comments>> getCommentsByUsername(@PathVariable("username") String username) {
         List<Comments> comments = commentsService.getCommentsByName(username);
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{username}/comments/{date1}/{date2}")
+    public ResponseEntity<CollectionModel<Comments>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
+            ,@PathVariable("date1") Date date1,@PathVariable("date2") Date date2) {
+        List<Comments> comments = commentsService.getCommentsByName(username);
+        comments = comments.stream().filter(c -> commentsService.getCommentsByDateRange(date1, date2).contains(c)).toList();
+        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+
     }
 //    @PostMapping("/{movie}/comments/create/")
 //    public Comments createComment(@PathVariable("movie") ObjectId movieId, @RequestBody Comments comments) {
