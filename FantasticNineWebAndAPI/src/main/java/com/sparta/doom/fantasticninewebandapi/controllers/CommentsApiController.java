@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/movies/")
+@RequestMapping("/api/")
 public class CommentsApiController {
 
     private final CommentsService commentsService;
@@ -23,16 +23,22 @@ public class CommentsApiController {
         this.commentsService = commentsService;
     }
 
-    @GetMapping("/{movie}/comments/")
+    @GetMapping("/movies/{movie}/comments/")
     public ResponseEntity<CollectionModel<Comments>> getComments(@PathVariable("movie") ObjectId movie) {
         List<Comments> comments = commentsService.getCommentsByMovieId(movie);
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
-    @GetMapping("/{movie}/comments/{name}")
-    public ResponseEntity<CollectionModel<Comments>> getCommentsByName(@PathVariable("movie") ObjectId movie, @PathVariable("name") String name) {
-        List<Comments> comments = commentsService.getCommentsByName(name);
+    @GetMapping("/movies/{movie}/comments/{name}")
+    public ResponseEntity<CollectionModel<Comments>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("name") String username) {
+        List<Comments> comments = commentsService.getCommentsByName(username);
         comments = comments.stream().filter(c -> c.getMovie_id().equals(movie)).toList();
+        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{username}/comments")
+    public ResponseEntity<CollectionModel<Comments>> getCommentsByUsername(@PathVariable("username") String username) {
+        List<Comments> comments = commentsService.getCommentsByName(username);
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 //    @PostMapping("/{movie}/comments/create/")
