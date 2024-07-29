@@ -24,13 +24,19 @@ public class CommentsApiController {
     }
 
     @GetMapping("/{movie}/comments/")
-    public ResponseEntity<CollectionModel<EntityModel<Comments>>> getComments(@PathVariable("movie") ObjectId movie) {
+    public ResponseEntity<CollectionModel<Comments>> getComments(@PathVariable("movie") ObjectId movie) {
         List<Comments> comments = commentsService.getCommentsByMovieId(movie);
-        return new ResponseEntity<>(CollectionModel.of(comments, HttpStatus.OK));
+        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    }
+
+    @GetMapping("/{movie}/comments/{name}")
+    public ResponseEntity<CollectionModel<Comments>> getCommentsByName(@PathVariable("movie") ObjectId movie, @PathVariable("name") String name) {
+        List<Comments> comments = commentsService.getCommentsByName(name);
+        comments = comments.stream().filter(c -> c.getMovie_id().equals(movie)).toList();
+        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @PostMapping("/{movie}/comments/create/")
     public Comments createComment(@PathVariable("movie") ObjectId movieId, @RequestBody Comments comments) {
-
     }
 }
