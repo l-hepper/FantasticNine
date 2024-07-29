@@ -41,7 +41,7 @@ public class CommentsService {
     public List<Comments> getCommentsByMovieId(ObjectId id){
         List<Comments> commentsList = new ArrayList<>();
         for(Comments comment : commentsRepository.findAll()){
-            if (comment.getId().equals(id)){
+            if (comment.getMovie_id().equals(id)){
                 commentsList.add(comment);
             }
         }

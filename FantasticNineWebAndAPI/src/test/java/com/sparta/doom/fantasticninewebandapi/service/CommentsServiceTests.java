@@ -13,10 +13,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -34,6 +31,8 @@ public class CommentsServiceTests {
     private Comments commentTwo;
     private ObjectId id;
     private ObjectId id2;
+    private ObjectId movieId1;
+    private ObjectId movieId2;
 
     @Autowired
     private CommentsService commentsService;
@@ -41,20 +40,35 @@ public class CommentsServiceTests {
     @BeforeEach()
     public void setUp() {
         id = new ObjectId();
+        movieId1 = new ObjectId();
         commentOne = new Comments();
         commentOne.setId(id);
         commentOne.setDate(new Date());
         commentOne.setEmail("test@test.com");
-        commentOne.setMovie_id(new ObjectId());
+        commentOne.setMovie_id(movieId1);
         commentOne.setText("This is some sample text");
         commentOne.setName("Testing Account");
+
+        movieId2 = new ObjectId();
+        id2 = new ObjectId();
+        commentTwo = new Comments();
+        commentTwo.setId(id);
+        commentTwo.setDate(new Date());
+        commentTwo.setEmail("test2@test2.com");
+        commentTwo.setMovie_id(movieId2);
+        commentTwo.setText("This is some sample text again");
+        commentTwo.setName("Testing Account2");
     }
 
     @Test
     public void findAllComments(){
-        int expected = 41079;
-        int actual = commentsService.getAllComments().size();
-        Assertions.assertEquals(expected, actual);
+        int expected = 2;
+        List<Comments> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        List<Comments> actual = service.getAllComments();
+        Assertions.assertEquals(expected, actual.size());
     }
 
     @Test
@@ -71,15 +85,25 @@ public class CommentsServiceTests {
     }
 
     @Test
-    public void findCommentsByUser(){
+    public void findCommentsByUsername(){
         List<Comments> expected = Arrays.asList(commentOne);
-
-
-
+        List<Comments> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        List<Comments> actual = service.getCommentsByName("Testing Account");
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void findCommentByMovieId(){
+        List<Comments> expected = Arrays.asList(commentTwo);
+        List<Comments> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        List<Comments> actual = service.getCommentsByMovieId(commentTwo.getMovie_id());
+        Assertions.assertEquals(expected, actual);
 
     }
     @Test
