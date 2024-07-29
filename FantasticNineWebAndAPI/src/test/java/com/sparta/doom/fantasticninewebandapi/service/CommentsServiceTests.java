@@ -13,7 +13,9 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -69,7 +71,10 @@ public class CommentsServiceTests {
     }
 
     @Test
-    public void findCommentByUser(){
+    public void findCommentsByUser(){
+        List<Comments> expected = Arrays.asList(commentOne);
+
+
 
     }
 
