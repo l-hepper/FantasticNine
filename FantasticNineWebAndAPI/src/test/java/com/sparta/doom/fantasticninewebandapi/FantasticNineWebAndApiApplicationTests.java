@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.util.Arrays;
+
 @SpringBootTest
 @EnableMongoRepositories
 class MongoDbTestApplicationTests {
@@ -17,9 +19,9 @@ class MongoDbTestApplicationTests {
 	@Test
 	void contextLoads() {
 
-		System.out.println("_______");
 		for (MoviesModel movie : moviesRepository.findAll()) {
-			System.out.println("Movie: " + movie);
+			System.out.println("_______\n");
+			System.out.println("Movie: " + movie.getAwards());
 
 		}
 

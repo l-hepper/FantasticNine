@@ -10,26 +10,26 @@ public class MoviesModel {
 
     @Id
     private String id;
-    private String title;
-    private String year;
+    private String awards;
+    private String[] cast;
+    private String[] countries;
+    private String[] directors;
+    private String fullplot;
+    private String genres;
+    private String imdb;
+    private String[] languages;
+    private String lastupdated;
+    private Integer num_mflix_comments;
+    private String plot;
+    private String poster;
     private String rated;
     private String released;
-    private String runtime;
-    private String[] genres;
-    private String[] directors;
-    private String[] writers;
-    private String[] actors;
-    private String plot;
-    private String language;
-    private String country;
-    private String awards;
-    private String poster;
-    private double imdbRating;
-    private int imdbVotes;
-    private String imdbID;
+    private Integer runtime;
+    private String title;
+    private String tomatoes;
     private String type;
-
-    // Getters and Setters
+    private String[] writers;
+    private String year;
 
     public String getId() {
         return id;
@@ -39,20 +39,100 @@ public class MoviesModel {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getAwards() {
+        return awards;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setAwards(String awards) {
+        this.awards = awards;
     }
 
-    public String getYear() {
-        return year;
+    public String[] getCast() {
+        return cast;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setCast(String[] cast) {
+        this.cast = cast;
+    }
+
+    public String[] getCountries() {
+        return countries;
+    }
+
+    public void setCountries(String[] countries) {
+        this.countries = countries;
+    }
+
+    public String[] getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(String[] directors) {
+        this.directors = directors;
+    }
+
+    public String getFullplot() {
+        return fullplot;
+    }
+
+    public void setFullplot(String fullplot) {
+        this.fullplot = fullplot;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public String getImdb() {
+        return imdb;
+    }
+
+    public void setImdb(String imdb) {
+        this.imdb = imdb;
+    }
+
+    public String[] getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String[] languages) {
+        this.languages = languages;
+    }
+
+    public String getLastupdated() {
+        return lastupdated;
+    }
+
+    public void setLastupdated(String lastupdated) {
+        this.lastupdated = lastupdated;
+    }
+
+    public Integer getNum_mflix_comments() {
+        return num_mflix_comments;
+    }
+
+    public void setNum_mflix_comments(Integer num_mflix_comments) {
+        this.num_mflix_comments = num_mflix_comments;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public void setPlot(String plot) {
+        this.plot = plot;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
     }
 
     public String getRated() {
@@ -71,108 +151,28 @@ public class MoviesModel {
         this.released = released;
     }
 
-    public String getRuntime() {
+    public Integer getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(String runtime) {
+    public void setRuntime(Integer runtime) {
         this.runtime = runtime;
     }
 
-    public String[] getGenres() {
-        return genres;
+    public String getTitle() {
+        return title;
     }
 
-    public void setGenres(String[] genres) {
-        this.genres = genres;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String[] getDirectors() {
-        return directors;
+    public String getTomatoes() {
+        return tomatoes;
     }
 
-    public void setDirectors(String[] directors) {
-        this.directors = directors;
-    }
-
-    public String[] getWriters() {
-        return writers;
-    }
-
-    public void setWriters(String[] writers) {
-        this.writers = writers;
-    }
-
-    public String[] getActors() {
-        return actors;
-    }
-
-    public void setActors(String[] actors) {
-        this.actors = actors;
-    }
-
-    public String getPlot() {
-        return plot;
-    }
-
-    public void setPlot(String plot) {
-        this.plot = plot;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getAwards() {
-        return awards;
-    }
-
-    public void setAwards(String awards) {
-        this.awards = awards;
-    }
-
-    public String getPoster() {
-        return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
-
-    public double getImdbRating() {
-        return imdbRating;
-    }
-
-    public void setImdbRating(double imdbRating) {
-        this.imdbRating = imdbRating;
-    }
-
-    public int getImdbVotes() {
-        return imdbVotes;
-    }
-
-    public void setImdbVotes(int imdbVotes) {
-        this.imdbVotes = imdbVotes;
-    }
-
-    public String getImdbID() {
-        return imdbID;
-    }
-
-    public void setImdbID(String imdbID) {
-        this.imdbID = imdbID;
+    public void setTomatoes(String tomatoes) {
+        this.tomatoes = tomatoes;
     }
 
     public String getType() {
@@ -183,28 +183,46 @@ public class MoviesModel {
         this.type = type;
     }
 
+    public String[] getWriters() {
+        return writers;
+    }
+
+    public void setWriters(String[] writers) {
+        this.writers = writers;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     @Override
     public String toString() {
-        return "MovieModel{" +
+        return "MoviesModel{" +
                 "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", year='" + year + '\'' +
+                ", awards='" + awards + '\'' +
+                ", cast=" + Arrays.toString(cast) +
+                ", countries=" + Arrays.toString(countries) +
+                ", directors=" + Arrays.toString(directors) +
+                ", fullplot='" + fullplot + '\'' +
+                ", genres='" + genres + '\'' +
+                ", imdb='" + imdb + '\'' +
+                ", languages=" + Arrays.toString(languages) +
+                ", lastupdated='" + lastupdated + '\'' +
+                ", num_mflix_comments=" + num_mflix_comments +
+                ", plot='" + plot + '\'' +
+                ", poster='" + poster + '\'' +
                 ", rated='" + rated + '\'' +
                 ", released='" + released + '\'' +
-                ", runtime='" + runtime + '\'' +
-                ", genres=" + Arrays.toString(genres) +
-                ", directors=" + Arrays.toString(directors) +
-                ", writers=" + Arrays.toString(writers) +
-                ", actors=" + Arrays.toString(actors) +
-                ", plot='" + plot + '\'' +
-                ", language='" + language + '\'' +
-                ", country='" + country + '\'' +
-                ", awards='" + awards + '\'' +
-                ", poster='" + poster + '\'' +
-                ", imdbRating=" + imdbRating +
-                ", imdbVotes=" + imdbVotes +
-                ", imdbID='" + imdbID + '\'' +
+                ", runtime=" + runtime +
+                ", title='" + title + '\'' +
+                ", tomatoes='" + tomatoes + '\'' +
                 ", type='" + type + '\'' +
+                ", writers=" + Arrays.toString(writers) +
+                ", year=" + year +
                 '}';
     }
 }
