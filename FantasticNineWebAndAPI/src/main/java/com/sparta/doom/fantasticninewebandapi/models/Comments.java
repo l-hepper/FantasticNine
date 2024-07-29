@@ -3,11 +3,10 @@ package com.sparta.doom.fantasticninewebandapi.models;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.time.LocalDate;
 import java.util.Date;
 
 
-@Document(collation = "comments")
+@Document(collection = "comments")
 public class Comments {
 
     @Id
