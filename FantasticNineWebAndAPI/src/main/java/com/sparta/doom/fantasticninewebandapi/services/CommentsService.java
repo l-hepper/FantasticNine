@@ -56,18 +56,25 @@ public class CommentsService {
     }
 
     public void createComment(Comments comments) {
+
         commentsRepository.save(comments);
+
     }
 
     public void deleteComment(ObjectId id) {
+
         commentsRepository.deleteById(id);
+
     }
 
-    public void updateComment(ObjectId id, Comments comments) {
+    public Comments updateComment(Comments commentUpdate) {
         for(Comments comment : commentsRepository.findAll()){
-            if(comment.getId().equals(id)){
+            if(comment.getId().equals(commentUpdate.getId())){
+                comment = commentUpdate;
                 commentsRepository.save(comment);
+                return comment;
             }
         }
+        return null;
     }
 }

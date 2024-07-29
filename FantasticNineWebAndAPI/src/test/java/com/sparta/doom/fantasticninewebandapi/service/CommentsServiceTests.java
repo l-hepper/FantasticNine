@@ -29,6 +29,7 @@ public class CommentsServiceTests {
 
     private Comments commentOne;
     private Comments commentTwo;
+    private Comments commentThree;
     private ObjectId id;
     private ObjectId id2;
     private ObjectId movieId1;
@@ -58,13 +59,25 @@ public class CommentsServiceTests {
         movieId2 = new ObjectId();
         id2 = new ObjectId();
         commentTwo = new Comments();
-        commentTwo.setId(id);
+        commentTwo.setId(id2);
         calendar.set(2002,Calendar.JANUARY,1,0,0,0);
         commentTwo.setDate(calendar.getTime());
         commentTwo.setEmail("test2@test2.com");
         commentTwo.setMovie_id(movieId2);
         commentTwo.setText("This is some sample text again");
         commentTwo.setName("Testing Account2");
+
+        commentThree = new Comments();
+        commentThree.setId(id);
+        calendar.set(2001,Calendar.JANUARY,1,0,0,0);
+        commentThree.setDate(calendar.getTime());
+        commentThree.setEmail("test@test.com");
+        commentThree.setMovie_id(movieId1);
+        commentThree.setText("This is some sample text that has been changed");
+        commentThree.setName("Testing Account");
+
+
+
 
         calendar.set(2001,Calendar.MAY,1,0,0,0);
         startDate = calendar.getTime();
@@ -118,6 +131,7 @@ public class CommentsServiceTests {
         Assertions.assertEquals(expected, actual);
 
     }
+
     @Test
     public void findCommentsByDateRange(){
         List<Comments> expected = Arrays.asList(commentTwo);
@@ -127,15 +141,28 @@ public class CommentsServiceTests {
         when(commentsRepository.findAll()).thenReturn(commentList);
         List<Comments> actual = service.getCommentsByDateRange(startDate, endDate);
         Assertions.assertEquals(expected, actual);
-
     }
+
     @Test
     public void updateComment(){
+        List<Comments> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findById(id)).thenReturn(Optional.of(commentThree));
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        when(commentsRepository.save(commentOne)).thenReturn(commentThree);
+        String expected = "This is some sample text that has been changed";
+        service.updateComment(commentThree);
+        Comments updated = service.getCommentById(id);
+        String actual = updated.getText();
+        Assertions.assertEquals(expected, actual);
     }
+
     @Test
     public void deleteComment(){
 
     }
+
     @Test
     public void createNewComment(){
     }
