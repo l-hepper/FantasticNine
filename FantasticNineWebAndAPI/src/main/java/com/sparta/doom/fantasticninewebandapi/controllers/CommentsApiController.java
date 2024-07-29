@@ -5,10 +5,14 @@ import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -23,10 +27,22 @@ public class CommentsApiController {
         this.commentsService = commentsService;
     }
 
-    @GetMapping("/movies/{movie}/comments/")
+    @GetMapping("/movies/{movie}/comments")
     public ResponseEntity<CollectionModel<CommentDoc>> getComments(@PathVariable("movie") ObjectId movie) {
         List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    }
+
+    @GetMapping("/movies/{movie}/comments/{commentId}")
+    public ResponseEntity<CommentDoc> getComment(@PathVariable("movie") ObjectId movie, @PathVariable("commentId") ObjectId commentId) {
+        CommentDoc comment = commentsService.getCommentById(commentId);
+        if (comment == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!comment.getMovie_id().equals(movie)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movie}/comments/{date1}/{date2}")
@@ -57,7 +73,14 @@ public class CommentsApiController {
         comments = comments.stream().filter(c -> commentsService.getCommentsByDateRange(date1, date2).contains(c)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
-//    @PostMapping("/{movie}/comments/create/")
-//    public Comments createComment(@PathVariable("movie") ObjectId movieId, @RequestBody Comments comments) {
-//    }
+    @PostMapping("/{movie}/comments/create")
+    public ResponseEntity<EntityModel<CommentDoc>> createComment(@PathVariable("movie") ObjectId movieId, @RequestBody CommentDoc newComment) {
+        if(!newComment.getId().equals(movieId)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        commentsService.createComment(newComment);
+        URI location = URI.create("/api/movies/" + movieId + "/comments/" + newComment.getId());
+        Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CommentsApiController.class).getComment(movieId,newComment.getId())).withSelfRel();
+        return ResponseEntity.created(location).body(EntityModel.of(newComment).add(selfLink));
+    }
 }
