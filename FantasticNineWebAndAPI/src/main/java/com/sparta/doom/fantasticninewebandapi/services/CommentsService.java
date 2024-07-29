@@ -55,25 +55,33 @@ public class CommentsService {
         return commentsList;
     }
 
-    public void createComment(Comments comments) {
+    public Comments createComment(Comments comment) {
 
-        commentsRepository.save(comments);
+        commentsRepository.save(comment);
+        return comment;
 
     }
 
     public void deleteComment(ObjectId id) {
-
-        commentsRepository.deleteById(id);
-
+        if(commentsRepository.existsById(id)){
+            commentsRepository.deleteById(id);
+        }
+        else throw new CommentNotFoundException("comment not found with id: " + id);
     }
 
     public Comments updateComment(Comments commentUpdate) {
-        for(Comments comment : commentsRepository.findAll()){
-            if(comment.getId().equals(commentUpdate.getId())){
-                comment = commentUpdate;
-                commentsRepository.save(comment);
-                return comment;
+
+        if(commentsRepository.existsById(commentUpdate.getId())){
+            for(Comments comment : commentsRepository.findAll()){
+                if(comment.getId().equals(commentUpdate.getId())){
+                    comment = commentUpdate;
+                    commentsRepository.save(comment);
+                    return comment;
+                }
             }
+        }
+        else {
+            throw new CommentNotFoundException("comment not found with id: " + commentUpdate.getId());
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package com.sparta.doom.fantasticninewebandapi.service;
+package com.sparta.doom.fantasticninewebandapi;
 
 import com.sparta.doom.fantasticninewebandapi.exceptions.CommentNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.Comments;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class CommentsServiceTests {
@@ -148,6 +148,7 @@ public class CommentsServiceTests {
         List<Comments> commentList = new ArrayList<>();
         commentList.add(commentOne);
         commentList.add(commentTwo);
+        when(commentsRepository.existsById(id)).thenReturn(true);
         when(commentsRepository.findById(id)).thenReturn(Optional.of(commentThree));
         when(commentsRepository.findAll()).thenReturn(commentList);
         when(commentsRepository.save(commentOne)).thenReturn(commentThree);
@@ -160,10 +161,25 @@ public class CommentsServiceTests {
 
     @Test
     public void deleteComment(){
+        when(commentsRepository.existsById(id)).thenReturn(true);
+        service.deleteComment(commentOne.getId());
+        verify(commentsRepository, times(1)).deleteById(commentOne.getId());
+    }
 
+    @Test
+    public void deleteCommentThrowsException(){
+        ObjectId notFoundId = new ObjectId();
+        assertThrows(CommentNotFoundException.class, () -> service.deleteComment(notFoundId));
     }
 
     @Test
     public void createNewComment(){
+        Comments comment = new Comments();
+        comment.setId(new ObjectId());
+        comment.setText("This is some sample text that has been created");
+        when(commentsRepository.save(comment)).thenReturn(comment);
+        Comments newCreatedComment = service.createComment(comment);
+        verify(commentsRepository, times(1)).save(comment);
+        Assertions.assertEquals(comment, newCreatedComment);
     }
 }
