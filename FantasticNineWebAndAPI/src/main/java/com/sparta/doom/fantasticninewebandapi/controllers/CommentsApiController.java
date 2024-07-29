@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
-import com.sparta.doom.fantasticninewebandapi.models.Comments;
+import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,39 +24,38 @@ public class CommentsApiController {
     }
 
     @GetMapping("/movies/{movie}/comments/")
-    public ResponseEntity<CollectionModel<Comments>> getComments(@PathVariable("movie") ObjectId movie) {
-        List<Comments> comments = commentsService.getCommentsByMovieId(movie);
+    public ResponseEntity<CollectionModel<CommentDoc>> getComments(@PathVariable("movie") ObjectId movie) {
+        List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movie}/comments/{date1}/{date2}")
-    public ResponseEntity<CollectionModel<Comments>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
-            ,@PathVariable Date date1,@PathVariable Date date2) {
-        List<Comments> comments = commentsService.getCommentsByMovieId(movie);
+    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
+            , @PathVariable Date date1, @PathVariable Date date2) {
+        List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
         comments = comments.stream().filter(c-> commentsService.getCommentsByDateRange(date1,date2).contains(c)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movie}/comments/{name}")
-    public ResponseEntity<CollectionModel<Comments>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("name") String username) {
-        List<Comments> comments = commentsService.getCommentsByName(username);
+    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("name") String username) {
+        List<CommentDoc> comments = commentsService.getCommentsByName(username);
         comments = comments.stream().filter(c -> c.getMovie_id().equals(movie)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @GetMapping("/users/{username}/comments")
-    public ResponseEntity<CollectionModel<Comments>> getCommentsByUsername(@PathVariable("username") String username) {
-        List<Comments> comments = commentsService.getCommentsByName(username);
+    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username) {
+        List<CommentDoc> comments = commentsService.getCommentsByName(username);
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @GetMapping("/users/{username}/comments/{date1}/{date2}")
-    public ResponseEntity<CollectionModel<Comments>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
-            ,@PathVariable("date1") Date date1,@PathVariable("date2") Date date2) {
-        List<Comments> comments = commentsService.getCommentsByName(username);
+    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
+            , @PathVariable("date1") Date date1, @PathVariable("date2") Date date2) {
+        List<CommentDoc> comments = commentsService.getCommentsByName(username);
         comments = comments.stream().filter(c -> commentsService.getCommentsByDateRange(date1, date2).contains(c)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
-
     }
 //    @PostMapping("/{movie}/comments/create/")
 //    public Comments createComment(@PathVariable("movie") ObjectId movieId, @RequestBody Comments comments) {

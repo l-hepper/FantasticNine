@@ -7,7 +7,7 @@ import java.util.Date;
 
 
 @Document(collection = "comments")
-public class Comments {
+public class CommentDoc {
 
     @Id
     private ObjectId id;

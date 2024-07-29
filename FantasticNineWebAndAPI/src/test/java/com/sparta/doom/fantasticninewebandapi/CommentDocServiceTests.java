@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi;
 
 import com.sparta.doom.fantasticninewebandapi.exceptions.CommentNotFoundException;
-import com.sparta.doom.fantasticninewebandapi.models.Comments;
+import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.CommentsRepository;
 import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
 import org.bson.types.ObjectId;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class CommentsServiceTests {
+public class CommentDocServiceTests {
 
     @Mock
     CommentsRepository commentsRepository;
@@ -27,9 +27,9 @@ public class CommentsServiceTests {
     @InjectMocks
     CommentsService service;
 
-    private Comments commentOne;
-    private Comments commentTwo;
-    private Comments commentThree;
+    private CommentDoc commentOne;
+    private CommentDoc commentTwo;
+    private CommentDoc commentThree;
     private ObjectId id;
     private ObjectId id2;
     private ObjectId movieId1;
@@ -47,7 +47,7 @@ public class CommentsServiceTests {
 
         id = new ObjectId();
         movieId1 = new ObjectId();
-        commentOne = new Comments();
+        commentOne = new CommentDoc();
         commentOne.setId(id);
         calendar.set(2001,Calendar.JANUARY,1,0,0,0);
         commentOne.setDate(calendar.getTime());
@@ -58,7 +58,7 @@ public class CommentsServiceTests {
 
         movieId2 = new ObjectId();
         id2 = new ObjectId();
-        commentTwo = new Comments();
+        commentTwo = new CommentDoc();
         commentTwo.setId(id2);
         calendar.set(2002,Calendar.JANUARY,1,0,0,0);
         commentTwo.setDate(calendar.getTime());
@@ -67,7 +67,7 @@ public class CommentsServiceTests {
         commentTwo.setText("This is some sample text again");
         commentTwo.setName("Testing Account2");
 
-        commentThree = new Comments();
+        commentThree = new CommentDoc();
         commentThree.setId(id);
         calendar.set(2001,Calendar.JANUARY,1,0,0,0);
         commentThree.setDate(calendar.getTime());
@@ -88,19 +88,19 @@ public class CommentsServiceTests {
     @Test
     public void findAllComments(){
         int expected = 2;
-        List<Comments> commentList = new ArrayList<>();
+        List<CommentDoc> commentList = new ArrayList<>();
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<Comments> actual = service.getAllComments();
+        List<CommentDoc> actual = service.getAllComments();
         Assertions.assertEquals(expected, actual.size());
     }
 
     @Test
     public void findCommentById(){
-        Comments expected = commentOne;
+        CommentDoc expected = commentOne;
         when(commentsRepository.findById(id)).thenReturn(Optional.of(commentOne));
-        Comments actual = service.getCommentById(id);
+        CommentDoc actual = service.getCommentById(id);
         Assertions.assertEquals(expected, actual);
     }
     @Test
@@ -111,41 +111,41 @@ public class CommentsServiceTests {
 
     @Test
     public void findCommentsByUsername(){
-        List<Comments> expected = Arrays.asList(commentOne);
-        List<Comments> commentList = new ArrayList<>();
+        List<CommentDoc> expected = Arrays.asList(commentOne);
+        List<CommentDoc> commentList = new ArrayList<>();
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<Comments> actual = service.getCommentsByName("Testing Account");
+        List<CommentDoc> actual = service.getCommentsByName("Testing Account");
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void findCommentByMovieId(){
-        List<Comments> expected = Arrays.asList(commentTwo);
-        List<Comments> commentList = new ArrayList<>();
+        List<CommentDoc> expected = Arrays.asList(commentTwo);
+        List<CommentDoc> commentList = new ArrayList<>();
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<Comments> actual = service.getCommentsByMovieId(commentTwo.getMovie_id());
+        List<CommentDoc> actual = service.getCommentsByMovieId(commentTwo.getMovie_id());
         Assertions.assertEquals(expected, actual);
 
     }
 
     @Test
     public void findCommentsByDateRange(){
-        List<Comments> expected = Arrays.asList(commentTwo);
-        List<Comments> commentList = new ArrayList<>();
+        List<CommentDoc> expected = Arrays.asList(commentTwo);
+        List<CommentDoc> commentList = new ArrayList<>();
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<Comments> actual = service.getCommentsByDateRange(startDate, endDate);
+        List<CommentDoc> actual = service.getCommentsByDateRange(startDate, endDate);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void updateComment(){
-        List<Comments> commentList = new ArrayList<>();
+        List<CommentDoc> commentList = new ArrayList<>();
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.existsById(id)).thenReturn(true);
@@ -154,7 +154,7 @@ public class CommentsServiceTests {
         when(commentsRepository.save(commentOne)).thenReturn(commentThree);
         String expected = "This is some sample text that has been changed";
         service.updateComment(commentThree);
-        Comments updated = service.getCommentById(id);
+        CommentDoc updated = service.getCommentById(id);
         String actual = updated.getText();
         Assertions.assertEquals(expected, actual);
     }
@@ -174,11 +174,11 @@ public class CommentsServiceTests {
 
     @Test
     public void createNewComment(){
-        Comments comment = new Comments();
+        CommentDoc comment = new CommentDoc();
         comment.setId(new ObjectId());
         comment.setText("This is some sample text that has been created");
         when(commentsRepository.save(comment)).thenReturn(comment);
-        Comments newCreatedComment = service.createComment(comment);
+        CommentDoc newCreatedComment = service.createComment(comment);
         verify(commentsRepository, times(1)).save(comment);
         Assertions.assertEquals(comment, newCreatedComment);
     }

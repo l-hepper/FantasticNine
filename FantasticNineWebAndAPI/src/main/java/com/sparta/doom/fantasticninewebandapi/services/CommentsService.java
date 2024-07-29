@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.exceptions.CommentNotFoundException;
-import com.sparta.doom.fantasticninewebandapi.models.Comments;
+import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.CommentsRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,43 +19,43 @@ public class CommentsService {
         this.commentsRepository = commentsRepository;
     }
 
-    public List<Comments> getAllComments() {
+    public List<CommentDoc> getAllComments() {
         return commentsRepository.findAll();
     }
 
-    public Comments getCommentById(ObjectId id) {
+    public CommentDoc getCommentById(ObjectId id) {
         return commentsRepository.findById(id).orElseThrow(()-> new CommentNotFoundException("comment not found with id: " + id));
     }
-    public List<Comments> getCommentsByName(String name){
-        List<Comments> commentsList = new ArrayList<>();
-        for(Comments comment : commentsRepository.findAll()){
+    public List<CommentDoc> getCommentsByName(String name){
+        List<CommentDoc> commentDocList = new ArrayList<>();
+        for(CommentDoc comment : commentsRepository.findAll()){
             if(comment.getName().equals(name)){
-                commentsList.add(comment);
+                commentDocList.add(comment);
             }
         }
-        return commentsList;
+        return commentDocList;
     }
-    public List<Comments> getCommentsByMovieId(ObjectId id){
-        List<Comments> commentsList = new ArrayList<>();
-        for(Comments comment : commentsRepository.findAll()){
+    public List<CommentDoc> getCommentsByMovieId(ObjectId id){
+        List<CommentDoc> commentDocList = new ArrayList<>();
+        for(CommentDoc comment : commentsRepository.findAll()){
             if (comment.getMovie_id().equals(id)){
-                commentsList.add(comment);
+                commentDocList.add(comment);
             }
         }
-        return commentsList;
+        return commentDocList;
     }
 
-    public List<Comments> getCommentsByDateRange(Date startDate, Date endDate){
-        List<Comments> commentsList = new ArrayList<>();
-        for(Comments comment : commentsRepository.findAll()){
+    public List<CommentDoc> getCommentsByDateRange(Date startDate, Date endDate){
+        List<CommentDoc> commentDocList = new ArrayList<>();
+        for(CommentDoc comment : commentsRepository.findAll()){
             if(comment.getDate().after(startDate) && comment.getDate().before(endDate)){
-                commentsList.add(comment);
+                commentDocList.add(comment);
             }
         }
-        return commentsList;
+        return commentDocList;
     }
 
-    public Comments createComment(Comments comment) {
+    public CommentDoc createComment(CommentDoc comment) {
 
         commentsRepository.save(comment);
         return comment;
@@ -70,10 +70,10 @@ public class CommentsService {
         else throw new CommentNotFoundException("comment not found with id: " + id);
     }
 
-    public Comments updateComment(Comments commentUpdate) {
+    public CommentDoc updateComment(CommentDoc commentUpdate) {
 
         if(commentsRepository.existsById(commentUpdate.getId())){
-            for(Comments comment : commentsRepository.findAll()){
+            for(CommentDoc comment : commentsRepository.findAll()){
                 if(comment.getId().equals(commentUpdate.getId())){
                     comment = commentUpdate;
                     commentsRepository.save(comment);
