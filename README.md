@@ -1,4 +1,4 @@
-# FantasticNine
+# Fantastic Nine meets Doctor Doom
 Week 8 - Movie API and Webpage
 
 ## Project Outline
