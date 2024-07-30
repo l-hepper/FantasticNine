@@ -3,6 +3,7 @@ package com.sparta.doom.fantasticninewebandapi.controllers;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 @RestController
@@ -40,13 +42,31 @@ public class SchedulesApiController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> getScheduleById(@PathVariable String id) {
-        return ResponseEntity.ok(schedulesService.getScheduleById(id).map(this::mapScheduleHateoas).orElseThrow());
+        return ResponseEntity.ok(schedulesService.getScheduleById(id).map(this::mapScheduleHateoas).orElseThrow(NoSuchElementException::new));
     }
 
-    @PostMapping("/{movieId}/{theaterId}")
-    public ResponseEntity<EntityModel<ScheduleDoc>> addSchedule(@PathVariable String movieId, @PathVariable String theaterId, @RequestBody ScheduleDoc newSchedule) {
+    @PostMapping
+    public ResponseEntity<EntityModel<ScheduleDoc>> addSchedule(@RequestBody ScheduleDoc newSchedule) {
+        if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         EntityModel<ScheduleDoc> newScheduleModel = mapScheduleHateoas(schedulesService.addSchedule(newSchedule));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(newScheduleModel);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSchedule(@PathVariable String id) {
+        schedulesService.removeSchedule(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EntityModel<ScheduleDoc>> updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule) {
+        if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        EntityModel<ScheduleDoc> updatedSchedule = mapScheduleHateoas(schedulesService.updateSchedule(schedule));
+        return ResponseEntity.ok().body(updatedSchedule);
     }
 
     private EntityModel<ScheduleDoc> mapScheduleHateoas(ScheduleDoc doc) {

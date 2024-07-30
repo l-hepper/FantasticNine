@@ -68,6 +68,9 @@ public class SchedulesService {
         return schedulesRepository.save(scheduleDoc);
     }
 
+    public void removeSchedule(String id) {
+        schedulesRepository.deleteById(id);
+    }
     public void removeSchedule(ScheduleDoc scheduleDoc) {
         schedulesRepository.delete(scheduleDoc);
     }
