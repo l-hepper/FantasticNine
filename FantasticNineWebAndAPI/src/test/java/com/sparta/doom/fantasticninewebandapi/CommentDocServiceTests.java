@@ -139,7 +139,7 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByDateRange("2001-05-01", "2002-05-01");
+        List<CommentDoc> actual = service.getCommentsByDateRange("2001-05-01", "2002-05-01",commentList);
         Assertions.assertEquals(expected, actual);
     }
 

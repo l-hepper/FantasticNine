@@ -54,8 +54,8 @@ public class CommentsApiController {
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
             , @PathVariable String date1, @PathVariable String date2) {
         List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
-        comments = comments.stream().filter(c-> commentsService.getCommentsByDateRange(date1,date2).contains(c)).toList();
-        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+        List<CommentDoc> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments);
+        return new ResponseEntity<>(CollectionModel.of(commentsOutput), HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movie}/comments/name/{name}")
@@ -75,8 +75,8 @@ public class CommentsApiController {
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
             , @PathVariable("date1") String date1, @PathVariable("date2") String date2) {
         List<CommentDoc> comments = commentsService.getCommentsByName(username);
-        comments = comments.stream().filter(c -> commentsService.getCommentsByDateRange(date1, date2).contains(c)).toList();
-        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+        List<CommentDoc> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments);
+        return new ResponseEntity<>(CollectionModel.of(commentsOutput), HttpStatus.OK);
     }
 
     @PostMapping("/movies/{movie}/comments/create")

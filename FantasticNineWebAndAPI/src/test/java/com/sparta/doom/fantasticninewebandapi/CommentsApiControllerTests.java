@@ -51,7 +51,7 @@ public class CommentsApiControllerTests {
     }
     @Test
     void testGetCommentsByDateRange() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd446f/comments/dates/1900-01-01/2020-01-01"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd4323/comments/dates/2015-01-01/2020-01-01"))
                 .andDo(MockMvcResultHandlers.print());
     }
 }

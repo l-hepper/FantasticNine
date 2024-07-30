@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,23 +54,23 @@ public class CommentsService {
         return commentDocList;
     }
 
-    public List<CommentDoc> getCommentsByDateRange(String startDateString, String endDateString){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    public List<CommentDoc> getCommentsByDateRange(String startDateString, String endDateString, List<CommentDoc> comments){
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<CommentDoc> commentDocList = new ArrayList<>();
-        try {
-            Date startDate = formatter.parse(startDateString);
-            Date endDate = formatter.parse(endDateString);
-            for (CommentDoc comment : commentsRepository.findAll()) {
-                if (comment.getDate().after(startDate) && comment.getDate().before(endDate)) {
-                    commentDocList.add(comment);
-                }
+        LocalDate startDate = LocalDate.parse(startDateString, inputFormatter);
+        LocalDate endDate = LocalDate.parse(endDateString, inputFormatter);
+
+        for(CommentDoc comment : comments){
+            Date commentDate = comment.getDate();
+            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDateString = targetFormat.format(commentDate);
+            LocalDate formattedDate = LocalDate.parse(formattedDateString, inputFormatter);
+            System.out.println(formattedDate);
+            if(formattedDate.isAfter(startDate) && formattedDate.isBefore(endDate)){
+                commentDocList.add(comment);
             }
-            return commentDocList;
         }
-        catch (ParseException e) {
-            //invalid date error
-            return commentDocList;
-        }
+        return commentDocList;
     }
 
     public CommentDoc createComment(CommentDoc comment) {
