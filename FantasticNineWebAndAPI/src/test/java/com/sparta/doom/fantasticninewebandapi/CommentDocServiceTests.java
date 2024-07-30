@@ -103,11 +103,11 @@ public class CommentDocServiceTests {
         CommentDoc actual = service.getCommentById(id);
         Assertions.assertEquals(expected, actual);
     }
-    @Test
-    public void commentNotFoundExceptionThrown(){
-        when(commentsRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(CommentNotFoundException.class, () -> service.getCommentById(id));
-    }
+//    @Test
+//    public void commentNotFoundExceptionThrown(){
+//        when(commentsRepository.findById(id)).thenReturn(Optional.empty());
+//        assertThrows(CommentNotFoundException.class, () -> service.getCommentById(id));
+//    } changed way of dealing with null comments in controller
 
     @Test
     public void findCommentsByUsername(){
@@ -116,7 +116,17 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByName("Testing Account");
+        List<CommentDoc> actual = service.getCommentsByName("Testing-Account");
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    public void findCommentsByUsernameMovie(){
+        List<CommentDoc> expected = Arrays.asList(commentOne);
+        List<CommentDoc> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        List<CommentDoc> actual = service.getCommentsByUsernameAndMovie("Testing-Account",commentList);
         Assertions.assertEquals(expected, actual);
     }
 
@@ -139,7 +149,7 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByDateRange(startDate, endDate);
+        List<CommentDoc> actual = service.getCommentsByDateRange("2001-05-01", "2002-05-01",commentList);
         Assertions.assertEquals(expected, actual);
     }
 
@@ -166,11 +176,11 @@ public class CommentDocServiceTests {
         verify(commentsRepository, times(1)).deleteById(commentOne.getId());
     }
 
-    @Test
-    public void deleteCommentThrowsException(){
-        ObjectId notFoundId = new ObjectId();
-        assertThrows(CommentNotFoundException.class, () -> service.deleteComment(notFoundId));
-    }
+//    @Test
+//    public void deleteCommentThrowsException(){
+//        ObjectId notFoundId = new ObjectId();
+//        assertThrows(CommentNotFoundException.class, () -> service.deleteComment(notFoundId));
+//    } changed way of dealing with null comments in controller
 
     @Test
     public void createNewComment(){
@@ -181,5 +191,22 @@ public class CommentDocServiceTests {
         CommentDoc newCreatedComment = service.createComment(comment);
         verify(commentsRepository, times(1)).save(comment);
         Assertions.assertEquals(comment, newCreatedComment);
+    }
+
+    @Test
+    public void censorBadTextLowerCase(){
+        CommentDoc comment = new CommentDoc();
+        comment.setText("This is some sample text that has fuck censored");
+        String expected = "This is some sample text that has **** censored";
+        String actual = commentsService.censorBadText(comment).getText();
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    public void censorBadTextUpperCase(){
+        CommentDoc comment = new CommentDoc();
+        comment.setText("This is some sample text that has Fucking censored");
+        String expected = "This is some sample text that has ****ing censored";
+        String actual = commentsService.censorBadText(comment).getText();
+        Assertions.assertEquals(expected, actual);
     }
 }
