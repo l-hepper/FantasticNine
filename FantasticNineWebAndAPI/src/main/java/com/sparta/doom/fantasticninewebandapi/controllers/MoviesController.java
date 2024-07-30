@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -65,5 +66,14 @@ public class MoviesController {
     public ResponseEntity<List<MoviesDTO>> getMoviesByGenre(@PathVariable String genre) {
         List<MoviesDTO> movies = moviesService.getMoviesByGenre(genre);
         return ResponseEntity.ok(movies);
+    }
+
+    @GetMapping("/search/{title}")
+    public ResponseEntity<List<MoviesDTO>> getMoviesByPartialTitle(@PathVariable String title) {
+        List<MoviesModel> movies = moviesService.getMoviesByPartialTitle(title);
+        List<MoviesDTO> moviesDTOs = movies.stream()
+                .map(moviesService::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(moviesDTOs);
     }
 }

@@ -93,6 +93,12 @@ public class MoviesService {
                 .findFirst();
     }
 
+    public List<MoviesModel> getMoviesByPartialTitle(String title) {
+        return moviesRepository.findAll().stream()
+                .filter(movie -> movie.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
     public MoviesDTO createMovie(MoviesDTO movieDto) {
         MoviesModel movie = convertToEntity(movieDto);
         MoviesModel savedMovie = moviesRepository.save(movie);
