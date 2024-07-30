@@ -35,6 +35,12 @@ public class CommentsApiControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @MockBean
+    private CommentsService commentsService;
+
+    @MockBean
+    private SecurityService securityService;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -99,12 +105,12 @@ public class CommentsApiControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
     @Test
-    void testGetCommentsByUserWrongUser() throws Exception {
+    void testGetCommentsByDateAndUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/2000-01-01/2001-01-01"))
                 .andDo(MockMvcResultHandlers.print());
     }
     @Test
-    void testGetCommentsByUserWrongUserNotFound() throws Exception {
+    void testGetCommentsByUserAndDatesWrongUserNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/MercedesTyler/comments/dates/2000-01-01/2001-01-01"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
@@ -133,4 +139,24 @@ public class CommentsApiControllerTests {
 //                .content(objectMapper.writeValueAsString(commentDoc)))
 //                .andDo(MockMvcResultHandlers.print());
 //    }
+
+    @Test
+    void testDeleteCommentReturnsCommentNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/movies/573a1390f29313caabcd4323/comments/id/5a9427648b0beebeb69579e8"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void testDeleteCommentReturnsNoContent() throws Exception {
+
+//        String apiKey = "valid-api-key";
+//        String role = "FULL_ACCESS";
+//
+//        when(securityService.getRoleFromKey(apiKey)).thenReturn(Optional.of(role));
+//        when(commentsService.getCommentById(commentId)).thenReturn(mockComment);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/movies/573a1390f29313caabcd4323/comments/id/5a9427648b0beebeb69579e7")
+                        .header("DOOM-API-KEY","unique-api-key-123"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 }

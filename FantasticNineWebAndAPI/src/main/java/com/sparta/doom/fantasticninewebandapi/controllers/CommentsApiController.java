@@ -154,7 +154,4 @@ public class CommentsApiController {
         commentsService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    //todo HATEOAS to link movies/user profile with comments
-
 }
