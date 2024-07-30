@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
-import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
+import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +29,7 @@ public class MoviesWebController {
     }
 
     @PostMapping("/create/")
-    public String createMoviePost(@ModelAttribute MoviesModel moviesModel, Model model) {
+    public String createMoviePost(@ModelAttribute MovieDoc moviesModel, Model model) {
         webClient.post()
                 .uri("/api/movies/create/")
                 .header("DOOM-API-KEY", key)
@@ -40,12 +40,12 @@ public class MoviesWebController {
 
     @GetMapping
     public String getMovies(Model model) {
-        List<MoviesModel> movies = webClient
+        List<MovieDoc> movies = webClient
                 .get()
                 .uri("/api/movies/")
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .bodyToFlux(MoviesModel.class)
+                .bodyToFlux(MovieDoc.class)
                 .collectList()
                 .block();
         model.addAttribute("movies", movies);
@@ -54,16 +54,16 @@ public class MoviesWebController {
 
     @GetMapping("/search/")
     public String getSearchedMovies(@RequestParam String movieName, Model model) {
-        List<MoviesModel> movies = webClient
+        List<MovieDoc> movies = webClient
                 .get()
                 .uri("api/movies/")
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .bodyToFlux(MoviesModel.class)
+                .bodyToFlux(MovieDoc.class)
                 .collectList()
                 .block();
-        ArrayList<MoviesModel> returnMovies = new ArrayList<>();
-        for (MoviesModel movie : movies) {
+        ArrayList<MovieDoc> returnMovies = new ArrayList<>();
+        for (MovieDoc movie : movies) {
             if (movie.getTitle().toLowerCase().contains(movieName.toLowerCase())) {
                 returnMovies.add(movie);
             }
@@ -74,19 +74,19 @@ public class MoviesWebController {
 
     @GetMapping("/search/{id}")
     public String getMovieDetails(@PathVariable String id, Model model) {
-        MoviesModel movie = webClient
+        MovieDoc movie = webClient
                 .get()
                 .uri("/api/movies/" + id)
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .bodyToMono(MoviesModel.class)
+                .bodyToMono(MovieDoc.class)
                 .block();
         model.addAttribute("movies", movie);
         return "movies/movies_details";
     }
 
     @PostMapping("/update/{id}")
-    public String updateMovie(@PathVariable String id, @RequestBody MoviesModel moviesModel, Model model) {
+    public String updateMovie(@PathVariable String id, @RequestBody MovieDoc moviesModel, Model model) {
         webClient.patch()
                 .uri("/api/movies/update/" + id)
                 .header("DOOM-API-KEY", key)
