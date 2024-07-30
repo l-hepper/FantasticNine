@@ -37,7 +37,7 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getMovie()}"></td>
+            <td th:text="${showings.getMovie().getTitle()}"></td>
             <td th:text="${showings.getStartTime()}"></td>
         </tr>
         </tbody>
