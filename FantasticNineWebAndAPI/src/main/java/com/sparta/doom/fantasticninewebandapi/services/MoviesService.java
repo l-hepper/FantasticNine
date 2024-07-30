@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
-import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
+import com.sparta.doom.fantasticninewebandapi.models.Movie;
 import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,7 +29,7 @@ public class MoviesService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public MoviesDTO convertToDto(MoviesModel movie) {
+    public MoviesDTO convertToDto(Movie movie) {
         return new MoviesDTO(
                 movie.getId(),
                 movie.getAwards(),
@@ -55,8 +55,8 @@ public class MoviesService {
         );
     }
 
-    private MoviesModel convertToEntity(MoviesDTO movieDto) {
-        MoviesModel movie = new MoviesModel();
+    private Movie convertToEntity(MoviesDTO movieDto) {
+        Movie movie = new Movie();
         movie.setId(movieDto.getId());
         movie.setAwards(movieDto.getAwards());
         movie.setCast(movieDto.getCast());
@@ -82,40 +82,40 @@ public class MoviesService {
     }
 
     public List<MoviesDTO> getAllMovies() {
-        List<MoviesModel> movies = moviesRepository.findAll();
+        List<Movie> movies = moviesRepository.findAll();
         return movies.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public MoviesDTO getMovieById(String id) {
-        Optional<MoviesModel> movie = moviesRepository.findById(id);
+        Optional<Movie> movie = moviesRepository.findById(id);
         return movie.map(this::convertToDto).orElse(null);
     }
 
-    public Optional<MoviesModel> getMovieByTitle(String title) {
+    public Optional<Movie> getMovieByTitle(String title) {
         return moviesRepository.findAll().stream()
                 .filter(movie -> movie.getTitle().contains(title))
                 .findFirst();
     }
 
-    public List<MoviesModel> getMoviesByPartialTitle(String title) {
+    public List<Movie> getMoviesByPartialTitle(String title) {
         return moviesRepository.findAll().stream()
                 .filter(movie -> movie.getTitle().toLowerCase().contains(title.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     public MoviesDTO createMovie(MoviesDTO movieDto) {
-        MoviesModel movie = convertToEntity(movieDto);
-        MoviesModel savedMovie = moviesRepository.save(movie);
+        Movie movie = convertToEntity(movieDto);
+        Movie savedMovie = moviesRepository.save(movie);
         return convertToDto(savedMovie);
     }
 
     public MoviesDTO updateMovie(String id, MoviesDTO movieDto) {
         if (moviesRepository.existsById(id)) {
-            MoviesModel movie = convertToEntity(movieDto);
+            Movie movie = convertToEntity(movieDto);
             movie.setId(id);
-            MoviesModel updatedMovie = moviesRepository.save(movie);
+            Movie updatedMovie = moviesRepository.save(movie);
             return convertToDto(updatedMovie);
         } else {
             return null;
@@ -132,7 +132,7 @@ public class MoviesService {
     }
 
     public List<MoviesDTO> getMoviesByGenre(String genre) {
-        List<MoviesModel> movies = moviesRepository.findAll().stream()
+        List<Movie> movies = moviesRepository.findAll().stream()
                 .filter(movie -> movie.getGenres() != null &&
                         Arrays.stream(movie.getGenres().split(","))
                                 .map(String::trim)
@@ -149,7 +149,7 @@ public class MoviesService {
         query.addCriteria(Criteria.where("imdb.rating").ne(""));
         query.with(Sort.by(Sort.Order.desc("imdb.rating")));
         query.limit(10);
-        List<MoviesModel> topMovies = mongoTemplate.find(query, MoviesModel.class);
+        List<Movie> topMovies = mongoTemplate.find(query, Movie.class);
         return topMovies.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

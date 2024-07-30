@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Arrays;
 
 @Document(collection = "movies")
-public class MoviesModel {
+public class Movie {
 
     @Id
     private String id;

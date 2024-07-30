@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
 import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
-import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
+import com.sparta.doom.fantasticninewebandapi.models.Movie;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +35,7 @@ public class MoviesController {
     //TODO add regex
     @GetMapping("/title/{title}")
     public ResponseEntity<MoviesDTO> getMovieByTitle(@PathVariable String title) {
-        Optional<MoviesModel> movie = moviesService.getMovieByTitle(title);
+        Optional<Movie> movie = moviesService.getMovieByTitle(title);
         if (movie.isPresent()) {
             MoviesDTO movieDto = moviesService.convertToDto(movie.get());
             return ResponseEntity.ok(movieDto);
@@ -70,7 +70,7 @@ public class MoviesController {
 
     @GetMapping("/search/{title}")
     public ResponseEntity<List<MoviesDTO>> getMoviesByPartialTitle(@PathVariable String title) {
-        List<MoviesModel> movies = moviesService.getMoviesByPartialTitle(title);
+        List<Movie> movies = moviesService.getMoviesByPartialTitle(title);
         List<MoviesDTO> moviesDTOs = movies.stream()
                 .map(moviesService::convertToDto)
                 .collect(Collectors.toList());
