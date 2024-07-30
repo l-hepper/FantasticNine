@@ -14,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class TheaterAPIController {
+public class TheaterApiController {
 
     private final TheaterService theaterService;
 
     @Autowired
-    public TheaterAPIController(TheaterService theaterService) {
+    public TheaterApiController(TheaterService theaterService) {
         this.theaterService = theaterService;
     }
 
