@@ -80,7 +80,6 @@ public class CommentsService {
             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDateString = targetFormat.format(commentDate);
             LocalDate formattedDate = LocalDate.parse(formattedDateString, inputFormatter);
-            System.out.println(formattedDate);
             if(formattedDate.isAfter(startDate) && formattedDate.isBefore(endDate)){
                 commentDocList.add(comment);
             }

@@ -116,7 +116,17 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByName("Testing Account");
+        List<CommentDoc> actual = service.getCommentsByName("Testing-Account");
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    public void findCommentsByUsernameMovie(){
+        List<CommentDoc> expected = Arrays.asList(commentOne);
+        List<CommentDoc> commentList = new ArrayList<>();
+        commentList.add(commentOne);
+        commentList.add(commentTwo);
+        when(commentsRepository.findAll()).thenReturn(commentList);
+        List<CommentDoc> actual = service.getCommentsByUsernameAndMovie("Testing-Account",commentList);
         Assertions.assertEquals(expected, actual);
     }
 

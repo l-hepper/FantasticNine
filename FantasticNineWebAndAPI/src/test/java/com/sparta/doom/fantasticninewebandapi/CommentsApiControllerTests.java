@@ -1,5 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,4 +55,37 @@ public class CommentsApiControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd4323/comments/dates/2015-01-01/2020-01-01"))
                 .andDo(MockMvcResultHandlers.print());
     }
+    @Test
+    void testGetCommentsByDateRangeBeforeDateAfterEndDate() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd4323/comments/dates/2022-01-01/2020-01-01"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void testGetCommentsByMovieAndUsername() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd4323/comments/name/Mercedes-Tyler"))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Mercedes Tyler")));
+    }
+    @Test
+    void testGetCommentsByMovieAndUsernameNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd4323/comments/name/MercedesTyler"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+    @Test
+    void testGetCommentsByUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+    @Test
+    void testGetCommentsByUserNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/MercedesTyler/comments"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+    @Test
+    void testGetCommentsByUserWrongUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/2000-01-01/2001-01-01"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+
 }
