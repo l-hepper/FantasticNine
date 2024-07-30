@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -86,6 +88,20 @@ public class CommentsApiControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/2000-01-01/2001-01-01"))
                 .andDo(MockMvcResultHandlers.print());
     }
-
-
+    @Test
+    void testGetCommentsByUserWrongUserNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/MercedesTyler/comments/dates/2000-01-01/2001-01-01"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+    @Test
+    void testCommentsByUserDatesNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/1901-01-01/1915-01-01"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+    @Test
+    void testCreateComment() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/movies/573a1390f29313caabcd4323/comments/create"))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+        //this needs working on
+    }
 }
