@@ -1,4 +1,4 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
-public class two {
+public class ScheduleApiController {
 }
