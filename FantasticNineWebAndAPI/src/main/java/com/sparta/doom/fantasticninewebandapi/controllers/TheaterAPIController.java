@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
-import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.services.TheaterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,16 +24,16 @@ public class TheaterAPIController {
     }
 
     @GetMapping("/theaters")
-    public ResponseEntity<List<TheaterModel>> getTheaters() {
-        List<TheaterModel> theaters = theaterService.getAllTheaters();
+    public ResponseEntity<List<TheaterDoc>> getTheaters() {
+        List<TheaterDoc> theaters = theaterService.getAllTheaters();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(theaters);
     }
 
     @GetMapping("theaters/{id}")
-    public ResponseEntity<TheaterModel> getTheaterById(@PathVariable int id) {
-        TheaterModel theater = theaterService.getTheaterByTheaterId(id);
+    public ResponseEntity<TheaterDoc> getTheaterById(@PathVariable int id) {
+        TheaterDoc theater = theaterService.getTheaterByTheaterId(id);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(theater);

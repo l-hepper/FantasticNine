@@ -1,8 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi;
 
-import com.sparta.doom.fantasticninewebandapi.models.Movie;
+import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.Schedule;
-import com.sparta.doom.fantasticninewebandapi.models.Theatre;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
 import org.junit.jupiter.api.Assertions;
@@ -29,8 +29,8 @@ public class ScheduleServiceTest {
 
     private static ScheduleService scheduleService;
 
-    Schedule schedule1 = new Schedule("1", new Theatre("1"), new Movie("1"), LocalDateTime.now().plusDays(1));
-    Schedule schedule2 = new Schedule("2", new Theatre("2"), new Movie("2"), LocalDateTime.now().plusDays(2));
+    Schedule schedule1 = new Schedule("1", new TheaterDoc(), new MovieDoc(), LocalDateTime.now().plusDays(1));
+    Schedule schedule2 = new Schedule("2", new TheaterDoc(), new MovieDoc(), LocalDateTime.now().plusDays(2));
 
 
     @BeforeAll
@@ -93,7 +93,7 @@ public class ScheduleServiceTest {
 
     @Test
     public void testGetSchedulesByTheatre() {
-        Theatre theatre = new Theatre("1");
+        TheaterDoc theatre = new TheaterDoc();
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
 
         List<Schedule> schedules = scheduleService.getSchedulesByTheatre(theatre);
@@ -105,7 +105,7 @@ public class ScheduleServiceTest {
 
     @Test
     public void testGetSchedulesByMovie() {
-        Movie movie = new Movie("1");
+        MovieDoc movie = new MovieDoc();
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
 
         List<Schedule> schedules = scheduleService.getSchedulesByMovie(movie);
