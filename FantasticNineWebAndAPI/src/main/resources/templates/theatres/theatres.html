@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Theaters</title>
+    <style>
+        .theater-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+
+        .theater-card h2 {
+            margin: 0 0 8px 0;
+        }
+
+        .theater-card p {
+            margin: 4px 0;
+            color: #555;
+        }
+
+        .theater-card a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .theater-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Theaters</h1>
+<div class="theater-list">
+    <div th:each="theater : ${theaters}" class="theater-card">
+        <h2>Theater ID: <span th:text="${theater.theaterId}"></span></h2>
+        <p>
+            <span th:text="${theater.location.address.street1}"></span>,
+            <span th:text="${theater.location.address.city}"></span>,
+            <span th:text="${theater.location.address.state}"></span>
+            <span th:text="${theater.location.address.zipcode}"></span>
+        </p>
+        <p>
+            Coordinates:
+            <span th:text="${theater.location.geo.coordinates[1]}"></span>,
+            <span th:text="${theater.location.geo.coordinates[0]}"></span>
+        </p>
+        <a th:href="@{/theaters/{theaterId}(theaterId=${theater.theaterId})}">View Details</a>
+    </div>
+</div>
+</body>
+</html>
