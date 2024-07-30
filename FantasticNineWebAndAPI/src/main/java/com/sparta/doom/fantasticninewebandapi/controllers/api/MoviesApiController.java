@@ -21,7 +21,7 @@ public class MoviesApiController {
         this.moviesService = moviesService;
     }
 
-    @GetMapping
+    @GetMapping("/movies")
     public ResponseEntity<List<MoviesDTO>> getAllMovies() {
         List<MoviesDTO> movies = moviesService.getAllMovies();
         return ResponseEntity.ok(movies);
@@ -53,13 +53,13 @@ public class MoviesApiController {
         }
     }
 
-    @GetMapping("/genres")
+    @GetMapping("/movies/genres")
     public ResponseEntity<List<String>> getAllGenres() {
         List<String> genres = moviesService.getAllGenres();
         return ResponseEntity.ok(genres);
     }
 
-    @PostMapping
+    @PostMapping("/movies")
     public ResponseEntity<MoviesDTO> createMovie(@RequestBody MoviesDTO movieDto, @RequestHeader(name = "DOOM-API-KEY") String key) {
         MoviesDTO createdMovie = moviesService.createMovie(movieDto);
         return ResponseEntity.status(201).body(createdMovie);
@@ -96,5 +96,11 @@ public class MoviesApiController {
     public ResponseEntity<List<MoviesDTO>> getTop10ByImdbRating() {
         List<MoviesDTO> topMovies = moviesService.getTop10ByImdbRating();
         return ResponseEntity.ok(topMovies);
+    }
+
+    @GetMapping("/series")
+    public ResponseEntity<List<MoviesDTO>> getAllSeries() {
+        List<MoviesDTO> series = moviesService.getAllSeries();
+        return ResponseEntity.ok(series);
     }
 }
