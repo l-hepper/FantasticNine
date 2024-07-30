@@ -2,6 +2,7 @@ package com.sparta.doom.fantasticninewebandapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
+import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
 import org.bson.types.ObjectId;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,11 +35,15 @@ public class CommentsApiControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CommentsService commentsService;
+
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(SecurityMockMvcConfigurers.springSecurity()).build();
     }
+
 
     @Test
     void testGetComments() throws Exception {
@@ -57,8 +62,21 @@ public class CommentsApiControllerTests {
     }
     @Test
     void testGetCommentByMovieWrongMovie() throws Exception {
+
+        CommentDoc commentDoc = new CommentDoc();
+        ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
+        ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
+        commentDoc.setId(commentId);
+        commentDoc.setMovie_id(movieId);
+        commentDoc.setEmail("test@example.com");
+        commentDoc.setDate(new Date());
+        commentDoc.setText("This is a test comment.");
+        commentDoc.setName("Mercedes Tyler");
+        commentsService.createComment(commentDoc);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd446f/comments/id/5a9427648b0beebeb69579e7"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        commentsService.deleteComment(commentId);
     }
     @Test
     void testGetCommentsByDateRange() throws Exception {
@@ -72,8 +90,22 @@ public class CommentsApiControllerTests {
     }
     @Test
     void testGetCommentsByMovieAndUsername() throws Exception {
+
+        CommentDoc commentDoc = new CommentDoc();
+        ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
+        ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
+        commentDoc.setId(commentId);
+        commentDoc.setMovie_id(movieId);
+        commentDoc.setEmail("test@example.com");
+        commentDoc.setDate(new Date());
+        commentDoc.setText("This is a test comment.");
+        commentDoc.setName("Mercedes Tyler");
+        commentsService.createComment(commentDoc);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/573a1390f29313caabcd4323/comments/name/Mercedes-Tyler"))
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Mercedes Tyler")));
+
+        commentsService.deleteComment(commentId);
     }
     @Test
     void testGetCommentsByMovieAndUsernameNotFound() throws Exception {
@@ -84,12 +116,14 @@ public class CommentsApiControllerTests {
     void testGetCommentsByUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Mercedes Tyler")))
                 .andDo(MockMvcResultHandlers.print());
+
     }
     @Test
     void testGetCommentsByUserNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/MercedesTyler/comments"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("\"totalElements\":0")));
     }
     @Test
     void testGetCommentsByDateAndUser() throws Exception {
@@ -124,7 +158,6 @@ public class CommentsApiControllerTests {
         commentDoc.setName("Test User");
 
         String commentJson = objectMapper.writeValueAsString(commentDoc);
-        System.out.println(commentJson);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/movies/573a1390f29313caabcd4323/comments/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -183,6 +216,18 @@ public class CommentsApiControllerTests {
 
     @Test
     void testUpdateCommentReturnsBadRequestIfWrongMovie() throws Exception {
+
+        CommentDoc commentDocSetUp = new CommentDoc();
+        ObjectId movieIdSetUp = new ObjectId("573a1390f29313caabcd4323");
+        ObjectId commentIdSetUp = new ObjectId("5a9427648b0beebeb69579e7");
+        commentDocSetUp.setId(commentIdSetUp);
+        commentDocSetUp.setMovie_id(movieIdSetUp);
+        commentDocSetUp.setEmail("test@example.com");
+        commentDocSetUp.setDate(new Date());
+        commentDocSetUp.setText("This is a test comment.");
+        commentDocSetUp.setName("Mercedes Tyler");
+        commentsService.createComment(commentDocSetUp);
+
         CommentDoc commentDoc = new CommentDoc();
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
@@ -202,10 +247,23 @@ public class CommentsApiControllerTests {
                         .content(commentJson))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        commentsService.deleteComment(commentIdSetUp);
     }
 
     @Test
     void testUpdateCommentReturnsNoContentIfSuccessful() throws Exception {
+
+        CommentDoc commentDocSetUp = new CommentDoc();
+        ObjectId movieIdSetUp = new ObjectId("573a1390f29313caabcd4323");
+        ObjectId commentIdSetUp = new ObjectId("5a9427648b0beebeb69579e7");
+        commentDocSetUp.setId(commentIdSetUp);
+        commentDocSetUp.setMovie_id(movieIdSetUp);
+        commentDocSetUp.setEmail("test@example.com");
+        commentDocSetUp.setDate(new Date());
+        commentDocSetUp.setText("This is a test comment.");
+        commentDocSetUp.setName("Mercedes Tyler");
+        commentsService.createComment(commentDocSetUp);
+
         CommentDoc commentDoc = new CommentDoc();
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
@@ -225,6 +283,7 @@ public class CommentsApiControllerTests {
                         .content(commentJson))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+        commentsService.deleteComment(commentIdSetUp);
     }
 
     @Test
@@ -234,6 +293,18 @@ public class CommentsApiControllerTests {
     }
     @Test
     void testDeleteCommentReturnsNoContentIfSuccessful() throws Exception {
+
+        CommentDoc commentDocSetUp = new CommentDoc();
+        ObjectId movieIdSetUp = new ObjectId("573a1390f29313caabcd4323");
+        ObjectId commentIdSetUp = new ObjectId("5a9427648b0beebeb69579e7");
+        commentDocSetUp.setId(commentIdSetUp);
+        commentDocSetUp.setMovie_id(movieIdSetUp);
+        commentDocSetUp.setEmail("test@example.com");
+        commentDocSetUp.setDate(new Date());
+        commentDocSetUp.setText("This is a test comment.");
+        commentDocSetUp.setName("Mercedes Tyler");
+        commentsService.createComment(commentDocSetUp);
+
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/movies/573a1390f29313caabcd4323/comments/id/5a9427648b0beebeb69579e7")
                         .header("DOOM-API-KEY", "unique-api-key-123"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
