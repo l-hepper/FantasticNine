@@ -3,10 +3,8 @@ package com.sparta.doom.fantasticninewebandapi.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Arrays;
-
 @Document(collection = "theaters")
-public class TheaterModel {
+public class TheaterDoc {
 
     @Id
     private String id;
