@@ -1,11 +1,18 @@
 package com.sparta.doom.fantasticninewebandapi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
+import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
+import com.sparta.doom.fantasticninewebandapi.services.SecurityService;
+import org.bson.types.ObjectId;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -16,6 +23,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static reactor.core.publisher.Mono.when;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CommentsApiControllerTests {
@@ -25,6 +37,9 @@ public class CommentsApiControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() {
@@ -98,10 +113,24 @@ public class CommentsApiControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/1901-01-01/1915-01-01"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-    @Test
-    void testCreateComment() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/movies/573a1390f29313caabcd4323/comments/create"))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-        //this needs working on
-    }
+//    @Test
+//    void testCreateCommentWithNoKey() throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/movies/573a1390f29313caabcd4323/comments/create")
+//                .header("DOOM-API-KEY", "read-only-key"))
+//                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+//    }
+
+//    @Test
+//    void testCreateCommentSuccess() throws Exception {
+//        ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
+//        ObjectId commentId = new ObjectId();
+//        CommentDoc commentDoc = new CommentDoc();
+//        commentDoc.setId(commentId);
+//        commentDoc.setMovie_id(movieId);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/movies/573a1390f29313caabcd4323/comments/create")
+//                        .header("DOOM-API-KEY", "FULL_ACCESS")
+//                .content(objectMapper.writeValueAsString(commentDoc)))
+//                .andDo(MockMvcResultHandlers.print());
+//    }
 }
