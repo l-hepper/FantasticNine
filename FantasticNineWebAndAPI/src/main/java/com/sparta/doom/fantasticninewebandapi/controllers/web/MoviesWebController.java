@@ -1,7 +1,10 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
+import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
 import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
+import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +43,12 @@ public class MoviesWebController {
 
     @GetMapping
     public String getMovies(Model model) {
-        List<MoviesModel> movies = webClient
+        List<MoviesDTO> movies = webClient
                 .get()
                 .uri("/api/movies/")
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .bodyToFlux(MoviesModel.class)
+                .bodyToFlux(MoviesDTO.class)
                 .collectList()
                 .block();
         model.addAttribute("movies", movies);
