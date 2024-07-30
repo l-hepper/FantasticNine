@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class SecurityService implements UserDetailsService {
+public class    SecurityService implements UserDetailsService {
     private final ApiKeyRepository apiKeyRepository;
     private final UserRepository userRepository;
 
@@ -33,7 +33,7 @@ public class SecurityService implements UserDetailsService {
         ApiKeyModel apiKey = new ApiKeyModel();
         apiKey.setKey(UUID.randomUUID().toString());
         apiKey.setAccessLevel(role);
-        apiKeyRepository.save(apiKey);
+        apiKey = apiKeyRepository.save(apiKey);
 
         return Optional.of(apiKey.getKey());
     }

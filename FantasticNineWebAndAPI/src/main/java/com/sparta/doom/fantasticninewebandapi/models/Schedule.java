@@ -1,5 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,11 +18,11 @@ public class Schedule {
 
     @NotNull
     @DBRef
-    private Theatre theatre;
+    private TheaterDoc theatre;
 
     @NotNull
     @DBRef
-    private Movie movie;
+    private MovieDoc movie;
 
     @NotNull
     @Future
