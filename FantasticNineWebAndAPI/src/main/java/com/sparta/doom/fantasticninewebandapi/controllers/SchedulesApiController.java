@@ -1,5 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
+import com.sparta.doom.fantasticninewebandapi.controllers.api.MoviesApiController;
+import com.sparta.doom.fantasticninewebandapi.controllers.api.TheaterApiController;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
@@ -76,7 +78,7 @@ public class SchedulesApiController {
         Link movieLink = doc.getMovie() == null ? Link.of("Not Found") : linkTo(methodOn(MoviesApiController.class)
                 .getMovieById(doc.getMovie().getId()))
                 .withRel("movie");
-        Link theaterLink = doc.getTheater() == null ? Link.of("Not Found") : linkTo(methodOn(TheatersApiController.class)
+        Link theaterLink = doc.getTheater() == null ? Link.of("Not Found") : linkTo(methodOn(TheaterApiController.class)
                 .getTheaters())
                 .slash(doc.getTheater().getId())
                 .withRel("theater");
