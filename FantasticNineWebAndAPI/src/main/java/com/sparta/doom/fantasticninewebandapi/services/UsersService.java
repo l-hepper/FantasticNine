@@ -35,8 +35,8 @@ public class UsersService {
 
     public Optional<UserDoc> updateUser(String id, UserDoc updatedUserDoc) {
         if (userRepository.existsById(id)) {
-            updatedUserDoc.setId(id);  // Ensure the ID is set correctly
-            UserDoc updatedUser = userRepository.save(updatedUserDoc);  // Save and get the updated user
+            updatedUserDoc.setId(id);
+            UserDoc updatedUser = userRepository.save(updatedUserDoc);
             return Optional.of(updatedUser);
         } else {
             throw new UserNotFoundException("User not found with id: " + id);

@@ -37,7 +37,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void createUser_ShouldSaveUser() {
+    void givenUserInfoCreatesNewUser() {
         when(userRepository.save(any(UserDoc.class))).thenReturn(userDoc);
 
         UserDoc result = usersService.createUser(userDoc);
@@ -48,7 +48,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void getUserById_ShouldReturnUser() {
+    void givenValidUserIdReturnsUser() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(userDoc));
 
         Optional<UserDoc> result = usersService.getUserById(userId);
@@ -59,7 +59,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void getUserById_ShouldReturnEmptyIfNotFound() {
+    void givenInvalidUserIdReturnsUser() {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         Optional<UserDoc> result = usersService.getUserById(userId);
@@ -69,7 +69,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void getUserByEmail_ShouldReturnUser() {
+    void givenValidEmailReturnsUser() {
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(userDoc));
 
         Optional<UserDoc> result = usersService.getUserByEmail(userEmail);
@@ -80,7 +80,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void getAllUsers_ShouldReturnUsers() {
+    void returnsAllUsers() {
         when(userRepository.findAll()).thenReturn(List.of(userDoc)); // Corrected to List.of
 
         Iterable<UserDoc> result = usersService.getAllUsers();
@@ -92,7 +92,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void updateUser_ShouldReturnUpdatedUser() {
+    void givenValidUserIdReturnsUpdatedUser() {
         when(userRepository.existsById(userId)).thenReturn(true);
 
         UserDoc updatedUser = new UserDoc(userEmail, "John Smith", "newpassword", Set.of("USER"));
@@ -110,7 +110,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void updateUser_ShouldThrowExceptionIfNotFound() {
+    void givenInvalidUserIdThrowsException() {
         when(userRepository.existsById(userId)).thenReturn(false);
 
         UserDoc updatedUser = new UserDoc(userEmail, "John Smith", "newpassword", Set.of("USER"));
@@ -124,7 +124,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void deleteUser_ShouldReturnTrueIfDeleted() {
+    void givenValidUserIdReturnsTrue() {
         doNothing().when(userRepository).deleteById(userId);
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -136,7 +136,7 @@ public class UsersServiceTests {
     }
 
     @Test
-    void deleteUser_ShouldReturnFalseIfNotDeleted() {
+    void givenInvalidUserIdReturnsFalse() {
         when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(userDoc));
 
         boolean result = usersService.deleteUser(userId);
