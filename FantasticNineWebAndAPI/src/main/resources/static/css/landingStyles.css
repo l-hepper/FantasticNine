@@ -1,0 +1,22 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+.navbar-dark .navbar-brand {
+    color: #ffffff;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff;
+}
+.card {
+    background-color: #1e1e1e;
+    border: none;
+}
+.card-title, .card-text {
+    color: #ffffff;
+}
+.footer {
+    background-color: #1e1e1e;
+    padding: 20px 0;
+    text-align: center;
+}
