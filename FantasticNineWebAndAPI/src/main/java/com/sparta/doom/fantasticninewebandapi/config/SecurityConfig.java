@@ -20,27 +20,45 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http.csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(authRequest -> authRequest
+//                        // Public pages
+//                        .requestMatchers("/", "/welcome/").permitAll()
+//                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
+//                        .requestMatchers("/mflix/**").permitAll()
+//
+//                        // API
+//                        .requestMatchers("/api/**").permitAll()
+//
+//                        // Web
+//                        .requestMatchers("/mflix/movies/**", "/mflix/theaters/**", "/mflix/users/**").permitAll()
+//                        .requestMatchers("/mflix/movies/create/", "/mflix/theaters/create/", "/mflix/users/create/").hasRole("ADMIN")
+//                        .requestMatchers("/mflix/movies/{id}/", "/mflix/theaters/{id}/", "/mflix/users/{id}/").hasRole("ADMIN")
+//                        .requestMatchers("/mflix/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
+//                        .requestMatchers("/mflix/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(formLogin -> formLogin
+//                        .loginPage("/login/")
+//                        .defaultSuccessUrl("/mflix/", true)
+//                        .permitAll()
+//                )
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout/")
+//                        .permitAll()
+//                )
+//                .build();
+//    }
+
+    // dev chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authRequest ->
-                        //All
-                        authRequest.requestMatchers("/", "/welcome").permitAll().requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
-
-                                //Auth
-                                .requestMatchers("/mflix/**").permitAll()
-
-                                //api
-                                .requestMatchers("/api/movies/**", "/api/theaters/**/", "/api/users/**/", "/api/**/search").permitAll()
-                                .requestMatchers("/api/movies/{id}", "/api/theaters/{id}", "/api/users/{id}", "/api/movies/{id}/comments/{id}").hasRole("ADMIN")
-                                .requestMatchers("/api/movies/create", "/api/theaters/create", "/api/users/create").hasRole("ADMIN")
-                                .requestMatchers("/api/movies/{id}/comments/create").hasRole("USER")
-
-                                //web
-                                .requestMatchers("/mflix/movies/**", "/mflix/theaters/**/", "/mflix/users/**/", "/mflix/**/search").permitAll()
-                                .requestMatchers("/mflix/movies/{id}", "/mflix/theaters/{id}", "/mflix/users/{id}", "/mflix/movies/{id}/comments/{id}").hasRole("ADMIN")
-                                .requestMatchers("/mflix/movies/create", "/mflix/theaters/create", "/mflix/users/create").hasRole("ADMIN")
-                                .requestMatchers("/mflix/movies/{id}/comments/create").hasRole("USER"))
-
-                .formLogin(formLogin -> formLogin.loginPage("/login/").defaultSuccessUrl("/mflix/", true).permitAll()).logout(logout -> logout.logoutUrl("/logout/").permitAll()).build();
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authRequest ->
+                        authRequest.anyRequest().permitAll())
+                .build();
     }
 }
