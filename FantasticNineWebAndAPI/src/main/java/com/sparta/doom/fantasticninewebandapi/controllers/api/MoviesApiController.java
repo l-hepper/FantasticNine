@@ -44,6 +44,12 @@ public class MoviesApiController {
         }
     }
 
+    @GetMapping("/genres")
+    public ResponseEntity<List<String>> getAllGenres() {
+        List<String> genres = moviesService.getAllGenres();
+        return ResponseEntity.ok(genres);
+    }
+
     @PostMapping
     public ResponseEntity<MoviesDTO> createMovie(@RequestBody MoviesDTO movieDto, @RequestHeader(name = "DOOM-API-KEY") String key) {
         MoviesDTO createdMovie = moviesService.createMovie(movieDto);

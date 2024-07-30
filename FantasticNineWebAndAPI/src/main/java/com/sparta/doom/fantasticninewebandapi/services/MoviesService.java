@@ -10,9 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -120,6 +118,15 @@ public class MoviesService {
         } else {
             return null;
         }
+    }
+
+    public List<String> getAllGenres() {
+        List<MovieDoc> movieDocs = moviesRepository.findAll();
+        return movieDocs.stream()
+                .filter(movieDoc -> movieDoc.getGenres() != null)
+                .flatMap(movieDoc -> Arrays.stream(movieDoc.getGenres().split(",")))
+                .map(String::trim)
+                .map(String::toLowerCase).distinct().collect(Collectors.toList());
     }
 
     public boolean deleteMovie(String id) {
