@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,30 +54,55 @@ public class CommentsApiController {
     @GetMapping("/movies/{movie}/comments/dates/{date1}/{date2}")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
             , @PathVariable String date1, @PathVariable String date2) {
+        if(date1 == null || date2 == null || LocalDate.parse(date1).isAfter(LocalDate.parse(date2)) || date1.length()!=10 || date2.length()!=10) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
         List<CommentDoc> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments);
-        return new ResponseEntity<>(CollectionModel.of(commentsOutput), HttpStatus.OK);
+        if(commentsOutput.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(CollectionModel.of(commentsOutput), HttpStatus.OK);
+        }
     }
 
-    @GetMapping("/movies/{movie}/comments/name/{name}")
-    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("name") String username) {
-        List<CommentDoc> comments = commentsService.getCommentsByName(username);
-        comments = comments.stream().filter(c -> c.getMovie_id().equals(movie)).toList();
-        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    @GetMapping("/movies/{movie}/comments/name/{username}")
+    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("username") String username) {
+        List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
+        List<CommentDoc> commentDocList = commentsService.getCommentsByUsernameAndMovie(username, comments);
+
+        if(commentDocList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(CollectionModel.of(commentDocList), HttpStatus.OK);
     }
 
     @GetMapping("/users/{username}/comments")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username) {
+        //regex matches to catch bad usernames?
         List<CommentDoc> comments = commentsService.getCommentsByName(username);
+        if(comments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @GetMapping("/users/{username}/comments/dates/{date1}/{date2}")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
             , @PathVariable("date1") String date1, @PathVariable("date2") String date2) {
+        if(date1 == null || date2 == null || LocalDate.parse(date1).isAfter(LocalDate.parse(date2)) || date1.length()!=10 || date2.length()!=10) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         List<CommentDoc> comments = commentsService.getCommentsByName(username);
         List<CommentDoc> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments);
-        return new ResponseEntity<>(CollectionModel.of(commentsOutput), HttpStatus.OK);
+        if(commentsOutput.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(CollectionModel.of(commentsOutput), HttpStatus.OK);
+        }
     }
 
     @PostMapping("/movies/{movie}/comments/create")
@@ -87,7 +113,7 @@ public class CommentsApiController {
         } else if (!requestRole.get().equals("FULL_ACCESS")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
-        if(!newComment.getId().equals(movieId)){
+        if(!newComment.getId().equals(movieId)|| commentsService.getCommentById(newComment.getId())!=null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         commentsService.createComment(newComment);

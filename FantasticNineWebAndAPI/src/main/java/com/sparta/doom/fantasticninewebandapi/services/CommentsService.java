@@ -38,12 +38,27 @@ public class CommentsService {
     public List<CommentDoc> getCommentsByName(String name){
         List<CommentDoc> commentDocList = new ArrayList<>();
         for(CommentDoc comment : commentsRepository.findAll()){
-            if(comment.getName().equals(name)){
+            String commentName = comment.getName();
+            commentName = commentName.replaceAll(" ", "-");
+            if(commentName.equals(name)){
                 commentDocList.add(comment);
             }
         }
         return commentDocList;
     }
+
+    public List<CommentDoc> getCommentsByUsernameAndMovie(String name, List<CommentDoc> comments) {
+        List<CommentDoc> commentDocList = new ArrayList<>();
+        for(CommentDoc comment : comments){
+            String commentName = comment.getName();
+            commentName = commentName.replaceAll(" ", "-");
+            if(commentName.equals(name)){
+                commentDocList.add(comment);
+            }
+        }
+        return commentDocList;
+    }
+
     public List<CommentDoc> getCommentsByMovieId(ObjectId id){
         List<CommentDoc> commentDocList = new ArrayList<>();
         for(CommentDoc comment : commentsRepository.findAll()){
