@@ -95,7 +95,7 @@ public class CommentsApiController {
         commentsService.updateComment(newComment);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("/{movie}/comments/{commentId")
+    @DeleteMapping("/{movie}/comments/{commentId}")
     public ResponseEntity<CommentDoc> deleteComment(@PathVariable("commentId") ObjectId commentId) {
         CommentDoc comment = commentsService.getCommentById(commentId);
         if(comment == null){
