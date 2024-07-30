@@ -38,7 +38,7 @@ public class CommentsApiController {
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
-    @GetMapping("/movies/{movie}/comments/{commentId}")
+    @GetMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> getComment(@PathVariable("movie") ObjectId movie, @PathVariable("commentId") ObjectId commentId) {
         CommentDoc comment = commentsService.getCommentById(commentId);
         if (comment == null) {
@@ -50,15 +50,15 @@ public class CommentsApiController {
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    @GetMapping("/movies/{movie}/comments/{date1}/{date2}")
+    @GetMapping("/movies/{movie}/comments/dates/{date1}/{date2}")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
-            , @PathVariable Date date1, @PathVariable Date date2) {
+            , @PathVariable String date1, @PathVariable String date2) {
         List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
         comments = comments.stream().filter(c-> commentsService.getCommentsByDateRange(date1,date2).contains(c)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
-    @GetMapping("/movies/{movie}/comments/{name}")
+    @GetMapping("/movies/{movie}/comments/name/{name}")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("name") String username) {
         List<CommentDoc> comments = commentsService.getCommentsByName(username);
         comments = comments.stream().filter(c -> c.getMovie_id().equals(movie)).toList();
@@ -71,15 +71,15 @@ public class CommentsApiController {
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{username}/comments/{date1}/{date2}")
+    @GetMapping("/users/{username}/comments/dates/{date1}/{date2}")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
-            , @PathVariable("date1") Date date1, @PathVariable("date2") Date date2) {
+            , @PathVariable("date1") String date1, @PathVariable("date2") String date2) {
         List<CommentDoc> comments = commentsService.getCommentsByName(username);
         comments = comments.stream().filter(c -> commentsService.getCommentsByDateRange(date1, date2).contains(c)).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
-    @PostMapping("/{movie}/comments/create")
+    @PostMapping("/movies/{movie}/comments/create")
     public ResponseEntity<EntityModel<CommentDoc>> createComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @RequestBody CommentDoc newComment) {
         Optional<String> requestRole = securityService.getRoleFromKey(key);
         if (requestRole.isEmpty()){
@@ -91,11 +91,11 @@ public class CommentsApiController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         commentsService.createComment(newComment);
-        URI location = URI.create("/api/movies/" + movieId + "/comments/" + newComment.getId());
+        URI location = URI.create("/api/movies/" + movieId + "/comments/id/" + newComment.getId());
         Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CommentsApiController.class).getComment(movieId,newComment.getId())).withSelfRel();
         return ResponseEntity.created(location).body(EntityModel.of(newComment).add(selfLink));
     }
-    @PutMapping("/{movie}/comments/{commentId}")
+    @PutMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> updateComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @PathVariable("commentId") ObjectId commentId, @RequestBody CommentDoc newComment) {
         Optional<String> requestRole = securityService.getRoleFromKey(key);
         if (requestRole.isEmpty()){
@@ -113,7 +113,7 @@ public class CommentsApiController {
         commentsService.updateComment(newComment);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("/{movie}/comments/{commentId}")
+    @DeleteMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> deleteComment(@RequestHeader(name = "DOOM-API-KEY") String key, @PathVariable("commentId") ObjectId commentId) {
         Optional<String> requestRole = securityService.getRoleFromKey(key);
         if (requestRole.isEmpty()){
@@ -128,5 +128,7 @@ public class CommentsApiController {
         commentsService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    //todo HATEOAS to link movies/user profile with comments
 
 }

@@ -7,6 +7,8 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +28,8 @@ public class CommentsService {
     }
 
     public CommentDoc getCommentById(ObjectId id) {
-        return commentsRepository.findById(id).orElseThrow(()-> new CommentNotFoundException("comment not found with id: " + id));
+        return commentsRepository.findById(id).orElse(null);
+        //orElseThrow(()-> new CommentNotFoundException("comment not found with id: " + id));
     }
     public List<CommentDoc> getCommentsByName(String name){
         List<CommentDoc> commentDocList = new ArrayList<>();
@@ -47,14 +50,23 @@ public class CommentsService {
         return commentDocList;
     }
 
-    public List<CommentDoc> getCommentsByDateRange(Date startDate, Date endDate){
+    public List<CommentDoc> getCommentsByDateRange(String startDateString, String endDateString){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         List<CommentDoc> commentDocList = new ArrayList<>();
-        for(CommentDoc comment : commentsRepository.findAll()){
-            if(comment.getDate().after(startDate) && comment.getDate().before(endDate)){
-                commentDocList.add(comment);
+        try {
+            Date startDate = formatter.parse(startDateString);
+            Date endDate = formatter.parse(endDateString);
+            for (CommentDoc comment : commentsRepository.findAll()) {
+                if (comment.getDate().after(startDate) && comment.getDate().before(endDate)) {
+                    commentDocList.add(comment);
+                }
             }
+            return commentDocList;
         }
-        return commentDocList;
+        catch (ParseException e) {
+            //invalid date error
+            return commentDocList;
+        }
     }
 
     public CommentDoc createComment(CommentDoc comment) {
@@ -90,7 +102,7 @@ public class CommentsService {
     }
 
     public CommentDoc censorBadText(CommentDoc comment) {
-        String[] censoredText = {"fuck","shit","cunt","arse","ass","shite","sh1t","5hit","5h1t","ar5e","a55","a5s","as5"};
+        String[] censoredText = {"fuck","shit","cunt","arse","ass","shite","sh1t","5hit","5h1t","ar5e","a55","a5s","as5","wank"};
         String patternString = "(" + String.join("|", censoredText) + ")";
         Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(comment.getText());

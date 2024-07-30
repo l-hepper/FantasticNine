@@ -103,11 +103,11 @@ public class CommentDocServiceTests {
         CommentDoc actual = service.getCommentById(id);
         Assertions.assertEquals(expected, actual);
     }
-    @Test
-    public void commentNotFoundExceptionThrown(){
-        when(commentsRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(CommentNotFoundException.class, () -> service.getCommentById(id));
-    }
+//    @Test
+//    public void commentNotFoundExceptionThrown(){
+//        when(commentsRepository.findById(id)).thenReturn(Optional.empty());
+//        assertThrows(CommentNotFoundException.class, () -> service.getCommentById(id));
+//    } changed way of dealing with null comments in controller
 
     @Test
     public void findCommentsByUsername(){
@@ -139,7 +139,7 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByDateRange(startDate, endDate);
+        List<CommentDoc> actual = service.getCommentsByDateRange("2001-05-01", "2002-05-01");
         Assertions.assertEquals(expected, actual);
     }
 
@@ -166,11 +166,11 @@ public class CommentDocServiceTests {
         verify(commentsRepository, times(1)).deleteById(commentOne.getId());
     }
 
-    @Test
-    public void deleteCommentThrowsException(){
-        ObjectId notFoundId = new ObjectId();
-        assertThrows(CommentNotFoundException.class, () -> service.deleteComment(notFoundId));
-    }
+//    @Test
+//    public void deleteCommentThrowsException(){
+//        ObjectId notFoundId = new ObjectId();
+//        assertThrows(CommentNotFoundException.class, () -> service.deleteComment(notFoundId));
+//    } changed way of dealing with null comments in controller
 
     @Test
     public void createNewComment(){
