@@ -1,4 +1,4 @@
-package com.sparta.doom.fantasticninewebandapi.controllers;
+package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
 import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
