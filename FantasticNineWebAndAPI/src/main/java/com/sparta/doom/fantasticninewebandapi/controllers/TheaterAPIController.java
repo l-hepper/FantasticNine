@@ -33,6 +33,4 @@ public class TheaterAPIController {
         TheaterModel foundTheater = theaterService.getTheaterById(id);
         return ResponseEntity.ok(foundTheater);
     }
-
-
 }
