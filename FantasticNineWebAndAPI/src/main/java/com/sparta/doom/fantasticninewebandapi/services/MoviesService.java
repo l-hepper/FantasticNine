@@ -4,6 +4,10 @@ import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
 import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
 import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -16,11 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class MoviesService {
 
-    MoviesRepository moviesRepository;
+    private final MoviesRepository moviesRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public MoviesService(MoviesRepository moviesRepository) {
+    public MoviesService(MoviesRepository moviesRepository, MongoTemplate mongoTemplate) {
         this.moviesRepository = moviesRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     public MoviesDTO convertToDto(MoviesModel movie) {
@@ -138,4 +144,14 @@ public class MoviesService {
                 .collect(Collectors.toList());
     }
 
+    public List<MoviesDTO> getTop10ByImdbRating() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("imdb.rating").ne(""));
+        query.with(Sort.by(Sort.Order.desc("imdb.rating")));
+        query.limit(10);
+        List<MoviesModel> topMovies = mongoTemplate.find(query, MoviesModel.class);
+        return topMovies.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 }
