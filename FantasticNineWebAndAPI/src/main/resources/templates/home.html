@@ -11,10 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
 </head>
 <body>
-<!-- Navbar -->
 <nav th:replace="~{fragments/navbar}"></nav>
-
-<!-- Header -->
 <header class="jumbotron jumbotron-fluid bg-dark text-white text-center">
     <div class="container">
         <h1 class="display-4">Welcome to Doomflix</h1>
@@ -41,9 +38,6 @@
         </div>
     </div>
 </header>
-
-
-<!-- Top Picks Section -->
 <section id="top-movies-all-time" class="container my-5">
     <h2 class="text-center mb-4">Movie Top Picks</h2>
     <div id="top-movies-all-time-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -72,8 +66,6 @@
         </a>
     </div>
 </section>
-
-<!-- By Genre Section -->
 <section id="movies-by-genre" class="container my-5">
     <h2 class="text-center mb-4">Movies By Genre</h2>
     <div id="genresCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -102,8 +94,6 @@
         </a>
     </div>
 </section>
-
-<!-- Top Movies This Year Section -->
 <section id="top-movies-this-year" class="container my-5">
     <h2 class="text-center mb-4">Top 10 Movies This Year</h2>
     <div id="top-movies-this-year-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -134,16 +124,7 @@
         </a>
     </div>
 </section>
-
-
-
-
-
-
-
-
 <footer th:replace="~{fragments/footer}"></footer>
-
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
