@@ -2,7 +2,7 @@ package com.sparta.doom.fantasticninewebandapi;
 
 import com.sparta.doom.fantasticninewebandapi.models.Movie;
 import com.sparta.doom.fantasticninewebandapi.models.Schedule;
-import com.sparta.doom.fantasticninewebandapi.models.Theatre;
+import com.sparta.doom.fantasticninewebandapi.models.Theater;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @SpringBootTest
 public class ScheduleRepoTest {
@@ -22,10 +21,10 @@ public class ScheduleRepoTest {
     @Test
     void canAddSchedule(){
         long count = scheduleRepository.count();
-        Theatre theatre = new Theatre("59a47286cfa9a3a73e51e732");
+        Theater theater = new Theater("59a47286cfa9a3a73e51e732");
         Movie movie = new Movie("573a1390f29313caabcd42e8");
         Schedule schedule = new Schedule();
-        schedule.setTheatre(theatre);
+        schedule.setTheater(theater);
         schedule.setMovie(movie);
         schedule.setStartTime(LocalDateTime.now());
         scheduleRepository.save(schedule);

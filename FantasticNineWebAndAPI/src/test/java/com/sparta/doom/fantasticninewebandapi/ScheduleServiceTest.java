@@ -2,16 +2,13 @@ package com.sparta.doom.fantasticninewebandapi;
 
 import com.sparta.doom.fantasticninewebandapi.models.Movie;
 import com.sparta.doom.fantasticninewebandapi.models.Schedule;
-import com.sparta.doom.fantasticninewebandapi.models.Theatre;
+import com.sparta.doom.fantasticninewebandapi.models.Theater;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
@@ -29,8 +26,8 @@ public class ScheduleServiceTest {
 
     private static ScheduleService scheduleService;
 
-    Schedule schedule1 = new Schedule("1", new Theatre("1"), new Movie("1"), LocalDateTime.now().plusDays(1));
-    Schedule schedule2 = new Schedule("2", new Theatre("2"), new Movie("2"), LocalDateTime.now().plusDays(2));
+    Schedule schedule1 = new Schedule("1", new Theater("1"), new Movie("1"), LocalDateTime.now().plusDays(1));
+    Schedule schedule2 = new Schedule("2", new Theater("2"), new Movie("2"), LocalDateTime.now().plusDays(2));
 
 
     @BeforeAll
@@ -93,14 +90,14 @@ public class ScheduleServiceTest {
 
     @Test
     public void testGetSchedulesByTheatre() {
-        Theatre theatre = new Theatre("1");
+        Theater theater = new Theater("1");
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
 
-        List<Schedule> schedules = scheduleService.getSchedulesByTheatre(theatre);
+        List<Schedule> schedules = scheduleService.getSchedulesByTheatre(theater);
 
         assertNotNull(schedules);
         assertEquals(1, schedules.size());
-        assertEquals("1", schedules.get(0).getTheatre().getId());
+        assertEquals("1", schedules.get(0).getTheater().getId());
     }
 
     @Test

@@ -17,7 +17,7 @@ public class Schedule {
 
     @NotNull
     @DBRef
-    private Theatre theatre;
+    private Theater theater;
 
     @NotNull
     @DBRef
