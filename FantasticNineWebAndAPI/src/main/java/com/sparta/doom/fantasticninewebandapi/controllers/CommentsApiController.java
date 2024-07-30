@@ -83,4 +83,26 @@ public class CommentsApiController {
         Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CommentsApiController.class).getComment(movieId,newComment.getId())).withSelfRel();
         return ResponseEntity.created(location).body(EntityModel.of(newComment).add(selfLink));
     }
+    @PutMapping("/{movie}/comments/{commentId}")
+    public ResponseEntity<CommentDoc> updateComment(@PathVariable("movie") ObjectId movieId, @PathVariable("commentId") ObjectId commentId, @RequestBody CommentDoc newComment) {
+        CommentDoc oldComment = commentsService.getCommentById(commentId);
+        if(oldComment == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!oldComment.getMovie_id().equals(movieId)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        commentsService.updateComment(newComment);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("/{movie}/comments/{commentId")
+    public ResponseEntity<CommentDoc> deleteComment(@PathVariable("commentId") ObjectId commentId) {
+        CommentDoc comment = commentsService.getCommentById(commentId);
+        if(comment == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        commentsService.deleteComment(commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
