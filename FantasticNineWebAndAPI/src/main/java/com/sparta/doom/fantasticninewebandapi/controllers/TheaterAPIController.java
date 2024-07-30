@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
-import com.sparta.doom.fantasticninewebandapi.models.TheaterModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterModel;
 import com.sparta.doom.fantasticninewebandapi.services.TheaterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

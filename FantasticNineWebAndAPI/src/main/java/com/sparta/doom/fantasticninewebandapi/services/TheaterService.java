@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
-import com.sparta.doom.fantasticninewebandapi.models.TheaterModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterModel;
 import com.sparta.doom.fantasticninewebandapi.repositories.TheaterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.sparta.doom.fantasticninewebandapi.models;
+package com.sparta.doom.fantasticninewebandapi.models.theater;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
