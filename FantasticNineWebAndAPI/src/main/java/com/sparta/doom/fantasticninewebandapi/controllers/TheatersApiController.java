@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class TheaterController {
+public class TheatersApiController {
 
     private final TheaterRepository theaterRepository;
 
     @Autowired
-    public TheaterController(TheaterRepository theaterRepository) {
+    public TheatersApiController(TheaterRepository theaterRepository) {
         this.theaterRepository = theaterRepository;
     }
 

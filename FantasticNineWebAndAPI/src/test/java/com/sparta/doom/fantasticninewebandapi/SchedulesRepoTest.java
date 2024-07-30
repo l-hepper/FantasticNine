@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
-public class ScheduleDocRepoTest {
+public class SchedulesRepoTest {
 
 
     //TODO : THESE ARE BAD TESTS, I WILL MAKE THEM BETTER
@@ -31,8 +31,13 @@ public class ScheduleDocRepoTest {
         scheduleDoc.setMovie(movie);
         scheduleDoc.setStartTime(LocalDateTime.now());
         schedulesRepository.save(scheduleDoc);
-        List<ScheduleDoc> scheduleDocs = schedulesRepository.findAll();
         Assertions.assertEquals(count +1, schedulesRepository.count());
+    }
+
+    @Test
+    void peekAtSchedules(){
+        List<ScheduleDoc> scheduleDocs = schedulesRepository.findAll();
+        Assertions.assertNotNull(scheduleDocs);
     }
 
     @Test

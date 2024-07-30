@@ -17,7 +17,7 @@ public class ScheduleDoc {
 
     @NotNull
     @DBRef
-    private TheaterModel theatre;
+    private TheaterModel theater;
 
     @NotNull
     @DBRef

@@ -1,6 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
+import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
+import com.sparta.doom.fantasticninewebandapi.models.TheaterModel;
 import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,39 +25,39 @@ public class SchedulesService {
         return schedulesRepository.findAll();
     }
 
-    public Optional<ScheduleDoc> getScheduleByID(String Id){
+    public Optional<ScheduleDoc> getScheduleById(String Id){
         return schedulesRepository.findById(Id);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatre(Theatre theatre) {
+    public List<ScheduleDoc> getSchedulesByTheatre(TheaterModel theatre) {
         String theatreId = theatre.getId();
         return getSchedulesByTheatreId(theatreId);
     }
 
-    private List<ScheduleDoc> getSchedulesByTheatreId(String theatreId) {
+    public List<ScheduleDoc> getSchedulesByTheatreId(String theatreId) {
         return schedulesRepository.findAll().stream()
-                .filter(schedule -> schedule.getTheatre().getId().equals(theatreId))
+                .filter(schedule -> schedule.getTheater().getId().equals(theatreId))
                 .toList();
     }
 
-    public List<ScheduleDoc> getSchedulesByMovie(Movie movie) {
+    public List<ScheduleDoc> getSchedulesByMovie(MoviesModel movie) {
         String movieId = movie.getId();
         return getSchedulesByMovieId(movieId);
     }
 
-    private List<ScheduleDoc> getSchedulesByMovieId(String movieId) {
+    public List<ScheduleDoc> getSchedulesByMovieId(String movieId) {
         return schedulesRepository.findAll().stream()
                 .filter(schedule -> schedule.getMovie().getId().equals(movieId))
                 .toList();
     }
 
-    private List<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
+    public List<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
         return schedulesRepository.findAll().stream()
                 .filter(schedule -> schedule.getStartTime().isAfter(startTime))
                 .toList();
     }
 
-    private List<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
+    public List<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
         return schedulesRepository.findAll().stream()
                 .filter(schedule -> schedule.getStartTime().isBefore(startTime))
                 .toList();
