@@ -182,4 +182,21 @@ public class CommentDocServiceTests {
         verify(commentsRepository, times(1)).save(comment);
         Assertions.assertEquals(comment, newCreatedComment);
     }
+
+    @Test
+    public void censorBadTextLowerCase(){
+        CommentDoc comment = new CommentDoc();
+        comment.setText("This is some sample text that has fuck censored");
+        String expected = "This is some sample text that has **** censored";
+        String actual = commentsService.censorBadText(comment).getText();
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    public void censorBadTextUpperCase(){
+        CommentDoc comment = new CommentDoc();
+        comment.setText("This is some sample text that has Fucking censored");
+        String expected = "This is some sample text that has ****ing censored";
+        String actual = commentsService.censorBadText(comment).getText();
+        Assertions.assertEquals(expected, actual);
+    }
 }

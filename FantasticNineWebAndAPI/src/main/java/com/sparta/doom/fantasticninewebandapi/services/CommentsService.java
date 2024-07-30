@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CommentsService {
@@ -85,5 +87,25 @@ public class CommentsService {
             throw new CommentNotFoundException("comment not found with id: " + commentUpdate.getId());
         }
         return null;
+    }
+    //todo censor bad text
+
+    public CommentDoc censorBadText(CommentDoc comment) {
+
+        String[] censoredText = {"fuck","shit","cunt","arse","ass","shite","sh1t","5hit","5h1t","ar5e","a55","a5s","as5"};
+        String patternString = "(" + String.join("|", censoredText) + ")";
+        Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(comment.getText());
+        StringBuilder censoredComment = new StringBuilder();
+
+        while (matcher.find()) {
+            String replacement = "*".repeat(matcher.group().length());
+            matcher.appendReplacement(censoredComment, replacement);
+        }
+
+        matcher.appendTail(censoredComment);
+        comment.setText(censoredComment.toString());
+        return comment;
+
     }
 }
