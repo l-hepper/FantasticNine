@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @Document(collection = "schedules")
-public class Schedule {
+public class ScheduleDoc {
     @Id
     private String id;
 
     @NotNull
     @DBRef
-    private Theatre theatre;
+    private TheaterModel theatre;
 
     @NotNull
     @DBRef
-    private Movie movie;
+    private MoviesModel movie;
 
     @NotNull
     @Future

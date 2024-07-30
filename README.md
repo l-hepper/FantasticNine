@@ -4,7 +4,7 @@ Week 8 - Movie API and Webpage
 ## Project Outline
 This is a proof of concept project.
 
-The product owner wants to explore the possibility of having a MongoDB and cloud-based solution for accessing information about movies, allowing users to post or read comments on movies and managing a film schedule for cinemas.
+The product owner wants to explore the possibility of having a MongoDB and cloud-based solution for accessing information about movies, allowing users to post or read comments on movies and managing a film scheduleDoc for cinemas.
 
 A sample database (sample_mflix) is provided which includes details of "movies", "comments", "theaters" and "users".
 
@@ -12,7 +12,7 @@ A sample database (sample_mflix) is provided which includes details of "movies",
 
 - A RESTful API which allows full CRUD access to the existing data for these 4 collections
 - A Web application providing a browser-based interface to the same set of existing collections
-- Additionally, a new feature is required to allow an administrator to create a schedule for a theatre, adding films to the roster and specifying showing times. No ticketing system is required at this point in the project. The cinema film scheduling feature should also be provided through both interfaces (REST & Web).
+- Additionally, a new feature is required to allow an administrator to create a scheduleDoc for a theatre, adding films to the roster and specifying showing times. No ticketing system is required at this point in the project. The cinema film scheduling feature should also be provided through both interfaces (REST & Web).
 
 ### Required Technologies
 - The persistence mechanism must be MongoDB
