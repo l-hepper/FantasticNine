@@ -29,17 +29,17 @@ public class TheaterApiController {
                 .body(theaters);
     }
 
-    @GetMapping("theaters/{id}")
-    public ResponseEntity<TheaterDoc> getTheaterById(@PathVariable int id) {
-        TheaterDoc theater = theaterService.getTheaterByTheaterId(id);
+    @GetMapping("theaters/{theaterId}")
+    public ResponseEntity<TheaterDoc> getTheaterByTheaterId(@PathVariable Integer theaterId) {
+        TheaterDoc theater = theaterService.getTheaterByTheaterId(theaterId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(theater);
     }
 
-    @DeleteMapping("theaters/{id}")
-    public ResponseEntity<HttpStatus> deleteTheater(int id) {
-        theaterService.deleteTheaterByTheaterId(id);
+    @DeleteMapping("theaters/{theaterId}")
+    public ResponseEntity<HttpStatus> deleteTheaterByTheaterId(@PathVariable Integer theaterId) {
+        theaterService.deleteTheaterByTheaterId(theaterId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
