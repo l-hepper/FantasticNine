@@ -4,9 +4,10 @@ Week 8 - Movie API and Webpage
 ## Project Outline
 This is a proof of concept project.
 
-The product owner wants to explore the possibility of having a MongoDB and cloud-based solution for accessing information about movies, allowing users to post or read comments on movies and managing a film scheduleDoc for cinemas.
+The product owner wants to explore the possibility of having a MongoDB and cloud-based solution for accessing information about movies, allowing users to post or read comments on movies and managing a film schedule for cinemas.
 
-A sample database (sample_mflix) is provided which includes details of "movies", "comments", "theaters" and "users".
+
+A sample database (sample_mflix) is provided which includes details of "movieDocs", "comments", "theaters" and "users".
 
 ### Two products are required:
 

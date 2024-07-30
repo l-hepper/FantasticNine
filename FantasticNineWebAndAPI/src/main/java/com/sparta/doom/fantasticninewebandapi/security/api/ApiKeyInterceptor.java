@@ -22,9 +22,6 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
         if (apiKey == null) {
             if ("GET".equals(request.getMethod())) {
                 return true;
-            } else {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return false;
             }
         }
 
