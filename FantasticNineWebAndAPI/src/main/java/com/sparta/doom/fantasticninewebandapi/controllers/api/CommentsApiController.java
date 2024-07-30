@@ -112,7 +112,7 @@ public class CommentsApiController {
         } else if (!requestRole.get().equals("FULL_ACCESS")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
-        if(!newComment.getId().equals(movieId)|| commentsService.getCommentById(newComment.getId())!=null){
+        if(!newComment.getMovie_id().toString().equals(movieId.toString())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         commentsService.createComment(newComment);

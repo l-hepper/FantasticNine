@@ -13,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,10 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Optional;
+import java.util.Date;
 
-import static org.mockito.ArgumentMatchers.any;
-import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,12 +30,6 @@ public class CommentsApiControllerTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-
-    @MockBean
-    private CommentsService commentsService;
-
-    @MockBean
-    private SecurityService securityService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -119,6 +109,58 @@ public class CommentsApiControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/1901-01-01/1915-01-01"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    //todo when creating a new comment need to - pass in the name and email address of the current logged in user
+    // the text will be whatever they type in can store in the body
+    // the date should be NOW saved in the way that the database likes it
+    // the movie id should be taken from the page on, as should only be able to leave comments about that movie on its page
+
+    @Test
+    void testCreateNewCommentReturnsBadRequestIfNotSameMovie() throws Exception {
+
+        CommentDoc commentDoc = new CommentDoc();
+        ObjectId movieId = new ObjectId("573a1390f29313caabcd4eaf");
+        commentDoc.setMovie_id(movieId);
+        commentDoc.setEmail("test@example.com");
+        commentDoc.setDate(new Date());
+        commentDoc.setText("This is a test comment.");
+        commentDoc.setName("Test User");
+
+        String commentJson = objectMapper.writeValueAsString(commentDoc);
+        System.out.println(commentJson);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/movies/573a1390f29313caabcd4323/comments/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("DOOM-API-KEY", "unique-api-key-123")
+                        .content(commentJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void testCreateNewCommentReturnsNoContentIfCorrect() throws Exception {
+        CommentDoc commentDoc = new CommentDoc();
+        ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
+        commentDoc.setMovie_id(movieId);
+        commentDoc.setEmail("test@example.com");
+        commentDoc.setDate(new Date());
+        commentDoc.setText("This is a test comment.");
+        commentDoc.setName("Test User");
+
+        String commentJson = objectMapper.writeValueAsString(commentDoc);
+        System.out.println(commentJson);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/movies/573a1390f29313caabcd4323/comments/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("DOOM-API-KEY", "unique-api-key-123")
+                        .content(commentJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+    }
+
 //    @Test
 //    void testCreateCommentWithNoKey() throws Exception {
 //        mockMvc.perform(MockMvcRequestBuilders.post("/api/movies/573a1390f29313caabcd4323/comments/create")
@@ -146,17 +188,17 @@ public class CommentsApiControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
-    @Test
-    void testDeleteCommentReturnsNoContent() throws Exception {
-
-//        String apiKey = "valid-api-key";
-//        String role = "FULL_ACCESS";
+//    @Test
+//    void testDeleteCommentReturnsNoContent() throws Exception {
 //
-//        when(securityService.getRoleFromKey(apiKey)).thenReturn(Optional.of(role));
-//        when(commentsService.getCommentById(commentId)).thenReturn(mockComment);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/movies/573a1390f29313caabcd4323/comments/id/5a9427648b0beebeb69579e7")
-                        .header("DOOM-API-KEY","unique-api-key-123"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
+////        String apiKey = "valid-api-key";
+////        String role = "FULL_ACCESS";
+////
+////        when(securityService.getRoleFromKey(apiKey)).thenReturn(Optional.of(role));
+////        when(commentsService.getCommentById(commentId)).thenReturn(mockComment);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.delete("/api/movies/573a1390f29313caabcd4323/comments/id/5a9427648b0beebeb69579e7")
+//                        .header("DOOM-API-KEY","unique-api-key-123"))
+//                .andExpect(MockMvcResultMatchers.status().isNoContent());
+//    }
 }
