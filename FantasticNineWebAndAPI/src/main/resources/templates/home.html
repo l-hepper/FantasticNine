@@ -9,13 +9,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/landingStyles.css}">
     <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
+    <style>
+        .header-background {
+            background-image: url('/images/doom_head.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            color: white;
+        }
+
+        .header-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8); /* Change this to adjust the darkness */
+            z-index: 1;
+        }
+
+        .header-background .container {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
 </head>
 <body>
 <!-- Navbar -->
 <nav th:replace="~{fragments/navbar}"></nav>
 
 <!-- Header -->
-<header class="jumbotron jumbotron-fluid bg-dark text-white text-center">
+<header class="jumbotron jumbotron-fluid bg-dark text-white text-center header-background">
     <div class="container">
         <h1 class="display-4">Welcome to Doomflix</h1>
         <p class="lead">Your ultimate movie database</p>
