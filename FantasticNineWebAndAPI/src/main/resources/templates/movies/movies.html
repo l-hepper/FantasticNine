@@ -7,15 +7,15 @@
         .card-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px; /* Space between cards */
+            gap: 10px;
         }
 
         .card {
             position: relative;
             overflow: hidden;
-            width: 200px; /* Fixed width */
-            height: 300px; /* Adjust height as needed */
-            background-color: black; /* Fallback background color */
+            width: 200px;
+            height: 300px;
+            background-color: black;
             color: white;
         }
 
@@ -27,7 +27,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, black, transparent 50%);
+            background: linear-gradient(to top, black, transparent 100%);
             z-index: 1;
         }
 
@@ -58,17 +58,17 @@
     <div class="card-container">
         <div th:each="movie : ${movies}">
             <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
-                 th:if="${movie.poster != null}">
+                 th:if="${movie.getPoster() != null}">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${movie.title}">Movie Title</h5>
-                    <p class="card-text" th:text="${movie.year}">Year</p>
+                    <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
+                    <p class="card-text" th:text="${movie.getYear()}">Year</p>
                     <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
                 </div>
             </div>
-            <div class="card" th:unless="${movie.poster != null}">
+            <div class="card" th:unless="${movie.getPoster() != null}">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${movie.title}">Movie Title</h5>
-                    <p class="card-text" th:text="${movie.year}">Year</p>
+                    <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
+                    <p class="card-text" th:text="${movie.getYear()}">Year</p>
                     <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
                 </div>
             </div>
