@@ -58,7 +58,7 @@ public class CommentsService {
     }
 
     public CommentDoc createComment(CommentDoc comment) {
-
+        comment = censorBadText(comment);
         commentsRepository.save(comment);
         return comment;
 
@@ -77,7 +77,7 @@ public class CommentsService {
         if(commentsRepository.existsById(commentUpdate.getId())){
             for(CommentDoc comment : commentsRepository.findAll()){
                 if(comment.getId().equals(commentUpdate.getId())){
-                    comment = commentUpdate;
+                    comment = censorBadText(commentUpdate);
                     commentsRepository.save(comment);
                     return comment;
                 }
@@ -88,10 +88,8 @@ public class CommentsService {
         }
         return null;
     }
-    //todo censor bad text
 
     public CommentDoc censorBadText(CommentDoc comment) {
-
         String[] censoredText = {"fuck","shit","cunt","arse","ass","shite","sh1t","5hit","5h1t","ar5e","a55","a5s","as5"};
         String patternString = "(" + String.join("|", censoredText) + ")";
         Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
