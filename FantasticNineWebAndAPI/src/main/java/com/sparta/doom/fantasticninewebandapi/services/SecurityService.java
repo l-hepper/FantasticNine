@@ -1,7 +1,10 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
+import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
+import com.sparta.doom.fantasticninewebandapi.repositories.UserRepository;
 import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyModel;
 import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyRepository;
+import com.sparta.doom.fantasticninewebandapi.security.web.SecurityUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,11 +17,12 @@ import java.util.UUID;
 @Service
 public class SecurityService implements UserDetailsService {
     private final ApiKeyRepository apiKeyRepository;
-    //private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public SecurityService(ApiKeyRepository apiKeyRepository) {
+    public SecurityService(ApiKeyRepository apiKeyRepository, UserRepository userRepository) {
         this.apiKeyRepository = apiKeyRepository;
+        this.userRepository = userRepository;
     }
 
     // Api
@@ -42,7 +46,11 @@ public class SecurityService implements UserDetailsService {
 
     // Web
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<UserDoc> user = userRepository.findByEmail(email);
+
+        return user
+                .map(SecurityUserDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User: " + email + " not found"));
     }
 }
