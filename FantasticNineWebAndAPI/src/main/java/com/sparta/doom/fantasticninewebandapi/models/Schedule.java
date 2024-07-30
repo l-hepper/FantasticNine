@@ -1,20 +1,29 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
-import jdk.jfr.DataAmount;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-@Document
+@Document(collection = "schedules")
 public class Schedule {
     @Id
-    private Integer id;
-    //should have theatre
-    //should have movies
-    //should have Start Times, End times will be calculated based on duration of movie + start time
+    private String id;
+    //I'm currently trying to mock these, so i can test stuff;
+    //these fields should actually just be Ids in the database
+    @NotNull
+    @DBRef
+    private Theatre theatre;
+    @NotNull
+    @DBRef
+    private Movie movie;
+    @NotNull
+    @Future
+    private LocalDateTime startTime;
 
 }
