@@ -30,7 +30,6 @@ public class MoviesWebController {
 
     @PostMapping("/create/")
     public String createMoviePost(@ModelAttribute MoviesModel moviesModel, Model model) {
-        //Call to api to create
         webClient.post()
                 .uri("/api/movies/create/")
                 .header("DOOM-API-KEY", key)
