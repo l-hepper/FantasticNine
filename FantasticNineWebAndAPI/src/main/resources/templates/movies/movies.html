@@ -3,13 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <title>Movies!</title>
+<!--    <style>-->
+<!--        .card {-->
+<!--            position: relative;-->
+<!--            overflow: hidden;-->
+<!--            height: fit-content;-->
+<!--            width: fit-content;-->
+<!--            background-color: black;-->
+<!--        }-->
+
+<!--        .card::before {-->
+<!--            content: "";-->
+<!--            display: flex;-->
+<!--            position: absolute;-->
+<!--            top: 0;-->
+<!--            left: 0;-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            background: linear-gradient(to top, black, transparent 100%);-->
+<!--            z-index: 1;-->
+<!--        }-->
+
+<!--        .card-body {-->
+<!--            position: absolute;-->
+<!--            bottom: 0;-->
+<!--            left: 0;-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            z-index: 2;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .card-title {-->
+<!--            margin: 0;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Movies</h1>-->
+<!--    <div class="d-flex flex-row flex-wrap" style="width: 80vw; margin-left: 10vw">-->
+<!--        <div class="p-2 m-2" th:each="movie : ${movies}" style="width: 200px;">-->
+<!--            <div class="card m-2">-->
+<!--                <img class="card-img-top" th:if="${movie.getPoster() != null}" th:src="${movie.getPoster()}" alt="Card image cap" width="200">-->
+<!--                <div class="card-body">-->
+<!--                    <h4 class="p-0 m-0" th:text="${movie.title}"></h4>-->
+<!--                    <h5 class="p-0 m-0" th:text="${movie.year}"></h5>-->
+<!--                    <h6 class="p-0 m-0" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'"></h6>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
     <style>
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Space between cards */
+        }
+
         .card {
             position: relative;
             overflow: hidden;
-            height: fit-content;
-            width: fit-content;
-            background-color: black;
+            width: 200px; /* Fixed width */
+            height: 300px; /* Adjust height as needed */
+            background-color: black; /* Fallback background color */
+            color: white;
         }
 
         .card::before {
@@ -20,7 +78,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, black, transparent 100%);
+            background: linear-gradient(to top, black, transparent 50%);
             z-index: 1;
         }
 
@@ -39,19 +97,36 @@
         }
     </style>
 </head>
+
 <body>
-    <h1>Movies</h1>
-    <div class="d-flex flex-row flex-wrap" style="width: 80vw">
-        <div class="p-2" th:each="movie : ${movies}" style="width: 200px;">
-            <div class="card m-2">
-                <img class="card-img-top" th:if="${movie.getPoster() != null}" th:src="${movie.getPoster()}" alt="Card image cap" width="200">
+<div class="container my-4" style="max-width: 80vw; margin: auto;">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center" style="margin: auto;">Movies!</h1>
+            <br>
+        </div>
+    </div>
+    <div class="card-container">
+        <div th:each="movie : ${movies}">
+            <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
+                 th:if="${movie.poster != null}">
                 <div class="card-body">
-                    <h4 class="p-0 m-0" th:text="${movie.title}"></h4>
-                    <h5 class="p-0 m-0" th:text="${movie.year}"></h5>
-                    <h6 class="p-0 m-0" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'"></h6>
+                    <h5 class="card-title" th:text="${movie.title}">Movie Title</h5>
+                    <p class="card-text" th:text="${movie.year}">Year</p>
+                    <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
+                </div>
+            </div>
+            <div class="card" th:unless="${movie.poster != null}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${movie.title}">Movie Title</h5>
+                    <p class="card-text" th:text="${movie.year}">Year</p>
+                    <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
 </body>
 </html>
