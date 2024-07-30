@@ -43,5 +43,23 @@
         </tbody>
     </table>
 </div>
+<!--For searchType = all-->
+<!--List all schedules in a table-->
+<div class="table-responsive" th:if="${searchType} == 'all'">
+    <table>
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Show Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showings : ${schedules}">
+            <td th:text="${showings.getMovie().getTitle()}"></td>
+            <td th:text="${showings.getStartTime()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
