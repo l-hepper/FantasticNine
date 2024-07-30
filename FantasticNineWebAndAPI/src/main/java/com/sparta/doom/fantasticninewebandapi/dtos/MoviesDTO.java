@@ -1,14 +1,9 @@
-package com.sparta.doom.fantasticninewebandapi.models;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.sparta.doom.fantasticninewebandapi.dtos;
 
 import java.util.Arrays;
 
-@Document(collection = "movies")
-public class MoviesModel {
+public class MoviesDTO {
 
-    @Id
     private String id;
     private String awards;
     private String[] cast;
@@ -19,7 +14,7 @@ public class MoviesModel {
     private String imdb;
     private String[] languages;
     private String lastupdated;
-    private Integer num_mflix_comments;
+    private Integer numMflixComments;
     private String plot;
     private String poster;
     private String rated;
@@ -30,6 +25,35 @@ public class MoviesModel {
     private String type;
     private String[] writers;
     private String year;
+
+    public MoviesDTO() {
+    }
+
+    public MoviesDTO(String id, String awards, String[] cast, String[] countries, String[] directors, String fullplot, String genres, String imdb, String[] languages, String lastupdated, Integer numMflixComments, String plot, String poster, String rated, String released, Integer runtime, String title, String tomatoes, String type, String[] writers, String year) {
+        this.id = id;
+        this.awards = awards;
+        this.cast = cast;
+        this.countries = countries;
+        this.directors = directors;
+        this.fullplot = fullplot;
+        this.genres = genres;
+        this.imdb = imdb;
+        this.languages = languages;
+        this.lastupdated = lastupdated;
+        this.numMflixComments = numMflixComments;
+        this.plot = plot;
+        this.poster = poster;
+        this.rated = rated;
+        this.released = released;
+        this.runtime = runtime;
+        this.title = title;
+        this.tomatoes = tomatoes;
+        this.type = type;
+        this.writers = writers;
+        this.year = year;
+    }
+
+    // Getters and Setters
 
     public String getId() {
         return id;
@@ -111,12 +135,12 @@ public class MoviesModel {
         this.lastupdated = lastupdated;
     }
 
-    public Integer getNum_mflix_comments() {
-        return num_mflix_comments;
+    public Integer getNumMflixComments() {
+        return numMflixComments;
     }
 
-    public void setNum_mflix_comments(Integer num_mflix_comments) {
-        this.num_mflix_comments = num_mflix_comments;
+    public void setNumMflixComments(Integer numMflixComments) {
+        this.numMflixComments = numMflixComments;
     }
 
     public String getPlot() {
@@ -201,7 +225,7 @@ public class MoviesModel {
 
     @Override
     public String toString() {
-        return "MoviesModel{" +
+        return "MovieDTO{" +
                 "id='" + id + '\'' +
                 ", awards='" + awards + '\'' +
                 ", cast=" + Arrays.toString(cast) +
@@ -212,7 +236,7 @@ public class MoviesModel {
                 ", imdb='" + imdb + '\'' +
                 ", languages=" + Arrays.toString(languages) +
                 ", lastupdated='" + lastupdated + '\'' +
-                ", num_mflix_comments=" + num_mflix_comments +
+                ", numMflixComments=" + numMflixComments +
                 ", plot='" + plot + '\'' +
                 ", poster='" + poster + '\'' +
                 ", rated='" + rated + '\'' +
@@ -222,7 +246,7 @@ public class MoviesModel {
                 ", tomatoes='" + tomatoes + '\'' +
                 ", type='" + type + '\'' +
                 ", writers=" + Arrays.toString(writers) +
-                ", year=" + year +
+                ", year='" + year + '\'' +
                 '}';
     }
 }

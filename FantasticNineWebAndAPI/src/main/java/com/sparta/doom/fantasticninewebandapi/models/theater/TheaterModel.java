@@ -1,16 +1,14 @@
-package com.sparta.doom.fantasticninewebandapi.models;
+package com.sparta.doom.fantasticninewebandapi.models.theater;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Arrays;
 
 @Document(collection = "theaters")
 public class TheaterModel {
 
     @Id
     private String id;
-    private String location;
+    private Location location;
     private int theaterId;
 
     public String getId() {
@@ -21,11 +19,11 @@ public class TheaterModel {
         this.id = id;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
