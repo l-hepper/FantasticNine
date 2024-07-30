@@ -23,7 +23,7 @@ public class TheaterService {
         return theaterRepository.findAll();
     }
 
-    public TheaterModel getTheaterById(int theaterId) {
+    public TheaterModel getTheaterByTheaterId(int theaterId) {
         Optional<TheaterModel> theater = theaterRepository.findTheaterModelByTheaterId(theaterId);
         if (!theater.isPresent()) {
             throw new ResourceAccessException("Theater with id " + theaterId + " not found");
