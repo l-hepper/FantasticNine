@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Optional;
+
 @Component
 public class ApiKeyInterceptor implements HandlerInterceptor {
 
@@ -20,19 +22,16 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
         if (apiKey == null) {
             if ("GET".equals(request.getMethod())) {
                 return true;
-            } else {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return false;
             }
         }
 
-        ApiKeyModel key = apiKeyRepository.findByKey(apiKey);
-        if (key == null) {
+        Optional<ApiKeyModel> key = apiKeyRepository.findByKey(apiKey);
+        if (key.isEmpty()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return false;
         }
 
-        request.setAttribute("role", key.getAccessLevel());
+        request.setAttribute("role", key.get().getAccessLevel());
         return true;
     }
 }

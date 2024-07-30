@@ -1,5 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.security.api;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -8,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "api_keys")
 public class ApiKeyModel {
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("apiKey")
     private String key;
@@ -16,7 +17,7 @@ public class ApiKeyModel {
     @Field("access_level")
     private String accessLevel;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 

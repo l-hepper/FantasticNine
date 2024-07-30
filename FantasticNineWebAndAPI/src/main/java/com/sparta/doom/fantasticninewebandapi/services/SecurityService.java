@@ -39,12 +39,9 @@ public class SecurityService implements UserDetailsService {
     }
 
     public Optional<String> getRoleFromKey(String apiKey) {
-        ApiKeyModel key = apiKeyRepository.findByKey(apiKey);
+        Optional<ApiKeyModel> key = apiKeyRepository.findByKey(apiKey);
 
-        if (key == null)
-            return Optional.empty();
-
-        return Optional.of(key.getAccessLevel());
+        return key.map(ApiKeyModel::getAccessLevel);
     }
 
     // Web
