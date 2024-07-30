@@ -18,17 +18,16 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
-        String apiKey = request.getParameter("DOOM-API-KEY");
+        String apiKey = request.getHeader("DOOM-API-KEY");
+        System.out.println(apiKey);
         if (apiKey == null) {
             if ("GET".equals(request.getMethod())) {
                 return true;
-            } else {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return false;
             }
         }
 
         Optional<ApiKeyModel> key = apiKeyRepository.findByKey(apiKey);
+
         if (key.isEmpty()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return false;

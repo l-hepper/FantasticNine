@@ -6,6 +6,7 @@ import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,6 +93,12 @@ public class MoviesService {
                 .findFirst();
     }
 
+    public List<MoviesModel> getMoviesByPartialTitle(String title) {
+        return moviesRepository.findAll().stream()
+                .filter(movie -> movie.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
     public MoviesDTO createMovie(MoviesDTO movieDto) {
         MoviesModel movie = convertToEntity(movieDto);
         MoviesModel savedMovie = moviesRepository.save(movie);
@@ -116,6 +123,19 @@ public class MoviesService {
         } else {
             return false;
         }
+    }
+
+    public List<MoviesDTO> getMoviesByGenre(String genre) {
+        List<MoviesModel> movies = moviesRepository.findAll().stream()
+                .filter(movie -> movie.getGenres() != null &&
+                        Arrays.stream(movie.getGenres().split(","))
+                                .map(String::trim)
+                                .map(String::toLowerCase)
+                                .anyMatch(genre.toLowerCase()::equals))
+                .toList();
+        return movies.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
 }
