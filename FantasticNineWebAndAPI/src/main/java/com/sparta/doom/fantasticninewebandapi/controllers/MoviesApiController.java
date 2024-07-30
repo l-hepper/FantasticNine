@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.controllers;
 
 import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
-import com.sparta.doom.fantasticninewebandapi.models.Movie;
+import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/movies")
-public class MoviesController {
+public class MoviesApiController {
 
     private final MoviesService moviesService;
 
-    public MoviesController(MoviesService moviesService) {
+    public MoviesApiController(MoviesService moviesService) {
         this.moviesService = moviesService;
     }
 
@@ -35,7 +35,7 @@ public class MoviesController {
     //TODO add regex
     @GetMapping("/title/{title}")
     public ResponseEntity<MoviesDTO> getMovieByTitle(@PathVariable String title) {
-        Optional<Movie> movie = moviesService.getMovieByTitle(title);
+        Optional<MovieDoc> movie = moviesService.getMovieByTitle(title);
         if (movie.isPresent()) {
             MoviesDTO movieDto = moviesService.convertToDto(movie.get());
             return ResponseEntity.ok(movieDto);
@@ -70,8 +70,8 @@ public class MoviesController {
 
     @GetMapping("/search/{title}")
     public ResponseEntity<List<MoviesDTO>> getMoviesByPartialTitle(@PathVariable String title) {
-        List<Movie> movies = moviesService.getMoviesByPartialTitle(title);
-        List<MoviesDTO> moviesDTOs = movies.stream()
+        List<MovieDoc> movieDocs = moviesService.getMoviesByPartialTitle(title);
+        List<MoviesDTO> moviesDTOs = movieDocs.stream()
                 .map(moviesService::convertToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(moviesDTOs);
