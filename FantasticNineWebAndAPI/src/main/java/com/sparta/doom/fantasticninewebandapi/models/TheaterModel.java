@@ -10,7 +10,7 @@ public class TheaterModel {
 
     @Id
     private String id;
-    private String location;
+    private Location location;
     private int theaterId;
 
     public String getId() {
@@ -21,11 +21,11 @@ public class TheaterModel {
         this.id = id;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
