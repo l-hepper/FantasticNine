@@ -14,14 +14,15 @@ import java.time.LocalDateTime;
 public class Schedule {
     @Id
     private String id;
-    //I'm currently trying to mock these, so i can test stuff;
-    //these fields should actually just be Ids in the database
+
     @NotNull
     @DBRef
     private Theatre theatre;
+
     @NotNull
     @DBRef
     private Movie movie;
+
     @NotNull
     @Future
     private LocalDateTime startTime;

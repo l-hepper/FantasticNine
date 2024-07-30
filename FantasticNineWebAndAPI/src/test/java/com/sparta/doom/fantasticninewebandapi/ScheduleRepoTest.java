@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class ScheduleRepoTest {
 
 
+    //TODO : THESE ARE BAD TESTS, I WILL MAKE THEM BETTER
     @Autowired
     ScheduleRepository scheduleRepository;
     @Test
@@ -41,8 +42,3 @@ public class ScheduleRepoTest {
     }
 
 }
-
-//shedule stuff
-
-/*
- */
