@@ -44,7 +44,7 @@ public class MoviesController {
     }
 
     @PostMapping
-    public ResponseEntity<MoviesDTO> createMovie(@RequestBody MoviesDTO movieDto) {
+    public ResponseEntity<MoviesDTO> createMovie(@RequestBody MoviesDTO movieDto, @RequestHeader(name = "DOOM-API-KEY") String key) {
         MoviesDTO createdMovie = moviesService.createMovie(movieDto);
         return ResponseEntity.status(201).body(createdMovie);
     }
