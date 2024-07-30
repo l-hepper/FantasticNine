@@ -34,7 +34,7 @@ public class ScheduleService {
         return getSchedulesByTheatreId(theatreId);
     }
 
-    private List<Schedule> getSchedulesByTheatreId(String theatreId) {
+    public List<Schedule> getSchedulesByTheatreId(String theatreId) {
         return scheduleRepository.findAll().stream()
                 .filter(schedule -> schedule.getTheatre().getId().equals(theatreId))
                 .toList();
@@ -45,7 +45,7 @@ public class ScheduleService {
         return getSchedulesByMovieId(movieId);
     }
 
-    private List<Schedule> getSchedulesByMovieId(String movieId) {
+    public List<Schedule> getSchedulesByMovieId(String movieId) {
         return scheduleRepository.findAll().stream()
                 .filter(schedule -> schedule.getMovie().getId().equals(movieId))
                 .toList();
