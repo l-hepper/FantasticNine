@@ -43,13 +43,12 @@
     <div id="top-movies-all-time-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
             <div th:each="chunk, iterStat : ${topRatedMovies}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                <div class="d-flex">
-                    <div th:each="movie : ${chunk}" class="card-container">
-                        <div class="card" style>
+                <div class="carousel-container">
+                    <div th:each="movie : ${chunk}" class="carousel-card">
+                        <div class="card">
                             <img th:src="@{${movie.poster}}" class="card-img-top" th:alt="${movie.title}">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${movie.title}"></h5>
-<!--                                <p class="card-text" th:text="${movie.plot}"></p>-->
                             </div>
                         </div>
                     </div>
@@ -67,13 +66,14 @@
     </div>
 </section>
 
+
 <section id="movies-by-genre" class="container my-5">
     <h2 class="text-center mb-4">Movies By Genre</h2>
     <div id="genresCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
             <div th:each="chunk, iterStat : ${genreChunks}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                <div class="d-flex">
-                    <div th:each="genre : ${chunk}" class="card-container">
+                <div class="carousel-container">
+                    <div th:each="movie : ${chunk}" class="carousel-card">
                         <div class="card">
                             <img th:src="@{${genre.image}}" class="card-img-top" th:alt="${genre.name}">
                             <div class="card-body">
@@ -101,9 +101,9 @@
         <div class="carousel-inner">
 
             <div th:each="chunk, iterStat : ${topMoviesChunks}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                <div class="d-flex">
+                <div class="carousel-container">
 
-                    <div th:each="movie : ${chunk}" class="card-container">
+                    <div th:each="movie : ${chunk}" class="carousel-card">
                         <div class="card">
                             <img th:src="@{${movie.posterImage}}" class="card-img-top" th:alt="${movie.title}">
                             <div class="card-body">
