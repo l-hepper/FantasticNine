@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Set;
 
 @Document(collection = "users")
-public class UserModel {
+public class UserDoc {
     @Id
     private String id;
     private String email;
@@ -17,7 +17,7 @@ public class UserModel {
     @Field("roles")
     private Set<String> roles;
 
-    public UserModel(String email, String name, String password, Set<String> roles) {
+    public UserDoc(String email, String name, String password, Set<String> roles) {
         this.email = email;
         this.name = name;
         this.password = password;

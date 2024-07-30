@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
-import com.sparta.doom.fantasticninewebandapi.models.UserModel;
+import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.UserRepository;
 import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyModel;
 import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyRepository;
@@ -50,7 +50,7 @@ public class SecurityService implements UserDetailsService {
     // Web
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<UserModel> user = userRepository.findByEmail(email);
+        Optional<UserDoc> user = userRepository.findByEmail(email);
 
         return user
                 .map(SecurityUserDetails::new)
