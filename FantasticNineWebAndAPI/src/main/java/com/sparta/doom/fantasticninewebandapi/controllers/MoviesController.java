@@ -77,7 +77,7 @@ public class MoviesController {
         return ResponseEntity.ok(moviesDTOs);
     }
 
-    @GetMapping("/top-rated-imdb")
+    @GetMapping("/top-rated")
     public ResponseEntity<List<MoviesDTO>> getTop10ByImdbRating() {
         List<MoviesDTO> topMovies = moviesService.getTop10ByImdbRating();
         return ResponseEntity.ok(topMovies);
