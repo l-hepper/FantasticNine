@@ -60,4 +60,10 @@ public class MoviesController {
         boolean isDeleted = moviesService.deleteMovie(id);
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/genre/{genre}")
+    public ResponseEntity<List<MoviesDTO>> getMoviesByGenre(@PathVariable String genre) {
+        List<MoviesDTO> movies = moviesService.getMoviesByGenre(genre);
+        return ResponseEntity.ok(movies);
+    }
 }
