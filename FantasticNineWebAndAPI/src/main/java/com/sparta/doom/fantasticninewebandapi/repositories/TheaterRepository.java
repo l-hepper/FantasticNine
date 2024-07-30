@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 public interface TheaterRepository extends MongoRepository<TheaterDoc, String> {
-    Optional<TheaterDoc> findTheaterModelByTheaterId(int theaterId);
+    Optional<TheaterDoc> findTheaterModelByTheaterId(Integer theaterId);
+    void deleteTheaterDocByTheaterId(Integer theaterId);
 }

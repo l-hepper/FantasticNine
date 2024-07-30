@@ -32,6 +32,13 @@ public class TheaterService {
         return theater.get();
     }
 
+    public void deleteTheaterByTheaterId(int theaterId) {
+        theaterRepository.deleteTheaterDocByTheaterId(theaterId);
+        if (theaterRepository.findTheaterModelByTheaterId(theaterId).isPresent()) {
+            throw new ResourceAccessException("Theater with id " + theaterId + " unable to delete");
+        }
+    }
+
 
 
 }
