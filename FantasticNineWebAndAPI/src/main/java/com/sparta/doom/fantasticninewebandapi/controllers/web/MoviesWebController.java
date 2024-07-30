@@ -16,7 +16,7 @@ public class MoviesWebController {
 
     public final WebClient webClient;
 
-    @Value("${key}")
+//    @Value("${key}") Causes bug
     private String key;
 
     public MoviesWebController(WebClient webClient) {
