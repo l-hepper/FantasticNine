@@ -1,0 +1,29 @@
+.navbar-dark .navbar-brand {
+    color: #ffffff;
+    font-family: 'Bebas Neue', cursive;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff;
+}
+
+.navbar-dark .form-control {
+    background-color: #1e1e1e;
+    border: none;
+    color: #ffffff;
+}
+
+.navbar-dark .form-control::placeholder {
+    color: #a9a9a9;
+}
+
+.navbar-dark .btn-outline-success {
+    color: #ffffff;
+    border-color: #ff0000;
+}
+
+.navbar-dark .btn-outline-success:hover {
+    color: #ffffff;
+    background-color: #ff0006;
+    border-color: #ff0000;
+}

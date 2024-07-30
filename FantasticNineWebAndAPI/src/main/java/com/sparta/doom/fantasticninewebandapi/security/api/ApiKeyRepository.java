@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ApiKeyRepository extends MongoRepository<ApiKeyModel, ObjectId> {
     Optional<ApiKeyModel> findByKey(String apiKey);
+
 }

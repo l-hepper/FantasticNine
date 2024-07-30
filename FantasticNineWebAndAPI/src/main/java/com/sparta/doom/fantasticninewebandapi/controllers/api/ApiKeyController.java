@@ -1,5 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
+import com.sparta.doom.fantasticninewebandapi.exceptions.InvalidRoleException;
 import com.sparta.doom.fantasticninewebandapi.services.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class ApiKeyController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
 
-        String newKey = securityService.generateKey(role).orElseThrow(() -> new IllegalArgumentException("Invalid role provided"));
+        String newKey = securityService.generateKey(role).orElseThrow(() -> new InvalidRoleException(role + ": Invalid role provided"));
 
         return ResponseEntity.ok(newKey);
     }
