@@ -26,7 +26,7 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
             }
         }
 
-        ApiKeyModel key = apiKeyRepository.findByApiKey(apiKey);
+        ApiKeyModel key = apiKeyRepository.findByKey(apiKey);
         if (key == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return false;
