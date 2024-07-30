@@ -39,15 +39,15 @@ public class GeneralWebController {
                 .collectList()
                 .block();
         assert topRatedMovies != null;
-        List<List<MovieDoc>> batchedMovies = batchMovies(topRatedMovies, BATCH_SIZE);
+        List<List<MovieDoc>> batchedMovies = batchMovies(topRatedMovies);
         model.addAttribute("topRatedMovies", batchedMovies);
         return "home";
     }
 
-    private List<List<MovieDoc>> batchMovies(List<MovieDoc> movies, int batchSize) {
+    private List<List<MovieDoc>> batchMovies(List<MovieDoc> movies) {
         List<List<MovieDoc>> batches = new ArrayList<>();
-        for (int i=0; i < movies.size(); i+= batchSize) {
-            batches.add(new ArrayList<>(movies.subList(i, Math.min(i+batchSize, movies.size()))));
+        for (int i=0; i < movies.size(); i+= GeneralWebController.BATCH_SIZE) {
+            batches.add(new ArrayList<>(movies.subList(i, Math.min(i+ GeneralWebController.BATCH_SIZE, movies.size()))));
         }
         return batches;
     }
