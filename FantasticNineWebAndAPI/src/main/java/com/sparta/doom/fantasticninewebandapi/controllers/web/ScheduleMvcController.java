@@ -17,7 +17,7 @@ public class ScheduleMvcController {
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
     private final ScheduleService scheduleService;
-    private ScheduleRepository scheduleRepository;
+    private final ScheduleRepository scheduleRepository;
     @Autowired
     public ScheduleMvcController(ScheduleService scheduleService, ScheduleRepository scheduleRepository) {
         this.scheduleService = scheduleService;
