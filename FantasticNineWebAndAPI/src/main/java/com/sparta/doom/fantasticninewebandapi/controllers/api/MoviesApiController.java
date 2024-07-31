@@ -70,7 +70,7 @@ public class MoviesApiController {
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/movies/genre/{genre}")
+    @GetMapping("/movies/genres/{genre}")
     public ResponseEntity<List<MovieDoc>> getMoviesByGenre(@PathVariable String genre) {
         List<MovieDoc> movies = moviesService.getMoviesByGenre(genre);
         return ResponseEntity.ok(movies);
