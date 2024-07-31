@@ -2,7 +2,7 @@ package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.exceptions.CommentNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
-import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.CommentsRepository;
+import com.sparta.doom.fantasticninewebandapi.repositories.CommentsRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

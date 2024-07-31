@@ -4,7 +4,7 @@ import com.sparta.doom.fantasticninewebandapi.models.theater.Address;
 import com.sparta.doom.fantasticninewebandapi.models.theater.Geo;
 import com.sparta.doom.fantasticninewebandapi.models.theater.Location;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
-import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.TheaterRepository;
+import com.sparta.doom.fantasticninewebandapi.repositories.TheaterRepository;
 import com.sparta.doom.fantasticninewebandapi.services.TheaterService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

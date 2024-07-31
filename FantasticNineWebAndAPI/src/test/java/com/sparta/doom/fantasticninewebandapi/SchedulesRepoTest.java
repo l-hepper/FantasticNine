@@ -3,7 +3,7 @@ package com.sparta.doom.fantasticninewebandapi;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
-import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.SchedulesRepository;
+import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

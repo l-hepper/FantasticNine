@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
-import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.TheaterRepository;
+import com.sparta.doom.fantasticninewebandapi.repositories.TheaterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
