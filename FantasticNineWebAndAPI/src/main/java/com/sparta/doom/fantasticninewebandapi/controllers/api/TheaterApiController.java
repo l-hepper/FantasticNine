@@ -21,7 +21,7 @@ public class TheaterApiController {
         this.theaterService = theaterService;
     }
 
-    @GetMapping("/theaters")
+    @GetMapping()
     public ResponseEntity<List<TheaterDoc>> getTheaters() {
         List<TheaterDoc> theaters = theaterService.getAllTheaters();
         return ResponseEntity.ok()
@@ -29,13 +29,13 @@ public class TheaterApiController {
                 .body(theaters);
     }
 
-    @GetMapping("theaters/cities/{cityName}")
+    @GetMapping("/theaters/cities/{cityName}")
     public ResponseEntity<List<TheaterDoc>> getTheatersByCityName(@PathVariable String cityName) {
         List<TheaterDoc> theaters = theaterService.getTheatersByCityName(cityName);
         return new ResponseEntity<>(theaters, HttpStatus.OK);
     }
 
-    @GetMapping("theaters/{theaterId}")
+    @GetMapping("/theaters/{theaterId}")
     public ResponseEntity<TheaterDoc> getTheaterByTheaterId(@PathVariable Integer theaterId) {
         TheaterDoc theater = theaterService.getTheaterByTheaterId(theaterId);
         return ResponseEntity.ok()
@@ -43,15 +43,21 @@ public class TheaterApiController {
                 .body(theater);
     }
 
-    @DeleteMapping("theaters/{theaterId}")
+    @DeleteMapping("/theaters/{theaterId}")
     public ResponseEntity<HttpStatus> deleteTheaterByTheaterId(@PathVariable Integer theaterId) {
         theaterService.deleteTheaterByTheaterId(theaterId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("theaters/create")
+    @PostMapping("/theaters")
     public ResponseEntity<HttpStatus> createTheater(@RequestBody TheaterDoc theater) {
         theaterService.createTheater(theater);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/theaters")
+    public ResponseEntity<TheaterDoc> updateTheater(@RequestBody TheaterDoc theater) {
+        TheaterDoc updatedTheater = theaterService.updateTheater(theater);
+        return new ResponseEntity<>(updatedTheater, HttpStatus.OK);
     }
 }
