@@ -21,6 +21,10 @@ public class UserDoc {
     @Field("roles")
     private Set<String> roles;
 
+    public UserDoc(){
+
+    }
+
     public UserDoc(String email, String name, String password, Set<String> roles) {
         this.email = email;
         this.name = name;
