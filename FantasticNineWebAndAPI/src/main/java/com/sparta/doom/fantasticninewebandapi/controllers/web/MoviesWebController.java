@@ -26,21 +26,6 @@ public class MoviesWebController {
         this.webClient = webClient;
     }
 
-    @GetMapping("/create/")
-    public String createMovie() {
-        return "movies/movies_create";
-    }
-
-    @PostMapping("/create/")
-    public String createMoviePost(@ModelAttribute MovieDoc moviesModel, Model model) {
-        webClient.post()
-                .uri("/api/movies/create/")
-                .header("DOOM-API-KEY", key)
-                .bodyValue(moviesModel);
-        model.addAttribute("movie", moviesModel);
-        return "redirect:/movies/search/" + moviesModel.getId();
-    }
-
     @GetMapping
     public String getMovies(Model model) {
         ResponseEntity<List<MoviesDTO>> moviesResponse = webClient
@@ -93,6 +78,21 @@ public class MoviesWebController {
                 .block();
         model.addAttribute("movies", movie);
         return "movies/movies_details";
+    }
+
+    @GetMapping("/create/")
+    public String createMovie() {
+        return "movies/movies_create";
+    }
+
+    @PostMapping("/create/")
+    public String createMoviePost(@ModelAttribute MovieDoc moviesModel, Model model) {
+        webClient.post()
+                .uri("/api/movies/create/")
+                .header("DOOM-API-KEY", key)
+                .bodyValue(moviesModel);
+        model.addAttribute("movie", moviesModel);
+        return "redirect:/movies/search/" + moviesModel.getId();
     }
 
     @PostMapping("/update/{id}")

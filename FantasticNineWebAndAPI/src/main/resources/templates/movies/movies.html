@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Movies!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
     <style>
         .card-container {
             display: flex;
@@ -48,10 +51,13 @@
 </head>
 
 <body>
+
+<nav th:replace="~{fragments/navbar}"></nav>
+
 <div class="container my-4" style="max-width: 80vw; margin: auto;">
     <div class="row">
         <div class="col-12">
-            <h1 class="text-center" style="margin: auto;">Movies!</h1>
+            <h1 style="width: fit-content; margin: auto;">Movies!</h1>
             <br>
         </div>
     </div>
@@ -69,7 +75,7 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
                     <p class="card-text" th:text="${movie.getYear()}">Year</p>
-                    <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
+                    <p class="card-text p-0 m-0" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
                 </div>
             </div>
         </div>
