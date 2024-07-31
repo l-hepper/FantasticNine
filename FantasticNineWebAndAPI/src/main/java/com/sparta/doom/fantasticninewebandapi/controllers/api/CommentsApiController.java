@@ -94,7 +94,7 @@ public class CommentsApiController {
     }
     @GetMapping("/users/email/{email}/comments")
     public ResponseEntity<PagedModel<CommentDoc>> getCommentsByEmail(@PathVariable("email") String email, Pageable pageable) {
-        Page<CommentDoc> commentsPage = commentsService.getCommentsByName(email, pageable);
+        Page<CommentDoc> commentsPage = commentsService.getCommentsByEmailAddress(email, pageable);
         PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
         return ResponseEntity.ok(pagedModel);
     }

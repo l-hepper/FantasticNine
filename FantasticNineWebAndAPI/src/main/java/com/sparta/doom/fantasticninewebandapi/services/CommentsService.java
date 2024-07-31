@@ -43,7 +43,7 @@ public class CommentsService {
     }
 
     public Page<CommentDoc> getCommentsByEmailAddress(String email, Pageable pageable) {
-        return commentsRepository.findByEmail(email, pageable);
+        return commentsRepository.findByEmailContainingIgnoreCase(email, pageable);
     }
 
     public List<CommentDoc> getCommentsByName(String name){

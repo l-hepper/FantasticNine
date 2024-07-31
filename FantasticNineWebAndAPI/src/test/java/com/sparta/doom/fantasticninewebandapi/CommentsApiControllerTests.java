@@ -126,6 +126,19 @@ public class CommentsApiControllerTests {
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("\"totalElements\":0")));
     }
     @Test
+    void testGetCommentsByUserEmailNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/email/wrong.email.address@something/comments"))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("\"totalElements\":0")));
+    }
+    @Test
+    void testGetCommentsByUserEmail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/email/mercedes_tyler@fakegmail.com/comments"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Mercedes Tyler")))
+                .andDo(MockMvcResultHandlers.print());
+
+    }
+    @Test
     void testGetCommentsByDateAndUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments/dates/2000-01-01/2001-01-01"))
                 .andDo(MockMvcResultHandlers.print());
