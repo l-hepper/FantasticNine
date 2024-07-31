@@ -49,7 +49,7 @@
             <div th:each="chunk, iterStat : ${topRatedMovies}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                 <div class="carousel-container">
                     <div th:each="movie : ${chunk}" class="carousel-card">
-                        <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">
+                        <a th:href="@{/movies/{id}(id=${movie.getId()})}">
                             <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
                                  th:if="${movie.getPoster() != null}">
                                 <div class="card-body">
@@ -88,7 +88,7 @@
             <div th:each="chunk, iterStat : ${topRatedSeries}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                 <div class="carousel-container">
                     <div th:each="movie : ${chunk}" class="carousel-card">
-                        <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">
+                        <a th:href="@{/movies/{id}(id=${movie.getId()})}">
                             <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
                                  th:if="${movie.getPoster() != null}">
                                 <div class="card-body">
