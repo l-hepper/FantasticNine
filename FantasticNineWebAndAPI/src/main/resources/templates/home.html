@@ -12,7 +12,9 @@
 </head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
+
 <header class="jumbotron jumbotron-fluid bg-dark text-white text-center">
+
     <div class="container">
         <h1 class="display-4">Welcome to Doomflix</h1>
         <p class="lead">Your ultimate movie database</p>
@@ -39,7 +41,7 @@
     </div>
 </header>
 <section id="top-movies-all-time" class="container my-5">
-    <h2 class="text-center mb-4">Movie Top Picks</h2>
+    <h2 class="text-center mb-4">Top 10 Movie Picks</h2>
     <div id="top-movies-all-time-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
             <div th:each="chunk, iterStat : ${topRatedMovies}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
@@ -96,7 +98,7 @@
     </div>
 </section>
 <section id="top-movies-this-year" class="container my-5">
-    <h2 class="text-center mb-4">Top 10 Movies This Year</h2>
+    <h2 class="text-center mb-4">Top 10 TV Shows</h2>
     <div id="top-movies-this-year-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
 
