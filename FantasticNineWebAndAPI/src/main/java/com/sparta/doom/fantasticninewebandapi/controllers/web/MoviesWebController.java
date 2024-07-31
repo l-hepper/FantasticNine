@@ -18,7 +18,7 @@ public class MoviesWebController {
 
     public final WebClient webClient;
 
-    @Value("${key}")
+//    @Value("${key}")
     private String key;
 
     public MoviesWebController(WebClient webClient) {
