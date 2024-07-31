@@ -70,12 +70,12 @@ public class MoviesWebController {
     public String getMovieDetails(@PathVariable String id, Model model) {
         MovieDoc movie = webClient
                 .get()
-                .uri("/api/movies" + id)
+                .uri("/api/movies/" + id)
                 .header("DOOM-API-KEY", key)
                 .retrieve()
                 .bodyToMono(MovieDoc.class)
                 .block();
-        model.addAttribute("movies", movie);
+        model.addAttribute("movie", movie);
         return "movies/movies_details";
     }
 
