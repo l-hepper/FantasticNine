@@ -66,6 +66,10 @@ body {
     width: fit-content;
 }
 
+.card:hover {
+    cursor: pointer;
+}
+
 .card-title, .card-text {
     color: #ffffff;
 }
@@ -176,3 +180,6 @@ body {
     color: #ffffff;
 }
 
+#genre-card-body {
+    height: 100%;
+}

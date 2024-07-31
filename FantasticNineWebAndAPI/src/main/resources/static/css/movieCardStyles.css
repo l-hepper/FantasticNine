@@ -25,6 +25,10 @@
     z-index: 1;
 }
 
+.card:hover {
+    cursor: pointer;
+}
+
 .card-body {
     position: absolute;
     bottom: 0;
@@ -38,3 +42,36 @@
 .card-title {
     margin: 0;
 }
+
+#details-card-img, #details-card-black, #details-card-text {
+    margin: 50px 5px 5px;
+    width: 465px;
+    height: 700px;
+}
+
+#details-card-img {
+    width: 100%;
+    object-fit: cover;
+}
+
+#details-card-text {
+    width: fit-content;
+    height: 90vh;
+}
+
+#details-card-text .card-body {
+    position: relative;
+    top: 0;
+    width: 100%;
+}
+
+#details-card-img:hover, #details-card-black:hover, #details-card-text-black:hover, #details-card-text:hover {
+    cursor: default;
+}
+
+#details-card-img:before {
+    display: none;
+}
+
+
+

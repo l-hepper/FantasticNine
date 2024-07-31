@@ -86,9 +86,9 @@
             <div th:each="chunk, iterStat : ${allGenres}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                 <div class="carousel-container">
                     <div th:each="genre : ${chunk}" class= "carousel-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${genre}"></h5>
+                        <div class="card" id="genre-card">
+                            <div class="card-body" id="genre-card-body">
+                                <h5 class="card-title" th:text="${genre}" id="genre-card-title"></h5>
                             </div>
                         </div>
                     </div>
