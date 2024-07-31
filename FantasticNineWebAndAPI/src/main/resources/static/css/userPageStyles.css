@@ -1,0 +1,51 @@
+.follow-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1px 0;
+}
+
+.profile-image-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comments-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.comments-container {
+    margin: 20px 0;
+    width: 100%;
+    max-width: 800px;
+}
+
+.comment {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    color: black;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.comment p, .comment small {
+    display: block;
+    margin: 0 auto;
+}
+
+.comment small a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.comment small a:hover {
+    text-decoration: underline;
+}
