@@ -53,7 +53,7 @@ body {
     right: -5%;
 }
 
-#top-movies-all-time-carousel, .carousel-inner {
+#top-movies-all-time-carousel, #by-genre-carousel, .carousel-inner {
     display: flex;
     max-width: fit-content;
     margin: auto;
