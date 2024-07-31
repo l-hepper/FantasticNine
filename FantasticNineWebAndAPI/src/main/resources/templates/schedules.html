@@ -19,8 +19,9 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getTheatre()} ?: 'N/A'"></td>
-            <td th:text="${showings.getStartTime()} ?: 'N/A'"></td>
+            <!--/*@thymesVar id="getTheater" type=""*/-->
+            <td th:text="${showings.theater.location} ?: 'N/A'"></td>
+            <td th:text="${showings.startTime} ?: 'N/A'"></td>
         </tr>
         </tbody>
     </table>
@@ -37,8 +38,8 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getMovie().getTitle()} ?: 'N/A'"></td>
-            <td th:text="${showings.getStartTime()} ?: 'N/A'"></td>
+            <td th:text="${showings.movie.title} ?: 'N/A'"></td>
+            <td th:text="${showings.startTime} ?: 'N/A'"></td>
         </tr>
         </tbody>
     </table>
@@ -68,13 +69,15 @@
         <thead>
         <tr>
             <th>Movie</th>
+            <th>Theater</th>
             <th>Show Times</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getMovie().getTitle()} ?: 'N/A'"></td>
-            <td th:text="${showings.getStartTime()} ?: 'N/A'"></td>
+        <tr th:each="showing : ${schedules}">
+            <td th:text="${showing.movie} ?: 'N/A'"></td>
+            <td th:text="${showing.theater.location.address.city} ?: 'N/A'"></td>
+            <td th:text="${showing.startTime} ?: 'N/A'"></td>
         </tr>
         </tbody>
     </table>

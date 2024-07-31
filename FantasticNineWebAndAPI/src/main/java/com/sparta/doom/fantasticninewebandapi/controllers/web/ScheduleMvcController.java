@@ -4,6 +4,9 @@ import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -88,24 +91,24 @@ public class ScheduleMvcController {
                     .collectList()
                     .block();
             model.addAttribute("schedules",schedules);
-        } else if (Objects.equals(searchType, "all")) {
-            //all schedules
-            List<ScheduleDoc> schedules = webClient
-                    .get()
-                    .uri("api/schedules")
-                    .header("DOOM-API-KEY", key)
-                    .retrieve()
-                    .bodyToFlux(ScheduleDoc.class)
-                    .collectList()
-                    .block();
-            model.addAttribute("schedules", schedules);
         }
         model.addAttribute("searchType", searchType);
         return "schedules";
     }
     @GetMapping("/schedules/")
     public String getAllSchedules(Model model) {
-        model.addAttribute("schedules", scheduleRepository.findAll());
+        List<ScheduleDoc> schedules = webClient
+                .get()
+                .uri("api/schedules")
+                .header("DOOM-API-KEY", key)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                .block()
+                .getContent()
+                .stream()
+                .map(EntityModel::getContent)
+                .toList();
+        model.addAttribute("schedules", schedules);
         model.addAttribute("searchType", "all");
         return "schedules";
     }
