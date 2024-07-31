@@ -13,6 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api")
@@ -26,14 +28,9 @@ public class SchedulesApiController {
 
     @GetMapping("/schedules")
     public CollectionModel<EntityModel<ScheduleDoc>> getSchedules() {
-        List<EntityModel<ScheduleDoc>> scheduleDocs = schedulesService.getSchedules().stream()
-                .map(this::mapScheduleHateoas)
-                .toList();
-        if(scheduleDocs.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getSchedules());
 
-        return CollectionModel.of(scheduleDocs)
+        return scheduleModel
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel());
     }
 
@@ -47,7 +44,7 @@ public class SchedulesApiController {
         if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        EntityModel<ScheduleDoc> newScheduleModel = mapScheduleHateoas(schedulesService.addSchedule(newSchedule));
+        EntityModel<ScheduleDoc> newScheduleModel = mapScheduleHateoas(schedulesService.addSchedule(newSchedule).orElseThrow(NoSuchElementException::new));
         return ResponseEntity.ok().body(newScheduleModel);
     }
 
@@ -62,32 +59,33 @@ public class SchedulesApiController {
         if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        EntityModel<ScheduleDoc> updatedSchedule = mapScheduleHateoas(schedulesService.updateSchedule(schedule));
+        EntityModel<ScheduleDoc> updatedSchedule = mapScheduleHateoas(schedulesService.updateSchedule(schedule).orElseThrow(NoSuchElementException::new));
         return ResponseEntity.ok().body(updatedSchedule);
     }
 
     @GetMapping("theaters/{Id}/schedules")
     public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getTheaterSchedules(@PathVariable String Id) {
-        List<EntityModel<ScheduleDoc>> schedules = schedulesService.getSchedulesByTheatreId(Id).stream()
-                .map(this::mapScheduleHateoas)
-                .toList();
-        if(schedules.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(CollectionModel.of(schedules)
+        CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByTheaterId(Id));
+        return ResponseEntity.ok(schedulesModel
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
     }
 
     @GetMapping("movies/{Id}/schedules")
     public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getMovieSchedules(@PathVariable String Id) {
-        List<EntityModel<ScheduleDoc>> schedules = schedulesService.getSchedulesByMovieId(Id).stream()
+        CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByMovieId(Id));
+        return ResponseEntity.ok(schedulesModel
+                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
+    }
+
+    private CollectionModel<EntityModel<ScheduleDoc>> getCollectionModelOf(Stream<ScheduleDoc> schedules) {
+        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = schedules
                 .map(this::mapScheduleHateoas)
-                .toList();
-        if(schedules.isEmpty()) {
+                .collect(Collectors.collectingAndThen(Collectors.toList(), CollectionModel::of));
+
+        if(scheduleModel.getContent().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(CollectionModel.of(schedules)
-                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
+        return scheduleModel;
     }
 
     private EntityModel<ScheduleDoc> mapScheduleHateoas(ScheduleDoc doc) {

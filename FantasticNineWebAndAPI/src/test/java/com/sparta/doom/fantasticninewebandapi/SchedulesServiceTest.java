@@ -40,7 +40,7 @@ public class SchedulesServiceTest {
     public void testGetSchedules() {
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1, schedule2));
 
-        List<ScheduleDoc> schedules = scheduleService.getSchedules();
+        List<ScheduleDoc> schedules = scheduleService.getSchedules().toList();
 
         assertNotNull(schedules);
         Assertions.assertEquals(2, schedules.size());
@@ -61,7 +61,7 @@ public class SchedulesServiceTest {
     public void testAddSchedule() {
         when(scheduleRepository.save(any(ScheduleDoc.class))).thenReturn(schedule1);
 
-        ScheduleDoc savedSchedule = scheduleService.addSchedule(schedule1);
+        ScheduleDoc savedSchedule = scheduleService.addSchedule(schedule1).orElseThrow();
 
         assertNotNull(savedSchedule);
         assertEquals("1", savedSchedule.getId());
@@ -81,7 +81,7 @@ public class SchedulesServiceTest {
     public void testUpdateSchedule() {
         when(scheduleRepository.save(any(ScheduleDoc.class))).thenReturn(schedule1);
 
-        ScheduleDoc updatedSchedule = scheduleService.updateSchedule(schedule1);
+        ScheduleDoc updatedSchedule = scheduleService.updateSchedule(schedule1).orElseThrow();
 
         assertNotNull(updatedSchedule);
         assertEquals("1", updatedSchedule.getId());
@@ -95,7 +95,7 @@ public class SchedulesServiceTest {
         schedule1.setTheater(theatre);
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
 
-        List<ScheduleDoc> schedules = scheduleService.getSchedulesByTheatre(theatre);
+        List<ScheduleDoc> schedules = scheduleService.getSchedulesByTheatre(theatre).toList();
 
         assertNotNull(schedules);
         assertEquals(1, schedules.size());
@@ -109,7 +109,7 @@ public class SchedulesServiceTest {
         schedule1.setMovie(movie);
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
 
-        List<ScheduleDoc> schedules = scheduleService.getSchedulesByMovie(movie);
+        List<ScheduleDoc> schedules = scheduleService.getSchedulesByMovie(movie).toList();
 
         assertNotNull(schedules);
         assertEquals(1, schedules.size());

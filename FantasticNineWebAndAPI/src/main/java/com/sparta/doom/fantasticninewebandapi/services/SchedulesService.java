@@ -9,66 +9,63 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class SchedulesService {
 
-    private SchedulesRepository schedulesRepository;
+    private final SchedulesRepository schedulesRepository;
 
     @Autowired
     public SchedulesService(SchedulesRepository schedulesRepository) {
         this.schedulesRepository = schedulesRepository;
     }
 
-    public List<ScheduleDoc> getSchedules() {
+    public Stream<ScheduleDoc> getSchedules() {
         return schedulesRepository.findAll().stream()
-                .sorted(Comparator.comparing(ScheduleDoc::getStartTime))
-                .toList();
+                .sorted(Comparator.comparing(ScheduleDoc::getStartTime));
     }
+    
+    
 
     public Optional<ScheduleDoc> getScheduleById(String Id){
         return schedulesRepository.findById(Id);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre) {
+    public Stream<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre) {
         String theatreId = theatre.getId();
-        return getSchedulesByTheatreId(theatreId);
+        return getSchedulesByTheaterId(theatreId);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatreId(String theatreId) {
-        return getSchedules().stream()
-                .filter(schedule -> schedule.getTheater().getId().equals(theatreId))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByTheaterId(String theatreId) {
+        return getSchedules()
+                .filter(schedule -> schedule.getTheater().getId().equals(theatreId));
     }
 
-    public List<ScheduleDoc> getSchedulesByMovie(MovieDoc movie) {
+    public Stream<ScheduleDoc> getSchedulesByMovie(MovieDoc movie) {
         String movieId = movie.getId();
         return getSchedulesByMovieId(movieId);
     }
 
-    public List<ScheduleDoc> getSchedulesByMovieId(String movieId) {
-        return getSchedules().stream()
-                .filter(schedule -> schedule.getMovie().getId().equals(movieId))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByMovieId(String movieId) {
+        return getSchedules()
+                .filter(schedule -> schedule.getMovie().getId().equals(movieId));
     }
 
-    public List<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
-        return getSchedules().stream()
-                .filter(schedule -> schedule.getStartTime().isAfter(startTime))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
+        return getSchedules()
+                .filter(schedule -> schedule.getStartTime().isAfter(startTime));
     }
 
-    public List<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
-        return getSchedules().stream()
-                .filter(schedule -> schedule.getStartTime().isBefore(startTime))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
+        return getSchedules()
+                .filter(schedule -> schedule.getStartTime().isBefore(startTime));
     }
 
 
-    public ScheduleDoc addSchedule(ScheduleDoc scheduleDoc) {
-        return schedulesRepository.save(scheduleDoc);
+    public Optional<ScheduleDoc> addSchedule(ScheduleDoc scheduleDoc) {
+        return Optional.of(schedulesRepository.save(scheduleDoc));
     }
 
     public void removeSchedule(String id) {
@@ -78,8 +75,8 @@ public class SchedulesService {
         schedulesRepository.delete(scheduleDoc);
     }
 
-    public ScheduleDoc updateSchedule(ScheduleDoc scheduleDoc) {
-        return schedulesRepository.save(scheduleDoc);
+    public Optional<ScheduleDoc> updateSchedule(ScheduleDoc scheduleDoc) {
+        return Optional.of(schedulesRepository.save(scheduleDoc));
     }
 
 
