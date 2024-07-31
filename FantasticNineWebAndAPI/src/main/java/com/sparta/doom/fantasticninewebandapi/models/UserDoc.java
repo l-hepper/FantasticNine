@@ -1,6 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,7 +11,10 @@ import java.util.Set;
 public class UserDoc {
     @Id
     private String id;
+
+    @Indexed(unique = true)
     private String email;
+
     private String name;
     private String password;
 

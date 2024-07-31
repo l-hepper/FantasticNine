@@ -6,9 +6,10 @@ body {
 .carousel-card {
     background-color: #1e1e1e;
     border: none;
-    height: 400px;
+    height: fit-content;
+    max-width: fit-content;
     flex: 1 1 20%;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .carousel-card img {
@@ -52,14 +53,16 @@ body {
     right: -5%;
 }
 
-#top-movies-all-time-carousel .carousel-inner, #top-movies-all-time-carousel .carousel-inner {
+#top-movies-all-time-carousel, .carousel-inner {
     display: flex;
+    max-width: fit-content;
+    margin: auto;
 }
 
 .card {
     background-color: #1e1e1e;
     border: none;
-    width: 100%;
+    width: fit-content;
 }
 
 .card-title, .card-text {
@@ -122,5 +125,30 @@ body {
 
 .btn-doomflix-theme:focus, .btn-doomflix-theme.focus {
     box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.5);
+}
+
+.header-background {
+    background-image: url('../images/doom_head.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    color: white;
+}
+
+.header-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8); /* Change this to adjust the darkness */
+    z-index: 1;
+}
+
+.header-background .container {
+    position: relative;
+    z-index: 2;
 }
 

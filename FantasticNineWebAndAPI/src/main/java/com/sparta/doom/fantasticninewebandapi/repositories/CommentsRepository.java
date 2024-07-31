@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentsRepository extends MongoRepository<CommentDoc, ObjectId> {
     Page<CommentDoc> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<CommentDoc> findByEmailContainingIgnoreCase(String email, Pageable pageable);
 }
