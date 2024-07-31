@@ -1,5 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
+import com.sparta.doom.fantasticninewebandapi.models.movie.Awards;
+import com.sparta.doom.fantasticninewebandapi.models.movie.Imdb;
+import com.sparta.doom.fantasticninewebandapi.models.movie.Tomatoes;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,13 +13,13 @@ public class MovieDoc {
 
     @Id
     private String id;
-    private String awards;
+    private Object awards;
     private String[] cast;
     private String[] countries;
     private String[] directors;
     private String fullplot;
     private String genres;
-    private String imdb;
+    private Object imdb;
     private String[] languages;
     private String lastupdated;
     private Integer num_mflix_comments;
@@ -26,7 +29,7 @@ public class MovieDoc {
     private String released;
     private Integer runtime;
     private String title;
-    private String tomatoes;
+    private Object tomatoes;
     private String type;
     private String[] writers;
     private String year;
@@ -39,11 +42,11 @@ public class MovieDoc {
         this.id = id;
     }
 
-    public String getAwards() {
+    public Object getAwards() {
         return awards;
     }
 
-    public void setAwards(String awards) {
+    public void setAwards(Object awards) {
         this.awards = awards;
     }
 
@@ -87,11 +90,11 @@ public class MovieDoc {
         this.genres = genres;
     }
 
-    public String getImdb() {
+    public Object getImdb() {
         return imdb;
     }
 
-    public void setImdb(String imdb) {
+    public void setImdb(Object imdb) {
         this.imdb = imdb;
     }
 
@@ -167,11 +170,11 @@ public class MovieDoc {
         this.title = title;
     }
 
-    public String getTomatoes() {
+    public Object getTomatoes() {
         return tomatoes;
     }
 
-    public void setTomatoes(String tomatoes) {
+    public void setTomatoes(Object tomatoes) {
         this.tomatoes = tomatoes;
     }
 
@@ -197,32 +200,5 @@ public class MovieDoc {
 
     public void setYear(String year) {
         this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "MoviesModel{" +
-                "id='" + id + '\'' +
-                ", awards='" + awards + '\'' +
-                ", cast=" + Arrays.toString(cast) +
-                ", countries=" + Arrays.toString(countries) +
-                ", directors=" + Arrays.toString(directors) +
-                ", fullplot='" + fullplot + '\'' +
-                ", genres='" + genres + '\'' +
-                ", imdb='" + imdb + '\'' +
-                ", languages=" + Arrays.toString(languages) +
-                ", lastupdated='" + lastupdated + '\'' +
-                ", num_mflix_comments=" + num_mflix_comments +
-                ", plot='" + plot + '\'' +
-                ", poster='" + poster + '\'' +
-                ", rated='" + rated + '\'' +
-                ", released='" + released + '\'' +
-                ", runtime=" + runtime +
-                ", title='" + title + '\'' +
-                ", tomatoes='" + tomatoes + '\'' +
-                ", type='" + type + '\'' +
-                ", writers=" + Arrays.toString(writers) +
-                ", year=" + year +
-                '}';
     }
 }

@@ -7,11 +7,8 @@ import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
