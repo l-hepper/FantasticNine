@@ -1,13 +1,16 @@
-package com.sparta.doom.fantasticninewebandapi.controllers;
+package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
 import com.sparta.doom.fantasticninewebandapi.services.SecurityService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,19 +77,26 @@ public class CommentsApiController {
         if(commentDocList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(CollectionModel.of(commentDocList), HttpStatus.OK);
     }
 
     @GetMapping("/users/{username}/comments")
-    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username) {
-        //regex matches to catch bad usernames?
-        List<CommentDoc> comments = commentsService.getCommentsByName(username);
-        if(comments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username, Pageable pageable) {
+        Page<CommentDoc> commentsPage = commentsService.getCommentsByName(username, pageable);
+        PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
+
+        return ResponseEntity.ok(pagedModel);
     }
+
+//    @GetMapping("/users/{username}/comments")
+//    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username) {
+//        //regex matches to catch bad usernames?
+//        List<CommentDoc> comments = commentsService.getCommentsByName(username);
+//        if(comments.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+//    }
 
     @GetMapping("/users/{username}/comments/dates/{date1}/{date2}")
     public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
@@ -113,7 +122,7 @@ public class CommentsApiController {
         } else if (!requestRole.get().equals("FULL_ACCESS")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
-        if(!newComment.getId().equals(movieId)|| commentsService.getCommentById(newComment.getId())!=null){
+        if(!newComment.getMovie_id().toString().equals(movieId.toString())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         commentsService.createComment(newComment);
@@ -154,7 +163,4 @@ public class CommentsApiController {
         commentsService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    //todo HATEOAS to link movies/user profile with comments
-
 }
