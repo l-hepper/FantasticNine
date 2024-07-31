@@ -33,7 +33,7 @@ public class ScheduleWebController {
     @Value("${key}")
     private String key;
     @Autowired
-    public ScheduleWebController(SchedulesService schedulesService, ScheduleRepository scheduleRepository, WebClient webClient) {
+    public ScheduleWebController(SchedulesService schedulesService, WebClient webClient) {
         this.webClient = webClient;
     }
     // Redirect gets to a single URL with two parameters
