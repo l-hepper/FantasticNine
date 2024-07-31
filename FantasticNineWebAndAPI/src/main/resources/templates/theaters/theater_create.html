@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Theater</title>
+</head>
+<body>
+<h1>Create New Theater</h1>
+<form action="/theaters/create" method="post">
+    <h2>Theater Details</h2>
+    <div>
+        <label for="theaterId">Theater ID:</label>
+        <input type="number" id="theaterId" name="theaterId" />
+    </div>
+
+    <h2>Location Details</h2>
+    <h3>Address</h3>
+    <div>
+        <label for="addressStreet1">Street:</label>
+        <input type="text" id="addressStreet1" name="street1" />
+    </div>
+    <div>
+        <label for="addressCity">City:</label>
+        <input type="text" id="addressCity" name="city" />
+    </div>
+    <div>
+        <label for="addressState">State:</label>
+        <input type="text" id="addressState" name="state" />
+    </div>
+    <div>
+        <label for="addressZipcode">Zipcode:</label>
+        <input type="text" id="addressZipcode" name="zipcode" />
+    </div>
+
+    <h3>Geographical Coordinates</h3>
+    <div>
+        <label for="geoCoordinates">Coordinates (latitude,longitude):</label>
+        <input type="text" id="geoCoordinates" name="coordinates" placeholder="e.g. 40.7128, -74.0060" />
+    </div>
+
+    <button type="submit">Create Theater</button>
+</form>
+<a href="/theaters">Back to List</a>
+</body>
+</html>

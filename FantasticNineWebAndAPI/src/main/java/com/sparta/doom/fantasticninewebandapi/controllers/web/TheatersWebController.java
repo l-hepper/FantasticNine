@@ -1,11 +1,17 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
+import com.sparta.doom.fantasticninewebandapi.models.theater.Address;
+import com.sparta.doom.fantasticninewebandapi.models.theater.Geo;
+import com.sparta.doom.fantasticninewebandapi.models.theater.Location;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
+import com.sparta.doom.fantasticninewebandapi.repositories.TheaterRepository;
+import com.sparta.doom.fantasticninewebandapi.services.TheaterService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
 
@@ -20,8 +26,9 @@ public class TheatersWebController {
 
     private static final int PAGE_SIZE = 10;
 
-    public TheatersWebController(WebClient webClient) {
+    public TheatersWebController(WebClient webClient, TheaterService theaterService, TheaterRepository theaterRepository) {
         this.webClient = webClient;
+
     }
 
     @GetMapping
@@ -67,16 +74,55 @@ public class TheatersWebController {
         return "theaters/theater_create";
     }
 
-    @PostMapping
-    public String createTheater(@ModelAttribute TheaterDoc theater) {
-        webClient
-                .post()
-                .uri("/api/theaters")
-                .header("DOOM-API-KEY", key)
-                .bodyValue(theater)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
+    @PostMapping("/create")
+    public String createTheater(
+            @RequestParam Integer theaterId,
+            @RequestParam String street1,
+            @RequestParam String city,
+            @RequestParam String state,
+            @RequestParam String zipcode,
+            @RequestParam String coordinates) {
+
+        TheaterDoc theater = new TheaterDoc();
+        theater.setTheaterId(theaterId);
+
+        Location location = new Location();
+        Address address = new Address();
+        address.setStreet1(street1);
+        address.setCity(city);
+        address.setState(state);
+        address.setZipcode(zipcode);
+        location.setAddress(address);
+
+        Geo geo = new Geo();
+        geo.setType("Point");
+        if (coordinates != null && !coordinates.isEmpty()) {
+            String[] coords = coordinates.split(",");
+            if (coords.length == 2) {
+                try {
+                    double lat = Double.parseDouble(coords[0].trim());
+                    double lon = Double.parseDouble(coords[1].trim());
+                    geo.setCoordinates(new double[]{lat, lon});
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        location.setGeo(geo);
+        theater.setLocation(location);
+
+        try {
+            webClient.post()
+                    .uri("/api/theaters")
+                    .header("DOOM-API-KEY", key)
+                    .bodyValue(theater)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            e.printStackTrace();
+        }
+
         return "redirect:/theaters";
     }
 

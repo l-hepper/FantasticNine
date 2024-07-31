@@ -45,6 +45,7 @@ public class TheaterAPIController {
 
     @DeleteMapping("/theaters/{theaterId}")
     public ResponseEntity<HttpStatus> deleteTheaterByTheaterId(@PathVariable Integer theaterId) {
+        System.out.println("Received request to delete theater with ID: " + theaterId);
         theaterService.deleteTheaterByTheaterId(theaterId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

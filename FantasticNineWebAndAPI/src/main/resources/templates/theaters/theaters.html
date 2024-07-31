@@ -67,6 +67,9 @@
 </head>
 <body>
 <h1>Theaters</h1>
+
+<a class="create-button" th:href="@{/theaters/create}">Create New Theater</a>
+
 <div class="theater-list">
     <div th:each="theater : ${theaters}" class="theater-card">
         <h2 th:text="${theater.location.address.city} + ' Theater'"></h2>
