@@ -39,8 +39,8 @@ public class CommentsApiController {
     }
 
     @GetMapping("/movies/{movie}/comments")
-    public ResponseEntity<CollectionModel<CommentDoc>> getComments(@PathVariable("movie") ObjectId movie) {
-        List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
+    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getComments(@PathVariable("movie") ObjectId movie) {
+        List<EntityModel<CommentDoc>> comments = commentsService.getCommentsByMovieId(movie).stream().map(this::commentEntityModel).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
