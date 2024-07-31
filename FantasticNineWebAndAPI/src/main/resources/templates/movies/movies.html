@@ -6,48 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
-    <style>
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .card {
-            position: relative;
-            overflow: hidden;
-            width: 200px;
-            height: 300px;
-            background-color: black;
-            color: white;
-        }
-
-        .card::before {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, black, transparent 100%);
-            z-index: 1;
-        }
-
-        .card-body {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px;
-            z-index: 2;
-            color: white;
-        }
-
-        .card-title {
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/movieCardStyles.css}">
 </head>
 
 <body>
