@@ -22,7 +22,7 @@ public class ScheduleDoc {
 
     @NotNull
     @DBRef
-    private TheaterDoc movie;
+    private MovieDoc movie;
 
     @NotNull
     @Future
