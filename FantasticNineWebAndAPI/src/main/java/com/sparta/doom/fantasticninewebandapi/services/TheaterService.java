@@ -45,6 +45,11 @@ public class TheaterService {
         }
     }
 
+    public void createTheater(TheaterDoc theaterDoc) {
+        System.out.println(theaterDoc.getTheaterId());
+        theaterRepository.save(theaterDoc);
+    }
+
 
 
 }

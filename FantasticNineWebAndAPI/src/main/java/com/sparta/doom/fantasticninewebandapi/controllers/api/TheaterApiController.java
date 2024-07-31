@@ -48,4 +48,10 @@ public class TheaterApiController {
         theaterService.deleteTheaterByTheaterId(theaterId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("theaters/create")
+    public ResponseEntity<HttpStatus> createTheater(@RequestBody TheaterDoc theater) {
+        theaterService.createTheater(theater);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }
