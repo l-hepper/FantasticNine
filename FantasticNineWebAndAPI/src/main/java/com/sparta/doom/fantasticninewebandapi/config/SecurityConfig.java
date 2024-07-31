@@ -80,11 +80,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/authenticate").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

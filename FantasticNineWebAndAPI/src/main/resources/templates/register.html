@@ -56,7 +56,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <form onsubmit="return validateForm()" method = "post" th:object ="${userDoc}"  th:action="@{/register}">
-                <input type = "hidden" th:name="*{roles}" th:value="USER">
+                <input type = "hidden" th:name="*{permissions}" th:value="USER">
                 <div class="form-group">
                     <label for="email" class="text-center">Email address</label>
                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">

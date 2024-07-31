@@ -1,12 +1,15 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +17,18 @@ import java.util.List;
 public class GeneralWebController {
 
     private final WebClient webClient;
+    @Value("${jwt.auth}")
+    private String AUTH_HEADER;
+
+    private final SecretKey secretKey;
+
     private final String API_KEY = "unique-api-key-123";
     private String key;
     private static final int BATCH_SIZE = 5;
 
-
-    public GeneralWebController(WebClient webClient) {
+    @Autowired
+    public GeneralWebController(WebClient webClient, SecretKey secretKey) {
+        this.secretKey = secretKey;
         this.webClient = webClient;
     }
 
@@ -30,10 +39,11 @@ public class GeneralWebController {
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
+
         List<MovieDoc> topRatedMovies = webClient
                 .get()
                 .uri("/api/movies/top-rated")
-                .header("DOOM-API-KEY", key)
+                .header(AUTH_HEADER,"Bearer " + secretKey.toString())
                 .retrieve()
                 .bodyToFlux(MovieDoc.class)
                 .collectList()
