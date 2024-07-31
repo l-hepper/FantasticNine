@@ -4,135 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doomflix - Your Ultimate Movie Database</title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/landingStyles.css}">
     <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
+    <style>
+        .header-background {
+            background-image: url('/images/doom_head.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            color: white;
+        }
+
+        .header-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8); /* Change this to adjust the darkness */
+            z-index: 1;
+        }
+
+        .header-background .container {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
 </head>
 <body>
-<!-- Navbar -->
 <nav th:replace="~{fragments/navbar}"></nav>
 
-<!-- Header -->
-<header class="jumbotron jumbotron-fluid bg-dark text-white text-center">
+<header class="jumbotron jumbotron-fluid bg-dark text-white text-center header-background">
+
     <div class="container">
         <h1 class="display-4">Welcome to Doomflix</h1>
         <p class="lead">Your ultimate movie database</p>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-4 mb-3 d-flex align-items-stretch">
+                <div class="card text-dark bg-dark border-light flex-fill">
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5 class="card-title">All Movies</h5>
+                        <p class="card-text flex-grow-1">Explore our extensive collection of movies from all genres and eras.</p>
+                        <a href="/movies" class="btn btn-doomflix-theme mt-auto">View Movies</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 d-flex align-items-stretch">
+                <div class="card text-dark bg-dark border-light flex-fill">
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5 class="card-title">All Theatres</h5>
+                        <p class="card-text flex-grow-1">Find theatres near you and check out their current screenings.</p>
+                        <a href="/theatres" class="btn btn-doomflix-theme mt-auto">View Theatres</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </header>
-
-<!-- Top Picks Section -->
 <section id="top-movies-all-time" class="container my-5">
-    <h2 class="text-center mb-4">Movie Top Picks</h2>
-    <div id="top-movies-all-time-carousel" class="carousel slide" data-ride="carousel">
+    <h2 class="text-center mb-4">Top 10 Movie Picks</h2>
+    <div id="top-movies-all-time-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
-            <!-- Movie Item -->
-            <div class="carousel-item active">
-                <div class="card">
-                    <img src="movie-poster.jpg" class="card-img-top" alt="Movie Poster">
-                    <div class="card-body">
-                        <h5 class="card-title">Movie Title 1</h5>
-                        <p class="card-text">Movie description goes here.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat the above block for more movies -->
-            <div class="carousel-item">
-                <div class="card">
-                    <img src="movie-poster-2.jpg" class="card-img-top" alt="Movie Poster">
-                    <div class="card-body">
-                        <h5 class="card-title">Movie Title 2</h5>
-                        <p class="card-text">Movie description goes here.</p>
+            <div th:each="chunk, iterStat : ${topRatedMovies}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                <div class="carousel-container">
+                    <div th:each="movie : ${chunk}" class="carousel-card">
+                        <div class="card">
+                            <img th:src="@{${movie.poster}}" class="card-img-top" th:alt="${movie.title}">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${movie.title}"></h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <a class="carousel-control-prev" href="#moviesCarousel" role="button" data-slide="prev">
+        <a class="carousel-control-prev" href="#top-movies-all-time-carousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#moviesCarousel" role="button" data-slide="next">
+        <a class="carousel-control-next" href="#top-movies-all-time-carousel" role="button" data-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
     </div>
 </section>
 
-<!-- Top Movies This Year Section -->
+
+<section id="movies-by-genre" class="container my-5">
+    <h2 class="text-center mb-4">Movies By Genre</h2>
+    <div id="genresCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+            <div th:each="chunk, iterStat : ${genreChunks}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                <div class="carousel-container">
+                    <div th:each="movie : ${chunk}" class="carousel-card">
+                        <div class="card">
+                            <img th:src="@{${genre.image}}" class="card-img-top" th:alt="${genre.name}">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${genre.name}">Genre Name</h5>
+                                <p class="card-text" th:text="${genre.description}">Description for Genre</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#genresCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#genresCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</section>
 <section id="top-movies-this-year" class="container my-5">
-    <h2 class="text-center mb-4">Top 10 Movies This Year</h2>
-    <div id="top-movies-this-year-carousel" class="carousel slide" data-ride="carousel">
+    <h2 class="text-center mb-4">Top 10 TV Shows</h2>
+    <div id="top-movies-this-year-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
-            <!-- Theatre Item -->
-            <div class="carousel-item active">
-                <div class="card">
-                    <img src="movie-image.jpg" class="card-img-top" alt="movie Image">
-                    <div class="card-body">
-                        <h5 class="card-title">Movie Name 1</h5>
-                        <p class="card-text">Movie info goes here</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat the above block for more theatres -->
-            <div class="carousel-item">
-                <div class="card">
-                    <img src="movie-image-2.jpg" class="card-img-top" alt="movie Image">
-                    <div class="card-body">
-                        <h5 class="card-title">Theatre Name 2</h5>
-                        <p class="card-text">Theatre location and description goes here.</p>
+
+            <div th:each="chunk, iterStat : ${topMoviesChunks}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                <div class="carousel-container">
+
+                    <div th:each="movie : ${chunk}" class="carousel-card">
+                        <div class="card">
+                            <img th:src="@{${movie.posterImage}}" class="card-img-top" th:alt="${movie.title}">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${movie.title}">Movie Title</h5>
+                                <p class="card-text" th:text="${movie.description}">Movie description goes here.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <a class="carousel-control-prev" href="#theatresCarousel" role="button" data-slide="prev">
+        <a class="carousel-control-prev" href="#top-movies-this-year-carousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#theatresCarousel" role="button" data-slide="next">
+        <a class="carousel-control-next" href="#top-movies-this-year-carousel" role="button" data-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
     </div>
 </section>
-
-<!-- By Genre Section -->
-<div id="genresCarousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        <div th:each="genre, iterStat : ${genres}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-            <div class="d-flex justify-content-center">
-                <div class="card" style="width: 18rem;">
-                    <img th:src="@{${genre.image}}" class="card-img-top" th:alt="${genre.name}">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${genre.name}">Genre Name</h5>
-                        <p class="card-text" th:text="${genre.description}">Description for Genre</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a class="carousel-control-prev" href="#genresCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#genresCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
-
-
-
-
-
-
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <p class="mb-0">© 2024 Doomflix. All rights reserved.</p>
-    </div>
-</footer>
-
+<footer th:replace="~{fragments/footer}"></footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
