@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
-import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
+import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +14,9 @@ public class ScheduleMvcController {
     // TODO Theatre has one schedule with many showings
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
-    private final ScheduleService ScheduleService;
+    private final SchedulesService ScheduleService;
     @Autowired
-    public ScheduleMvcController(ScheduleService scheduleService) {
+    public ScheduleMvcController(SchedulesService scheduleService) {
         ScheduleService = scheduleService;
     }
     @GetMapping("/theatre/{id}/schedules/")

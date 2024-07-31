@@ -88,6 +88,18 @@ public class MoviesApiController {
         return ResponseEntity.ok(topMovies);
     }
 
+    @GetMapping("/movies/top-rated-movies")
+    public ResponseEntity<List<MovieDoc>> getTop10MoviesByImdbRating() {
+        List<MovieDoc> topMovies = moviesService.getTop10MoviesByImdbRating();
+        return ResponseEntity.ok(topMovies);
+    }
+
+    @GetMapping("/series/top-rated")
+    public ResponseEntity<List<MovieDoc>> getTop10SeriesByImdbRating() {
+        List<MovieDoc> topSeries = moviesService.getTop10SeriesByImdbRating();
+        return ResponseEntity.ok(topSeries);
+    }
+
     @GetMapping("/series")
     public ResponseEntity<List<MovieDoc>> getAllSeries() {
         List<MovieDoc> series = moviesService.getAllSeries();
