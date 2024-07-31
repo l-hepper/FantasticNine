@@ -6,6 +6,7 @@ import com.sparta.doom.fantasticninewebandapi.services.SecurityService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,6 +23,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/")
 public class CommentsApiController {
@@ -36,13 +40,13 @@ public class CommentsApiController {
     }
 
     @GetMapping("/movies/{movie}/comments")
-    public ResponseEntity<CollectionModel<CommentDoc>> getComments(@PathVariable("movie") ObjectId movie) {
-        List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
+    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getComments(@PathVariable("movie") ObjectId movie) {
+        List<EntityModel<CommentDoc>> comments = commentsService.getCommentsByMovieId(movie).stream().map(this::commentEntityModel).toList();
         return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movie}/comments/id/{commentId}")
-    public ResponseEntity<CommentDoc> getComment(@PathVariable("movie") ObjectId movie, @PathVariable("commentId") ObjectId commentId) {
+    public ResponseEntity<EntityModel<CommentDoc>> getComment(@PathVariable("movie") ObjectId movie, @PathVariable("commentId") ObjectId commentId) {
         CommentDoc comment = commentsService.getCommentById(commentId);
         if (comment == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -50,17 +54,20 @@ public class CommentsApiController {
         if(!comment.getMovie_id().equals(movie)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        EntityModel<CommentDoc> commentDocEntityModel = EntityModel.of(comment
+                ,linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovie_id().toString())).withRel("movie")
+                ,linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovie_id(),comment.getId())).withSelfRel());
+        return new ResponseEntity<>(commentDocEntityModel, HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movie}/comments/dates/{date1}/{date2}")
-    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
+    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getCommentsByMovieAndDate(@PathVariable("movie") ObjectId movie
             , @PathVariable String date1, @PathVariable String date2) {
         if(date1 == null || date2 == null || LocalDate.parse(date1).isAfter(LocalDate.parse(date2)) || date1.length()!=10 || date2.length()!=10) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
-        List<CommentDoc> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments);
+        List<EntityModel<CommentDoc>> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments).stream().map(this::commentEntityModel).toList();
         if(commentsOutput.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -70,9 +77,9 @@ public class CommentsApiController {
     }
 
     @GetMapping("/movies/{movie}/comments/name/{username}")
-    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("username") String username) {
+    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getCommentsByMovieAndUsername(@PathVariable("movie") ObjectId movie, @PathVariable("username") String username) {
         List<CommentDoc> comments = commentsService.getCommentsByMovieId(movie);
-        List<CommentDoc> commentDocList = commentsService.getCommentsByUsernameAndMovie(username, comments);
+        List<EntityModel<CommentDoc>> commentDocList = commentsService.getCommentsByUsernameAndMovie(username, comments).stream().map(this::commentEntityModel).toList();
 
         if(commentDocList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -80,11 +87,19 @@ public class CommentsApiController {
         return new ResponseEntity<>(CollectionModel.of(commentDocList), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{username}/comments")
-    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username, Pageable pageable) {
+    @GetMapping("/users/name/{username}/comments")
+    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username
+            ,@RequestParam(value = "page", defaultValue = "0") int page
+            ,@RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page,size);
         Page<CommentDoc> commentsPage = commentsService.getCommentsByName(username, pageable);
         PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
-
+        return ResponseEntity.ok(pagedModel);
+    }
+    @GetMapping("/users/email/{email}/comments")
+    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByEmail(@PathVariable("email") String email, Pageable pageable) {
+        Page<CommentDoc> commentsPage = commentsService.getCommentsByEmailAddress(email, pageable);
+        PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
         return ResponseEntity.ok(pagedModel);
     }
 
@@ -99,13 +114,14 @@ public class CommentsApiController {
 //    }
 
     @GetMapping("/users/{username}/comments/dates/{date1}/{date2}")
-    public ResponseEntity<CollectionModel<CommentDoc>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
+    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getCommentsByUsernameAndDateRange(@PathVariable("username") String username
             , @PathVariable("date1") String date1, @PathVariable("date2") String date2) {
         if(date1 == null || date2 == null || LocalDate.parse(date1).isAfter(LocalDate.parse(date2)) || date1.length()!=10 || date2.length()!=10) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         List<CommentDoc> comments = commentsService.getCommentsByName(username);
-        List<CommentDoc> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments);
+        List<EntityModel<CommentDoc>> commentsOutput = commentsService.getCommentsByDateRange(date1,date2,comments)
+                .stream().map(this::commentEntityModel).toList();
         if(commentsOutput.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -116,12 +132,6 @@ public class CommentsApiController {
 
     @PostMapping("/movies/{movie}/comments/create")
     public ResponseEntity<EntityModel<CommentDoc>> createComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @RequestBody CommentDoc newComment) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         if(!newComment.getMovie_id().toString().equals(movieId.toString())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -132,12 +142,7 @@ public class CommentsApiController {
     }
     @PutMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> updateComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @PathVariable("commentId") ObjectId commentId, @RequestBody CommentDoc newComment) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
+
         CommentDoc oldComment = commentsService.getCommentById(commentId);
         if(oldComment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -150,17 +155,17 @@ public class CommentsApiController {
     }
     @DeleteMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> deleteComment(@RequestHeader(name = "DOOM-API-KEY") String key, @PathVariable("commentId") ObjectId commentId) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         CommentDoc comment = commentsService.getCommentById(commentId);
         if(comment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         commentsService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    private EntityModel<CommentDoc> commentEntityModel(CommentDoc comment) {
+        Link movieLink = WebMvcLinkBuilder.linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovie_id().toString())).withRel("movie");
+//        Link userLink = WebMvcLinkBuilder.linkTo(methodOn(UsersController.class).getUserByEmail(comment.getEmail())).withRel("user");
+        Link selfLink = WebMvcLinkBuilder.linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovie_id(),comment.getId())).withSelfRel();
+        return EntityModel.of(comment, /*userLink,*/ movieLink, selfLink);
     }
 }

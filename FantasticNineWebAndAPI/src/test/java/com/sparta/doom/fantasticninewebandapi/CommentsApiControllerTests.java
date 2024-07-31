@@ -114,7 +114,7 @@ public class CommentsApiControllerTests {
     }
     @Test
     void testGetCommentsByUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/Mercedes-Tyler/comments"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/name/Mercedes-Tyler/comments"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Mercedes Tyler")))
                 .andDo(MockMvcResultHandlers.print());
@@ -122,8 +122,21 @@ public class CommentsApiControllerTests {
     }
     @Test
     void testGetCommentsByUserNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/MercedesTyler/comments"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/name/MercedesTyler/comments"))
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("\"totalElements\":0")));
+    }
+    @Test
+    void testGetCommentsByUserEmailNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/email/wrong.email.address@something/comments"))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("\"totalElements\":0")));
+    }
+    @Test
+    void testGetCommentsByUserEmail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/email/mercedes_tyler@fakegmail.com/comments"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Mercedes Tyler")))
+                .andDo(MockMvcResultHandlers.print());
+
     }
     @Test
     void testGetCommentsByDateAndUser() throws Exception {

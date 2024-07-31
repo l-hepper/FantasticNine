@@ -10,4 +10,5 @@ public class FantasticNineWebAndApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(FantasticNineWebAndApiApplication.class, args);
     }
+
 }
