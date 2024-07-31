@@ -106,12 +106,7 @@ public class CommentsApiController {
 
     @PostMapping("/movies/{movie}/comments/create")
     public ResponseEntity<EntityModel<CommentDoc>> createComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @RequestBody CommentDoc newComment) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
+
         if(!newComment.getId().equals(movieId)|| commentsService.getCommentById(newComment.getId())!=null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -122,12 +117,7 @@ public class CommentsApiController {
     }
     @PutMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> updateComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @PathVariable("commentId") ObjectId commentId, @RequestBody CommentDoc newComment) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
+
         CommentDoc oldComment = commentsService.getCommentById(commentId);
         if(oldComment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -140,12 +130,6 @@ public class CommentsApiController {
     }
     @DeleteMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> deleteComment(@RequestHeader(name = "DOOM-API-KEY") String key, @PathVariable("commentId") ObjectId commentId) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         CommentDoc comment = commentsService.getCommentById(commentId);
         if(comment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
