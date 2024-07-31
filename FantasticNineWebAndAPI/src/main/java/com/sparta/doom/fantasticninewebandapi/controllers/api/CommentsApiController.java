@@ -86,9 +86,15 @@ public class CommentsApiController {
         return new ResponseEntity<>(CollectionModel.of(commentDocList), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{username}/comments")
+    @GetMapping("/users/name/{username}/comments")
     public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username, Pageable pageable) {
         Page<CommentDoc> commentsPage = commentsService.getCommentsByName(username, pageable);
+        PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
+        return ResponseEntity.ok(pagedModel);
+    }
+    @GetMapping("/users/email/{email}/comments")
+    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByEmail(@PathVariable("email") String email, Pageable pageable) {
+        Page<CommentDoc> commentsPage = commentsService.getCommentsByName(email, pageable);
         PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
         return ResponseEntity.ok(pagedModel);
     }

@@ -42,6 +42,10 @@ public class CommentsService {
         return commentsRepository.findByNameContainingIgnoreCase(name.replaceAll("-", " "), pageable);
     }
 
+    public Page<CommentDoc> getCommentsByEmailAddress(String email, Pageable pageable) {
+        return commentsRepository.findByEmail(email, pageable);
+    }
+
     public List<CommentDoc> getCommentsByName(String name){
         List<CommentDoc> commentDocList = new ArrayList<>();
         for(CommentDoc comment : commentsRepository.findAll()){
