@@ -1,8 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
-import com.sparta.doom.fantasticninewebandapi.models.MoviesModel;
+import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
-import com.sparta.doom.fantasticninewebandapi.models.TheaterModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class SchedulesService {
         return schedulesRepository.findById(Id);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatre(TheaterModel theatre) {
+    public List<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre) {
         String theatreId = theatre.getId();
         return getSchedulesByTheatreId(theatreId);
     }
@@ -40,7 +40,7 @@ public class SchedulesService {
                 .toList();
     }
 
-    public List<ScheduleDoc> getSchedulesByMovie(MoviesModel movie) {
+    public List<ScheduleDoc> getSchedulesByMovie(MovieDoc movie) {
         String movieId = movie.getId();
         return getSchedulesByMovieId(movieId);
     }

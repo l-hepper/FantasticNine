@@ -1,9 +1,7 @@
-package com.sparta.doom.fantasticninewebandapi.controllers;
+package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
-import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -15,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 
 @RestController
 @RequestMapping("/api/schedules")
@@ -76,7 +73,7 @@ public class SchedulesApiController {
         Link movieLink = doc.getMovie() == null ? Link.of("Not Found") : linkTo(methodOn(MoviesApiController.class)
                 .getMovieById(doc.getMovie().getId()))
                 .withRel("movie");
-        Link theaterLink = doc.getTheater() == null ? Link.of("Not Found") : linkTo(methodOn(TheatersApiController.class)
+        Link theaterLink = doc.getTheater() == null ? Link.of("Not Found") : linkTo(methodOn(TheaterApiController.class)
                 .getTheaters())
                 .slash(doc.getTheater().getId())
                 .withRel("theater");

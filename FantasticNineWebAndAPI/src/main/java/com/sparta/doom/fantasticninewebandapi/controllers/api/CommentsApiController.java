@@ -1,4 +1,4 @@
-package com.sparta.doom.fantasticninewebandapi.controllers;
+package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
@@ -16,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
