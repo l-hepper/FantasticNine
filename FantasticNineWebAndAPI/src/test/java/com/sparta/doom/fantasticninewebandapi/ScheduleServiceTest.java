@@ -2,16 +2,14 @@ package com.sparta.doom.fantasticninewebandapi;
 
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.Schedule;
+import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
-import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
+import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
@@ -27,7 +25,7 @@ public class ScheduleServiceTest {
 
     private static ScheduleRepository scheduleRepository;
 
-    private static ScheduleService scheduleService;
+    private static SchedulesService schedulesService;
 
     Schedule schedule1 = new Schedule("1", new TheaterDoc(), new MovieDoc(), LocalDateTime.now().plusDays(1));
     Schedule schedule2 = new Schedule("2", new TheaterDoc(), new MovieDoc(), LocalDateTime.now().plusDays(2));
@@ -36,14 +34,14 @@ public class ScheduleServiceTest {
     @BeforeAll
     public static void setUp() {
         scheduleRepository = Mockito.mock(ScheduleRepository.class);
-        scheduleService = new ScheduleService(scheduleRepository);
+        schedulesService = new SchedulesService(scheduleRepository);
     }
 
     @Test
     public void testGetSchedules() {
         when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1, schedule2));
 
-        List<Schedule> schedules = scheduleService.getSchedules();
+        List<ScheduleDoc> schedules = schedulesService.getSchedules();
 
         assertNotNull(schedules);
         Assertions.assertEquals(2, schedules.size());
@@ -53,7 +51,7 @@ public class ScheduleServiceTest {
     public void testGetScheduleById() {
         when(scheduleRepository.findById("1")).thenReturn(Optional.of(schedule1));
 
-        Optional<Schedule> retrievedSchedule = scheduleService.getScheduleByID("1");
+        Optional<Schedule> retrievedSchedule = schedulesService.getScheduleByID("1");
 
         assertTrue(retrievedSchedule.isPresent());
         assertEquals("1", retrievedSchedule.get().getId());
@@ -64,7 +62,7 @@ public class ScheduleServiceTest {
     public void testAddSchedule() {
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule1);
 
-        Schedule savedSchedule = scheduleService.addSchedule(schedule1);
+        Schedule savedSchedule = schedulesService.addSchedule(schedule1);
 
         assertNotNull(savedSchedule);
         assertEquals("1", savedSchedule.getId());
@@ -75,7 +73,7 @@ public class ScheduleServiceTest {
     public void testRemoveSchedule() {
         doNothing().when(scheduleRepository).delete(schedule1);
 
-        scheduleService.removeSchedule(schedule1);
+        schedulesService.removeSchedule(schedule1);
 
         verify(scheduleRepository, times(1)).delete(schedule1);
     }
@@ -84,7 +82,7 @@ public class ScheduleServiceTest {
     public void testUpdateSchedule() {
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule1);
 
-        Schedule updatedSchedule = scheduleService.updateSchedule(schedule1);
+        Schedule updatedSchedule = schedulesService.updateSchedule(schedule1);
 
         assertNotNull(updatedSchedule);
         assertEquals("1", updatedSchedule.getId());

@@ -1,10 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
-import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
-import com.sparta.doom.fantasticninewebandapi.models.Schedule;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
-import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
+import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,29 +19,29 @@ public class ScheduleMvcController {
     // TODO Theatre has one schedule with many showings
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
-    private final ScheduleService scheduleService;
+    private final SchedulesService schedulesService;
     private final ScheduleRepository scheduleRepository;
     public final WebClient webClient;
     private String key;
     @Autowired
-    public ScheduleMvcController(ScheduleService scheduleService, ScheduleRepository scheduleRepository, WebClient webClient) {
-        this.scheduleService = scheduleService;
+    public ScheduleMvcController(SchedulesService schedulesService, ScheduleRepository scheduleRepository, WebClient webClient) {
+        this.schedulesService = schedulesService;
         this.scheduleRepository = scheduleRepository;
         this.webClient = webClient;
     }
     // Redirect gets to a single URL with two parameters
     // Redirect to /schedules/ or /schedules/{id}/{searchType}
     @GetMapping("/theaters/search/{id}/schedules/")
-    public String getScheduleForTheatre(@PathVariable String id) {
+    public String getSchedulesForTheatre(@PathVariable String id) {
         return "redirect:/schedules/theater/" +id+"/";
     }
 
     @GetMapping("/movies/search/{id}/schedules/")
-    public String getScheduleForMovie(@PathVariable String id, Model model) {
+    public String getSchedulesForMovie(@PathVariable String id, Model model) {
         return "redirect:/schedules/movie/" +id+"/";
     }
     @GetMapping("/schedules/{searchType}/{id}/")
-    public String getScheduleById(@PathVariable String searchType,@PathVariable String id, Model model) {
+    public String getSchedulesSearch(@PathVariable String searchType,@PathVariable String id, Model model) {
         if (Objects.equals(searchType, "theater")) {
             //schedules by theater id
             List<ScheduleDoc> schedules = webClient
