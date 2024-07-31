@@ -2,8 +2,6 @@ package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.UserRepository;
-import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyModel;
-import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
