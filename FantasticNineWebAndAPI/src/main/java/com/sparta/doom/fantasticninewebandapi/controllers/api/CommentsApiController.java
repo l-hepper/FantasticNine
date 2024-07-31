@@ -165,12 +165,10 @@ public class CommentsApiController {
         commentsService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
     private EntityModel<CommentDoc> commentEntityModel(CommentDoc comment) {
         Link movieLink = WebMvcLinkBuilder.linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovie_id().toString())).withRel("movie");
         Link userLink = WebMvcLinkBuilder.linkTo(methodOn(UsersController.class).getUserByEmail(comment.getEmail())).withRel("user");
         Link selfLink = WebMvcLinkBuilder.linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovie_id(),comment.getId())).withSelfRel();
         return EntityModel.of(comment, userLink, movieLink, selfLink);
     }
-}
 }
