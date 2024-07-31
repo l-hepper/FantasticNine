@@ -80,7 +80,7 @@
 
 
 <section id="movies-by-genre" class="container my-5">
-    <h2 class="text-center mb-4">Movies By Genre</h2>
+    <h2 class="text-center mb-4">Movies & Series By Genre</h2>
     <div id="by-genre-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
             <div th:each="chunk, iterStat : ${allGenres}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
