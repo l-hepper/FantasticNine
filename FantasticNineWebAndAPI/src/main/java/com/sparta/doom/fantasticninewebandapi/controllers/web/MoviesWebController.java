@@ -1,6 +1,5 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
-import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +27,15 @@ public class MoviesWebController {
 
     @GetMapping
     public String getMovies(Model model) {
-        ResponseEntity<List<MoviesDTO>> moviesResponse = webClient
+        ResponseEntity<List<MovieDoc>> moviesResponse = webClient
                 .get()
                 .uri("/api/movies/")
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .toEntityList(MoviesDTO.class)
+                .toEntityList(MovieDoc.class)
                 .block();
 
-        ArrayList<MoviesDTO> moviesList = new ArrayList<>();
+        ArrayList<MovieDoc> moviesList = new ArrayList<>();
         if (moviesResponse.hasBody()) {
             for (int i = 0; i<10; i++) {
                 moviesList.add(moviesResponse.getBody().get(i));
