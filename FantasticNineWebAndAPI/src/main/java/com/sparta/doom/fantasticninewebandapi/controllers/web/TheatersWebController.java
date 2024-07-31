@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Controller
-@RequestMapping("/theatres")
+@RequestMapping("/theaters")
 public class TheatersWebController {
 
     private final WebClient webClient;
@@ -32,8 +32,8 @@ public class TheatersWebController {
                 .bodyToFlux(TheaterModel.class)
                 .collectList()
                 .block();
-        model.addAttribute("theatres", theatres);
-        return "theaters";
+        model.addAttribute("theaters", theatres);
+        return "theaters/theaters";
     }
 
     @GetMapping("/search/{id}")
@@ -46,7 +46,7 @@ public class TheatersWebController {
                 .bodyToMono(TheaterModel.class)
                 .block();
         model.addAttribute("theater", theater);
-        return "theater_details";
+        return "theaters/theater_details";
     }
 
 }
