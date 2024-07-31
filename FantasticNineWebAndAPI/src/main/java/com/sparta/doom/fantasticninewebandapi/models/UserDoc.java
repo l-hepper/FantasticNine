@@ -18,18 +18,19 @@ public class UserDoc {
     private String name;
     private String password;
 
-    @Field("roles")
-    private Set<String> roles;
+    @Field("permissions")
+    private Set<String> permissions;
 
     public UserDoc(){
 
     }
 
-    public UserDoc(String email, String name, String password, Set<String> roles) {
+    public UserDoc(String email, String name, String password, Set<String> permissions) {
+
         this.email = email;
         this.name = name;
         this.password = password;
-        this.roles = roles;
+        this.permissions = permissions;
     }
 
     public String getId() {
@@ -64,11 +65,11 @@ public class UserDoc {
         this.password = password;
     }
 
-    public Set<String> getRoles() {
-        return roles;
+    public Set<String> getPermissions() {
+        return permissions;
     }
 
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
     }
 }

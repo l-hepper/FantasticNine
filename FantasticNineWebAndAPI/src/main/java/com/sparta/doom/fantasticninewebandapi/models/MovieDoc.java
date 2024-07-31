@@ -13,13 +13,13 @@ public class MovieDoc {
 
     @Id
     private String id;
-    private Object awards;
+    private String awards;
     private String[] cast;
     private String[] countries;
     private String[] directors;
     private String fullplot;
     private String genres;
-    private Object imdb;
+    private String imdb;
     private String[] languages;
     private String lastupdated;
     private Integer num_mflix_comments;
@@ -29,7 +29,7 @@ public class MovieDoc {
     private String released;
     private Integer runtime;
     private String title;
-    private Object tomatoes;
+    private String tomatoes;
     private String type;
     private String[] writers;
     private String year;
@@ -42,11 +42,11 @@ public class MovieDoc {
         this.id = id;
     }
 
-    public Object getAwards() {
+    public String getAwards() {
         return awards;
     }
 
-    public void setAwards(Object awards) {
+    public void setAwards(String awards) {
         this.awards = awards;
     }
 
@@ -90,11 +90,11 @@ public class MovieDoc {
         this.genres = genres;
     }
 
-    public Object getImdb() {
+    public String getImdb() {
         return imdb;
     }
 
-    public void setImdb(Object imdb) {
+    public void setImdb(String imdb) {
         this.imdb = imdb;
     }
 
@@ -170,11 +170,11 @@ public class MovieDoc {
         this.title = title;
     }
 
-    public Object getTomatoes() {
+    public String getTomatoes() {
         return tomatoes;
     }
 
-    public void setTomatoes(Object tomatoes) {
+    public void setTomatoes(String tomatoes) {
         this.tomatoes = tomatoes;
     }
 
