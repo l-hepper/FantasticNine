@@ -109,7 +109,8 @@ public class MoviesService {
         query.addCriteria(Criteria.where("imdb.rating").ne(""));
         query.with(Sort.by(Sort.Order.desc("imdb.rating")));
 
-        List<MovieDoc> allMovies = mongoTemplate.find(query.limit(20), MovieDoc.class);
+        List<MovieDoc> allMovies = mongoTemplate
+                .find(query.limit(20), MovieDoc.class);
 
         return allMovies.stream()
                 .filter(distinctByKey(MovieDoc::getTitle))
