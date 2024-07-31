@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping
-public class ScheduleMvcController {
+public class ScheduleWebController {
     // TODO Theatre has one schedule with many showings
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
@@ -27,7 +27,7 @@ public class ScheduleMvcController {
     @Value("${key}")
     private String key;
     @Autowired
-    public ScheduleMvcController(SchedulesService schedulesService, ScheduleRepository scheduleRepository, WebClient webClient) {
+    public ScheduleWebController(SchedulesService schedulesService, ScheduleRepository scheduleRepository, WebClient webClient) {
         this.webClient = webClient;
     }
     // Redirect gets to a single URL with two parameters
