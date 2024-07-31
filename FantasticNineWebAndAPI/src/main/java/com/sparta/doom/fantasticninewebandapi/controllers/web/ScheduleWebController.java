@@ -3,6 +3,7 @@ package com.sparta.doom.fantasticninewebandapi.controllers.web;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,6 +11,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -23,6 +25,10 @@ public class ScheduleWebController {
     // TODO Theatre has one schedule with many showings
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
+    // TODO Create
+    // TODO Update
+    // TODO Delete
+    // TODO Web Page design
     public final WebClient webClient;
     @Value("${key}")
     private String key;
@@ -101,7 +107,7 @@ public class ScheduleWebController {
             model.addAttribute("schedules",schedules);
         }
         model.addAttribute("searchType", searchType);
-        return "schedules";
+        return "schedules/show";
     }
     @GetMapping("/schedules/")
     public String getAllSchedules(Model model) {
@@ -118,16 +124,51 @@ public class ScheduleWebController {
                 .toList();
         model.addAttribute("schedules", schedules);
         model.addAttribute("searchType", "all");
-        return "schedules";
+        return "schedules/show";
     }
 
     @GetMapping("/schedules/create/")
-    public String createSchedule() {
-        return "schedules/schedules_create";
+    public String createSchedule(Model model) {
+        model.addAttribute("schedule", new ScheduleDoc());
+        // add any other needed attributes
+        return "schedules/create";
     }
+
     @PostMapping("/schedules/create/")
-    public String createSchedulePost(@ModelAttribute ScheduleDoc schedule, Model model) {
-        //scheduleService.addSchedule(schedule);
+    public String createSchedule(@Valid @ModelAttribute ScheduleDoc schedule, Errors errors) {
+        if (errors.hasErrors()) {
+            throw new IllegalArgumentException("Invalid schedule: " + errors);
+        } else {
+            webClient.post()
+                    .uri("api/schedules/")
+                    .header("DOOM-API-KEY", key)
+                    .bodyValue(schedule);
+            return "redirect:/schedules/schedule/" + schedule.getId() + "/";
+        }
+    }
+
+    @PostMapping("/schedules/update/{id}/")
+    public String updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule, Model model, Errors errors) {
+        if (errors.hasErrors()) {
+            throw new IllegalArgumentException("Invalid schedule: " + errors);
+        } else {
+            webClient.put()
+                    .uri("api/schedules/" + schedule.getId())
+                    .header("DOOM-API-KEY", key)
+                    .bodyValue(schedule)
+                    .retrieve()
+                    .bodyToMono(ScheduleDoc.class)
+                    .block();
+            return "redirect:/schedules/schedule/" + schedule.getId() + "/";
+        }
+    }
+
+    @GetMapping("/schedules/delete/{id}/")
+    public String deleteSchedule(@PathVariable String id) {
+        webClient
+                .delete()
+                .uri("api/schedules/" + id)
+                .header("DOOM-API-KEY", key);
         return "redirect:/schedules/";
     }
 }
