@@ -28,7 +28,7 @@ public class SchedulesApiController {
 
     @GetMapping("/schedules")
     public CollectionModel<EntityModel<ScheduleDoc>> getSchedules() {
-        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getSchedulesStream());
+        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getSchedules());
 
         return scheduleModel
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel());
@@ -44,7 +44,7 @@ public class SchedulesApiController {
         if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        EntityModel<ScheduleDoc> newScheduleModel = mapScheduleHateoas(schedulesService.addSchedule(newSchedule));
+        EntityModel<ScheduleDoc> newScheduleModel = mapScheduleHateoas(schedulesService.addSchedule(newSchedule).orElseThrow(NoSuchElementException::new));
         return ResponseEntity.ok().body(newScheduleModel);
     }
 
@@ -59,7 +59,7 @@ public class SchedulesApiController {
         if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        EntityModel<ScheduleDoc> updatedSchedule = mapScheduleHateoas(schedulesService.updateSchedule(schedule));
+        EntityModel<ScheduleDoc> updatedSchedule = mapScheduleHateoas(schedulesService.updateSchedule(schedule).orElseThrow(NoSuchElementException::new));
         return ResponseEntity.ok().body(updatedSchedule);
     }
 
@@ -75,10 +75,6 @@ public class SchedulesApiController {
         CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByMovieId(Id));
         return ResponseEntity.ok(schedulesModel
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
-    }
-
-    private CollectionModel<EntityModel<ScheduleDoc>> getCollectionModelOf(List<ScheduleDoc> schedules) {
-        return getCollectionModelOf(schedules.stream());
     }
 
     private CollectionModel<EntityModel<ScheduleDoc>> getCollectionModelOf(Stream<ScheduleDoc> schedules) {
