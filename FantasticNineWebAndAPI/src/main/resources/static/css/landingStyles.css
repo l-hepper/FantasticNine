@@ -55,7 +55,8 @@ body {
 
 #top-movies-all-time-carousel, #by-genre-carousel, .carousel-inner {
     display: flex;
-    max-width: fit-content;
+    width: fit-content;
+    max-width: 1050px;
     margin: auto;
 }
 

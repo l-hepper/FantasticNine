@@ -48,12 +48,6 @@
             <div th:each="chunk, iterStat : ${topRatedMovies}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                 <div class="carousel-container">
                     <div th:each="movie : ${chunk}" class="carousel-card">
-<!--                        <div class="card">-->
-<!--                            <img th:src="@{${movie.poster}}" class="card-img-top" th:alt="${movie.title}">-->
-<!--                            <div class="card-body">-->
-<!--                                <h5 class="card-title" th:text="${movie.title}"></h5>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
                              th:if="${movie.getPoster() != null}">
                             <div class="card-body">
