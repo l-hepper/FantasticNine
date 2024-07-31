@@ -21,7 +21,7 @@ public class TheaterApiController {
         this.theaterService = theaterService;
     }
 
-    @GetMapping()
+    @GetMapping("/theaters")
     public ResponseEntity<List<TheaterDoc>> getTheaters() {
         List<TheaterDoc> theaters = theaterService.getAllTheaters();
         return ResponseEntity.ok()
