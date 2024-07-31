@@ -20,7 +20,7 @@
         <tbody>
         <tr th:each="showings : ${schedules}">
             <!--/*@thymesVar id="getTheater" type=""*/-->
-            <td th:text="${showings.theater.location} ?: 'N/A'"></td>
+            <td th:text="${showings.theater.location.address.city} ?: 'N/A'"></td>
             <td th:text="${showings.startTime} ?: 'N/A'"></td>
         </tr>
         </tbody>
@@ -75,7 +75,7 @@
         </thead>
         <tbody>
         <tr th:each="showing : ${schedules}">
-            <td th:text="${showing.movie} ?: 'N/A'"></td>
+            <td th:text="${showing.movie.title} ?: 'N/A'"></td>
             <td th:text="${showing.theater.location.address.city} ?: 'N/A'"></td>
             <td th:text="${showing.startTime} ?: 'N/A'"></td>
         </tr>

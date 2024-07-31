@@ -4,6 +4,7 @@ import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,14 +23,11 @@ public class ScheduleMvcController {
     // TODO Theatre has one schedule with many showings
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
-    private final SchedulesService schedulesService;
-    private final ScheduleRepository scheduleRepository;
     public final WebClient webClient;
+    @Value("${key}")
     private String key;
     @Autowired
     public ScheduleMvcController(SchedulesService schedulesService, ScheduleRepository scheduleRepository, WebClient webClient) {
-        this.schedulesService = schedulesService;
-        this.scheduleRepository = scheduleRepository;
         this.webClient = webClient;
     }
     // Redirect gets to a single URL with two parameters
@@ -52,9 +50,12 @@ public class ScheduleMvcController {
                     .uri("api/schedules")
                     .header("DOOM-API-KEY", key)
                     .retrieve()
-                    .bodyToFlux(ScheduleDoc.class)
-                    .collectList()
-                    .block();
+                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                    .block()
+                    .getContent()
+                    .stream()
+                    .map(EntityModel::getContent)
+                    .toList();
             ArrayList <ScheduleDoc> returnSchedules = new ArrayList<>();
             assert schedules != null;
             for (ScheduleDoc schedule : schedules) {
@@ -70,9 +71,12 @@ public class ScheduleMvcController {
                     .uri("api/schedules")
                     .header("DOOM-API-KEY", key)
                     .retrieve()
-                    .bodyToFlux(ScheduleDoc.class)
-                    .collectList()
-                    .block();
+                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                    .block()
+                    .getContent()
+                    .stream()
+                    .map(EntityModel::getContent)
+                    .toList();
             ArrayList <ScheduleDoc> returnSchedules = new ArrayList<>();
             assert schedules != null;
             for (ScheduleDoc schedule : schedules) {
@@ -83,13 +87,17 @@ public class ScheduleMvcController {
             model.addAttribute("schedules", returnSchedules);
         } else if (Objects.equals(searchType, "schedule")) {
             //Schedules id
-            List<ScheduleDoc> schedules = webClient.get()
-                    .uri("api/schedules/"+id)
+            List<ScheduleDoc> schedules = webClient
+                    .get()
+                    .uri("api/schedules/" + id)
                     .header("DOOM-API-KEY", key)
                     .retrieve()
-                    .bodyToFlux(ScheduleDoc.class)
-                    .collectList()
-                    .block();
+                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                    .block()
+                    .getContent()
+                    .stream()
+                    .map(EntityModel::getContent)
+                    .toList();
             model.addAttribute("schedules",schedules);
         }
         model.addAttribute("searchType", searchType);
