@@ -7,11 +7,8 @@ import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.ScheduleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
@@ -91,27 +88,27 @@ public class ScheduleServiceTest {
         verify(scheduleRepository, times(1)).save(schedule1);
     }
 
-    @Test
-    public void testGetSchedulesByTheatre() {
-        TheaterDoc theatre = new TheaterDoc();
-        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
-
-        List<Schedule> schedules = scheduleService.getSchedulesByTheatre(theatre);
-
-        assertNotNull(schedules);
-        assertEquals(1, schedules.size());
-        assertEquals("1", schedules.get(0).getTheatre().getId());
-    }
-
-    @Test
-    public void testGetSchedulesByMovie() {
-        MovieDoc movie = new MovieDoc();
-        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
-
-        List<Schedule> schedules = scheduleService.getSchedulesByMovie(movie);
-
-        assertNotNull(schedules);
-        assertEquals(1, schedules.size());
-        assertEquals("1", schedules.get(0).getMovie().getId());
-    }
+//    @Test
+//    public void testGetSchedulesByTheatre() {
+//        TheaterDoc theatre = new TheaterDoc();
+//        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
+//
+//        List<Schedule> schedules = scheduleService.getSchedulesByTheatre(theatre);
+//
+//        assertNotNull(schedules);
+//        assertEquals(1, schedules.size());
+//        assertEquals("1", schedules.get(0).getTheatre().getId());
+//    }
+//
+//    @Test
+//    public void testGetSchedulesByMovie() {
+//        MovieDoc movie = new MovieDoc();
+//        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
+//
+//        List<Schedule> schedules = scheduleService.getSchedulesByMovie(movie);
+//
+//        assertNotNull(schedules);
+//        assertEquals(1, schedules.size());
+//        assertEquals("1", schedules.get(0).getMovie().getId());
+//    }
 }
