@@ -13,8 +13,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -44,33 +47,42 @@ public class SecurityConfig {
 
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//        .sessionManagement(sessionManagement ->
-//                        sessionManagement
-//                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                )
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authRequest ->
-//                        authRequest
-//                                .requestMatchers("/", "/welcome/").permitAll()
-//                                .requestMatchers("/api/**").hasRole("ADMIN")
-//                                .requestMatchers("/mflix/**").hasAnyRole("USER", "ADMIN")
-//                                .requestMatchers("/mflix/movies/create/", "/mflix/theaters/create/", "/mflix/users/create/").hasRole("ADMIN")
-//                                .requestMatchers("/mflix/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
-//                                .requestMatchers("/mflix/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
-//                                .anyRequest().authenticated()
-//                )
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/login/")
-//                        .defaultSuccessUrl("/mflix/", true)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout/")
-//                        .permitAll()
-//                )
-//                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//    http
+//            .sessionManagement(sessionManagement ->
+//            sessionManagement
+//                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//            )
+//            .csrf(AbstractHttpConfigurer::disable)
+//        .authorizeHttpRequests(authRequest ->
+//            authRequest
+//                    .requestMatchers("/", "/welcome/", "/home/", "/api/**", "/mflix/**").permitAll()
+//                .requestMatchers("/mflix/movies/create/", "/mflix/theaters/create/", "/mflix/users/create/").hasRole("ADMIN")
+//                .requestMatchers("/mflix/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
+//                .requestMatchers("/mflix/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
+//                .anyRequest().authenticated()
+//        )
+//                .formLogin(formLogin ->
+//            formLogin
+//                    .loginPage("/login/")
+//            .defaultSuccessUrl("/mflix/", true)
+//                .permitAll()
+//        )
+//                .logout(logout ->
+//            logout
+//                    .logoutUrl("/logout/")
+//            .permitAll()
+//        )
 //                .build();
+//
+//    http
+//            .addFilterBefore(new FilterChainProxy(
+//            new DefaultSecurityFilterChain(
+//            new AntPathRequestMatcher("/api/**"),
+//    tokenRequestFilter
+//            )
+//                    ), UsernamePasswordAuthenticationFilter.class);
+//
+//    return http.build();
 //    }
 
     // dev chain
@@ -80,11 +92,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/authenticate").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new FilterChainProxy(
+                        new DefaultSecurityFilterChain(
+                                new AntPathRequestMatcher("/api/**"),
+                                tokenRequestFilter
+                        )
+                ), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
