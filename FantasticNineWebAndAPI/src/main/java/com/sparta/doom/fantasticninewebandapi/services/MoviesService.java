@@ -1,6 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.dtos.MovieSummaryDTO;
+import com.sparta.doom.fantasticninewebandapi.exceptions.MovieNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,8 @@ public class MoviesService {
     }
 
     public Optional<MovieDoc> getMovieById(String id) {
-        return moviesRepository.findById(id);
+        return Optional.ofNullable(moviesRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + id)));
     }
 
     public Optional<MovieDoc> getMovieByTitle(String title) {
@@ -77,7 +79,7 @@ public class MoviesService {
             movieDoc.setId(id);
             return Optional.of(moviesRepository.save(movieDoc));
         } else {
-            return Optional.empty();
+            throw new MovieNotFoundException("Movie not found with id: " + id);
         }
     }
 
@@ -96,7 +98,7 @@ public class MoviesService {
             moviesRepository.deleteById(id);
             return true;
         } else {
-            return false;
+            throw new MovieNotFoundException("Movie not found with id: " + id);
         }
     }
 
