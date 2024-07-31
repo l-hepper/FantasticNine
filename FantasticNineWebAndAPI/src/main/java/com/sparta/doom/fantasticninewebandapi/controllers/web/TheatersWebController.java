@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
-import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,19 +28,19 @@ public class TheatersWebController {
     public String getTheatres(
             @RequestParam(defaultValue = "0") int page,
             Model model) {
-        List<TheaterModel> theaters = webClient
+        List<TheaterDoc> theaters = webClient
                 .get()
                 .uri("/api/theaters")
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .bodyToFlux(TheaterModel.class)
+                .bodyToFlux(TheaterDoc.class)
                 .collectList()
                 .block();
 
         int start = page * PAGE_SIZE;
         int end = Math.min(start + PAGE_SIZE, theaters.size());
 
-        List<TheaterModel> paginatedTheaters = theaters.subList(start, end);
+        List<TheaterDoc> paginatedTheaters = theaters.subList(start, end);
 
         model.addAttribute("theaters", paginatedTheaters);
         model.addAttribute("currentPage", page);
@@ -50,12 +50,12 @@ public class TheatersWebController {
 
     @GetMapping("/{id}")
     public String getTheaterDetails(@PathVariable String id, Model model) {
-        TheaterModel theater = webClient
+        TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
                 .header("DOOM-API-KEY", key)
                 .retrieve()
-                .bodyToMono(TheaterModel.class)
+                .bodyToMono(TheaterDoc.class)
                 .block();
         model.addAttribute("theater", theater);
         return "theaters/theater_details";

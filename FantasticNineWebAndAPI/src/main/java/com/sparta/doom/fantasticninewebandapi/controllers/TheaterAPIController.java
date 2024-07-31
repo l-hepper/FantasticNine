@@ -1,14 +1,12 @@
-package com.sparta.doom.fantasticninewebandapi.controllers;
+package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
-import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.services.TheaterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,18 +22,42 @@ public class TheaterAPIController {
     }
 
     @GetMapping("/theaters")
-    public ResponseEntity<List<TheaterModel>> getTheaters() {
-        List<TheaterModel> theaters = theaterService.getAllTheaters();
+    public ResponseEntity<List<TheaterDoc>> getTheaters() {
+        List<TheaterDoc> theaters = theaterService.getAllTheaters();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(theaters);
     }
 
-    @GetMapping("theaters/{id}")
-    public ResponseEntity<TheaterModel> getTheaterById(@PathVariable int id) {
-        TheaterModel theater = theaterService.getTheaterByTheaterId(id);
+    @GetMapping("/theaters/cities/{cityName}")
+    public ResponseEntity<List<TheaterDoc>> getTheatersByCityName(@PathVariable String cityName) {
+        List<TheaterDoc> theaters = theaterService.getTheatersByCityName(cityName);
+        return new ResponseEntity<>(theaters, HttpStatus.OK);
+    }
+
+    @GetMapping("/theaters/{theaterId}")
+    public ResponseEntity<TheaterDoc> getTheaterByTheaterId(@PathVariable Integer theaterId) {
+        TheaterDoc theater = theaterService.getTheaterByTheaterId(theaterId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(theater);
+    }
+
+    @DeleteMapping("/theaters/{theaterId}")
+    public ResponseEntity<HttpStatus> deleteTheaterByTheaterId(@PathVariable Integer theaterId) {
+        theaterService.deleteTheaterByTheaterId(theaterId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/theaters")
+    public ResponseEntity<HttpStatus> createTheater(@RequestBody TheaterDoc theater) {
+        theaterService.createTheater(theater);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/theaters")
+    public ResponseEntity<TheaterDoc> updateTheater(@RequestBody TheaterDoc theater) {
+        TheaterDoc updatedTheater = theaterService.updateTheater(theater);
+        return new ResponseEntity<>(updatedTheater, HttpStatus.OK);
     }
 }
