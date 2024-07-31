@@ -40,7 +40,8 @@ public class UserPageWebController {
     @GetMapping("/user/{userId}")
     public String userPage(@PathVariable("userId") String userId, Model model) {
         UserDoc user = webClient.get().uri("/api/users/{userId}", userId).retrieve().bodyToMono(UserDoc.class).block();
-        List<CommentDoc> commentDocList = fetchComments(user.getEmail());
+        int pageToGet = 0;
+        List<CommentDoc> commentDocList = fetchComments(user.getEmail(),pageToGet);
         List<CommentDoc> withMovieTitle = new ArrayList<>();
 
         for(CommentDoc commentDoc : commentDocList) {
@@ -61,10 +62,10 @@ public class UserPageWebController {
         return "users/user_page";
     }
 
-    private List<CommentDoc> fetchComments(String email) {
+    private List<CommentDoc> fetchComments(String email, int page) {
         Mono<PagedModel<CommentDoc>> commentsMono = webClient.get().uri(uriBuilder -> uriBuilder
                 .path("/api/users/email/{email}/comments")
-                .queryParam("page, 0")
+                .queryParam("page", page)
                 .queryParam("size",10)
                 .build(email))
         .retrieve().bodyToMono(new ParameterizedTypeReference<PagedModel<CommentDoc>>() {});
