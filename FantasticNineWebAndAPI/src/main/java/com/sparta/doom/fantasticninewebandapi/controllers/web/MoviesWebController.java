@@ -71,21 +71,21 @@ public class MoviesWebController {
 //        return "theaters/theaters";
 //    }
 
-    @GetMapping("/search/{movieName}")
-    public String getSearchedMovies(@PathVariable String movieName, Model model) {
-        ResponseEntity<List<MovieDoc>> movies = webClient
+    @GetMapping("/search")
+    public String searchMovies(@RequestParam String query, Model model) {
+        ResponseEntity<List<MovieDoc>> moviesResponse = webClient
                 .get()
-                .uri("/api/movies/search/" + movieName)
+                .uri("/api/movies/search/" + query)
                 .header("DOOM-API-KEY", key)
                 .retrieve()
                 .toEntityList(MovieDoc.class)
                 .block();
-        ArrayList<MovieDoc> moviesList = new ArrayList<>();
-        if (movies.hasBody()) {
-            for (int i = 0; i<10; i++) {
-                moviesList.add(movies.getBody().get(i));
-            }
+
+        List<MovieDoc> moviesList = new ArrayList<>();
+        if (moviesResponse.hasBody()) {
+            moviesList = moviesResponse.getBody().stream().limit(10).collect(Collectors.toList());
         }
+
         model.addAttribute("movies", moviesList);
         return "movies/movies";
     }
@@ -115,7 +115,7 @@ public class MoviesWebController {
                 .header("DOOM-API-KEY", key)
                 .bodyValue(moviesModel);
         model.addAttribute("movie", moviesModel);
-        return "redirect:/movies/search/" + moviesModel.getId();
+        return "redirect:/movies/" + moviesModel.getId();
     }
 
     @PostMapping("/update/{id}")
@@ -125,7 +125,7 @@ public class MoviesWebController {
                 .header("DOOM-API-KEY", key)
                 .bodyValue(moviesModel);
         model.addAttribute("movie", moviesModel);
-        return "redirect:/movies/search" + id;
+        return "redirect:/movies/" + id;
     }
 
     @GetMapping("/delete/{id}")
