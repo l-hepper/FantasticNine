@@ -28,7 +28,9 @@ public class UserPageWebController {
     }
 
     @GetMapping("/my_account")
-    public String userPage() {
+    public String userPage(Model model)
+    {
+
         return "users/my_account";
     }
 
