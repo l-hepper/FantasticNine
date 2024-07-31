@@ -19,15 +19,15 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getTheatre()}"></td>
-            <td th:text="${showings.getStartTime()}"></td>
+            <td th:text="${showings.getTheatre()} ?: 'N/A'"></td>
+            <td th:text="${showings.getStartTime()} ?: 'N/A'"></td>
         </tr>
         </tbody>
     </table>
 </div>
-<!--For searchType = theatre-->
+<!--For searchType = theater-->
 <!--List each film next to its (multiple) show times-->
-<div class="table-responsive" th:if="${searchType} == 'theatre'">
+<div class="table-responsive" th:if="${searchType} == 'theater'">
     <table>
         <thead>
         <tr>
@@ -37,8 +37,26 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getMovie().getTitle()}"></td>
-            <td th:text="${showings.getStartTime()}"></td>
+            <td th:text="${showings.getMovie().getTitle()} ?: 'N/A'"></td>
+            <td th:text="${showings.getStartTime()} ?: 'N/A'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div
+<!--    For searchType = schedule-->
+<!--Show singular schedule-->
+<div class="table-responsive" th:if="${searchType} == 'schedule'">
+    <table>
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Show Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
         </tr>
         </tbody>
     </table>
@@ -55,11 +73,12 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.getMovie().getTitle()}"></td>
-            <td th:text="${showings.getStartTime()}"></td>
+            <td th:text="${showings.getMovie().getTitle()} ?: 'N/A'"></td>
+            <td th:text="${showings.getStartTime()} ?: 'N/A'"></td>
         </tr>
         </tbody>
     </table>
 </div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 </html>
