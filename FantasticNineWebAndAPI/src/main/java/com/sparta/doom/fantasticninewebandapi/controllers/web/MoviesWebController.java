@@ -1,7 +1,12 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
+import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
+import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -81,7 +86,27 @@ public class MoviesWebController {
                 .retrieve()
                 .bodyToMono(MovieDoc.class)
                 .block();
+
+        List<CommentDoc> comments = webClient
+                .get()
+                .uri("/api/movies/"+id+"/comments")
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<CommentDoc>>>() {})
+                .block().getContent().stream().map(EntityModel::getContent).toList();
+
+        List<CommentDoc> returnComments = new ArrayList<>();
+
+        for(CommentDoc comment : comments) {
+            String emailAddress = comment.getEmail();
+            UserDoc user = webClient.get().uri("/api/users/email/"+emailAddress)
+                    .retrieve().bodyToMono(UserDoc.class).block();
+            CommentDoc commentWithId = comment;
+            commentWithId.setEmail(user.getId());
+            returnComments.add(commentWithId);
+        }
+
         model.addAttribute("movies", movie);
+        model.addAttribute("comments", returnComments);
         return "movies/movies_details";
     }
 

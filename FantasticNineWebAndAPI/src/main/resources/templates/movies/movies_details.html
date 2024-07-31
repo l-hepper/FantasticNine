@@ -2,9 +2,43 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Movie Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doomflix - Your Ultimate Movie Database</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/landingStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/userPageStyles.css}">
 </head>
+
 <body>
     <h1>Movie Details</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="comments-wrapper">
+        <div class="container comments-container">
+            <h2 class="text-center">Latest Comments</h2>
+            <div th:each="comment : ${comments}" class="comment">
+                <p th:text="${comment.getText()}">Sample comment content</p>
+                <small class="text-muted">
+                    <a th:href="@{/user/{id}(id=${comment.getEmail()})}" th:text="${comment.getName()}">Username</a>
+                </small>
+                <div>
+                    <small class="text-muted" th:text="${comment.getDate()}">Comment Date</small>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
