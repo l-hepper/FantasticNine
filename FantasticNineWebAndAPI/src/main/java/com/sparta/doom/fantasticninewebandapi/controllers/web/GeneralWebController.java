@@ -43,7 +43,7 @@ public class GeneralWebController {
     public String showHomePage(Model model) {
         List<MovieDoc> topRatedMovies = webClient
                 .get()
-                .uri("/api/movies/top-rated")
+                .uri("/api/movies/top-rated-movies")
                 .header("DOOM-API-KEY", key)
                 .retrieve()
                 .bodyToFlux(MovieDoc.class)
@@ -52,10 +52,20 @@ public class GeneralWebController {
         assert topRatedMovies != null;
         List<List<MovieDoc>> batchedMovies = batchMovies(topRatedMovies);
 
+        List<MovieDoc> topRatedSeries = webClient
+                .get()
+                .uri("/api/series/top-rated")
+                .header("DOOM-API-KEY", key)
+                .retrieve()
+                .bodyToFlux(MovieDoc.class)
+                .collectList()
+                .block();
+        assert topRatedSeries != null;
+        List<List<MovieDoc>> batchedSeries = batchMovies(topRatedSeries);
+
         List<List<String>> batchedGenres = batchGenres();
-
-
         model.addAttribute("topRatedMovies", batchedMovies);
+        model.addAttribute("topRatedSeries", batchedSeries);
         model.addAttribute("allGenres", batchedGenres);
         return "home";
     }
