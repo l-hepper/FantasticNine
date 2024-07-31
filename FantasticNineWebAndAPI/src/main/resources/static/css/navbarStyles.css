@@ -24,7 +24,11 @@
 
 .navbar-collapse .collapse {
     margin-bottom: 5px;
-    margin-top: 5px;
+    margin-top: 6px;
+}
+
+.bar-push {
+    margin-top: 1px;
 }
 
 
