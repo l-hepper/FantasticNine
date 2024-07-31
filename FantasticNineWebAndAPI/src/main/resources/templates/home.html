@@ -88,21 +88,23 @@
             <div th:each="chunk, iterStat : ${topRatedSeries}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                 <div class="carousel-container">
                     <div th:each="movie : ${chunk}" class="carousel-card">
-                        <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
-                             th:if="${movie.getPoster() != null}">
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
-                                <p class="card-text" th:text="${movie.getYear()}">Year</p>
-                                <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
+                        <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">
+                            <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
+                                 th:if="${movie.getPoster() != null}">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
+                                    <p class="card-text" th:text="${movie.getYear()}">Year</p>
+                                    <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" th:unless="${movie.getPoster() != null}">
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
-                                <p class="card-text" th:text="${movie.getYear()}">Year</p>
-                                <p class="card-text p-0 m-0" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
+                            <div class="card" th:unless="${movie.getPoster() != null}">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
+                                    <p class="card-text" th:text="${movie.getYear()}">Year</p>
+                                    <p class="card-text p-0 m-0" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
