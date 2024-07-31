@@ -21,7 +21,12 @@ public class UserDoc {
     @Field("permissions")
     private Set<String> permissions;
 
+    public UserDoc(){
+
+    }
+
     public UserDoc(String email, String name, String password, Set<String> permissions) {
+
         this.email = email;
         this.name = name;
         this.password = password;
