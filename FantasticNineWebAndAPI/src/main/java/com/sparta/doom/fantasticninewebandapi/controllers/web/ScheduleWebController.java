@@ -1,7 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
-import com.sparta.doom.fantasticninewebandapi.repositories.ScheduleRepository;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
