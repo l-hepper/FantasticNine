@@ -18,13 +18,17 @@ public class TheatersWebController {
     @Value("${key}")
     private String key;
 
+    private static final int PAGE_SIZE = 10;
+
     public TheatersWebController(WebClient webClient) {
         this.webClient = webClient;
     }
 
     @GetMapping
-    public String getTheatres(Model model) {
-        List<TheaterModel> theatres = webClient
+    public String getTheatres(
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        List<TheaterModel> theaters = webClient
                 .get()
                 .uri("/api/theaters")
                 .header("DOOM-API-KEY", key)
@@ -32,11 +36,19 @@ public class TheatersWebController {
                 .bodyToFlux(TheaterModel.class)
                 .collectList()
                 .block();
-        model.addAttribute("theaters", theatres);
+
+        int start = page * PAGE_SIZE;
+        int end = Math.min(start + PAGE_SIZE, theaters.size());
+
+        List<TheaterModel> paginatedTheaters = theaters.subList(start, end);
+
+        model.addAttribute("theaters", paginatedTheaters);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", (int) Math.ceil((double) theaters.size() / PAGE_SIZE));
         return "theaters/theaters";
     }
 
-    @GetMapping("/search/{id}")
+    @GetMapping("/{id}")
     public String getTheaterDetails(@PathVariable String id, Model model) {
         TheaterModel theater = webClient
                 .get()

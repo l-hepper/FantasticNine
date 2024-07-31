@@ -31,13 +31,45 @@
         .theater-card a:hover {
             text-decoration: underline;
         }
+
+        .pagination {
+            margin: 16px;
+            text-align: center;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .pagination a.disabled {
+            color: #ccc;
+            border: 1px solid #ccc;
+            cursor: not-allowed;
+        }
+
+        .pagination a:hover:not(.disabled) {
+            background-color: #ddd;
+        }
+
+        .pagination .current-page {
+            margin: 0 5px;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
 <h1>Theaters</h1>
 <div class="theater-list">
     <div th:each="theater : ${theaters}" class="theater-card">
-        <h2>Theater ID: <span th:text="${theater.theaterId}"></span></h2>
+        <h2 th:text="${theater.location.address.city} + ' Theater'"></h2>
         <p>
             <span th:text="${theater.location.address.street1}"></span>,
             <span th:text="${theater.location.address.city}"></span>,
@@ -52,5 +84,16 @@
         <a th:href="@{/theaters/{theaterId}(theaterId=${theater.theaterId})}">View Details</a>
     </div>
 </div>
+
+<div class="pagination">
+    <a th:if="${currentPage > 0}" th:href="@{/theaters(page=${currentPage - 1})}">&laquo; Previous</a>
+    <a th:if="${currentPage == 0}" class="disabled">&laquo; Previous</a>
+
+    <span class="current-page" th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
+
+    <a th:if="${currentPage < totalPages - 1}" th:href="@{/theaters(page=${currentPage + 1})}">Next &raquo;</a>
+    <a th:if="${currentPage == totalPages - 1}" class="disabled">Next &raquo;</a>
+</div>
+
 </body>
 </html>
