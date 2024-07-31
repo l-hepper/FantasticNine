@@ -15,6 +15,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="#theatres">Theatres</a>
             </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')">
+                <a class="nav-link" th:href="@{/users/my_account.html}">My Account</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" th:href="@{/users/my_account.html}">Manage Users</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link">
                     <span sec:authorize="hasRole('ROLE_ADMIN')" class="badge badge-primary">Admin</span>
@@ -27,7 +33,6 @@
             <li class ="nav-item" sec:authorize="!hasRole('ROLE_USER') and !hasRole('ROLE_ADMIN')">
                 <a class="nav-link" th:href="@{/login}">Login</a>
             </li>
-
         </ul>
     </div>
 </nav>
