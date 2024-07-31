@@ -6,9 +6,10 @@ body {
 .carousel-card {
     background-color: #1e1e1e;
     border: none;
-    height: 400px;
+    height: fit-content;
+    max-width: fit-content;
     flex: 1 1 20%;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .carousel-card img {
@@ -52,14 +53,16 @@ body {
     right: -5%;
 }
 
-#top-movies-all-time-carousel .carousel-inner, #top-movies-all-time-carousel .carousel-inner {
+#top-movies-all-time-carousel, .carousel-inner {
     display: flex;
+    max-width: fit-content;
+    margin: auto;
 }
 
 .card {
     background-color: #1e1e1e;
     border: none;
-    width: 100%;
+    width: fit-content;
 }
 
 .card-title, .card-text {
