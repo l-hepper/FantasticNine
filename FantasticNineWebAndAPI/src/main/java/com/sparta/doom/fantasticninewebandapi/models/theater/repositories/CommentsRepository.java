@@ -1,4 +1,4 @@
-package com.sparta.doom.fantasticninewebandapi.repositories;
+package com.sparta.doom.fantasticninewebandapi.models.theater.repositories;
 
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import org.bson.types.ObjectId;

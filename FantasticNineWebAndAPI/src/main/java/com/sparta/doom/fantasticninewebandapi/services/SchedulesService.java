@@ -3,11 +3,12 @@ package com.sparta.doom.fantasticninewebandapi.services;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
-import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
+import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.SchedulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,9 @@ public class SchedulesService {
     }
 
     public List<ScheduleDoc> getSchedules() {
-        return schedulesRepository.findAll();
+        return schedulesRepository.findAll().stream()
+                .sorted(Comparator.comparing(ScheduleDoc::getStartTime))
+                .toList();
     }
 
     public Optional<ScheduleDoc> getScheduleById(String Id){
@@ -35,7 +38,7 @@ public class SchedulesService {
     }
 
     public List<ScheduleDoc> getSchedulesByTheatreId(String theatreId) {
-        return schedulesRepository.findAll().stream()
+        return getSchedules().stream()
                 .filter(schedule -> schedule.getTheater().getId().equals(theatreId))
                 .toList();
     }
@@ -46,19 +49,19 @@ public class SchedulesService {
     }
 
     public List<ScheduleDoc> getSchedulesByMovieId(String movieId) {
-        return schedulesRepository.findAll().stream()
+        return getSchedules().stream()
                 .filter(schedule -> schedule.getMovie().getId().equals(movieId))
                 .toList();
     }
 
     public List<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
-        return schedulesRepository.findAll().stream()
+        return getSchedules().stream()
                 .filter(schedule -> schedule.getStartTime().isAfter(startTime))
                 .toList();
     }
 
     public List<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
-        return schedulesRepository.findAll().stream()
+        return getSchedules().stream()
                 .filter(schedule -> schedule.getStartTime().isBefore(startTime))
                 .toList();
     }

@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
-import com.sparta.doom.fantasticninewebandapi.repositories.UserRepository;
+import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.UserRepository;
 import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyModel;
 import com.sparta.doom.fantasticninewebandapi.security.api.ApiKeyRepository;
 import com.sparta.doom.fantasticninewebandapi.security.web.SecurityUserDetails;
