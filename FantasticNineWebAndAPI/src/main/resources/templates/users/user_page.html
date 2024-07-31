@@ -63,7 +63,10 @@
     <h2>Latest Comments</h2>
     <div th:each="comment : ${commentDocList}" class="comment">
         <p th:text="${comment.getText()}">Sample comment content</p>
-        <small class="text-muted" th:text="${comment.getName()}">Author Name</small>
+        <small class="text-muted" th:text="${comment.getName()}">Movie Title</small>
+        <div>
+        <small class="text-muted" th:text="${comment.getDate()}">Comment Date</small>
+        </div>
     </div>
 </div>
 

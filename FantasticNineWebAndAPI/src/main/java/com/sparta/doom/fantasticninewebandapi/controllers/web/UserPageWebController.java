@@ -1,6 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
+import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,11 +41,18 @@ public class UserPageWebController {
     public String userPage(@PathVariable("userId") String userId, Model model) {
         UserDoc user = webClient.get().uri("/api/users/{userId}", userId).retrieve().bodyToMono(UserDoc.class).block();
         List<CommentDoc> commentDocList = fetchComments(user.getEmail());
-        String username = user.getName();
+        List<CommentDoc> withMovieTitle = new ArrayList<>();
 
-        model.addAttribute("userDocName", username);
+        for(CommentDoc commentDoc : commentDocList) {
+            MovieDoc movie = webClient.get().uri("/api/movies/" + commentDoc.getMovie_id().toString()).retrieve().bodyToMono(MovieDoc.class).block();
+            CommentDoc commentWithTitle = commentDoc;
+            commentWithTitle.setName(movie.getTitle());
+            withMovieTitle.add(commentWithTitle);
+        }
+
+        model.addAttribute("userDocName", user.getName());
         model.addAttribute("userDocEmail", user.getEmail());
-        model.addAttribute("commentDocList", commentDocList);
+        model.addAttribute("commentDocList", withMovieTitle);
 
 //        model.addAttribute("comments", comments);
 
