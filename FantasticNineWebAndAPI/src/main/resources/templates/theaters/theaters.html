@@ -1,24 +1,58 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Theaters</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Bebas Neue', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .create-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .create-button:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
         .theater-card {
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 16px;
-            margin: 16px;
+            padding: 20px;
+            margin: 10px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .theater-card:hover {
+            background-color: #f1f1f1;
         }
 
         .theater-card h2 {
-            margin: 0 0 8px 0;
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #333;
         }
 
         .theater-card p {
-            margin: 4px 0;
+            margin: 8px 0;
             color: #555;
         }
 
@@ -33,17 +67,18 @@
         }
 
         .pagination {
-            margin: 16px;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
         }
 
         .pagination a {
             margin: 0 5px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             text-decoration: none;
             color: #007bff;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         .pagination a.disabled {
@@ -58,45 +93,48 @@
 
         .pagination .current-page {
             margin: 0 5px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f8f9fa;
+            border-radius: 5px;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
-<h1>Theaters</h1>
+<nav th:replace="~{fragments/navbar}"></nav>
 
-<a class="create-button" th:href="@{/theaters/create}">Create New Theater</a>
+<div class="container">
+    <a class="create-button" href="/theaters/create">Create New Theater</a>
 
-<div class="theater-list">
-    <div th:each="theater : ${theaters}" class="theater-card">
-        <h2 th:text="${theater.location.address.city} + ' Theater'"></h2>
-        <p>
-            <span th:text="${theater.location.address.street1}"></span>,
-            <span th:text="${theater.location.address.city}"></span>,
-            <span th:text="${theater.location.address.state}"></span>
-            <span th:text="${theater.location.address.zipcode}"></span>
-        </p>
-        <p>
-            Coordinates:
-            <span th:text="${theater.location.geo.coordinates[1]}"></span>,
-            <span th:text="${theater.location.geo.coordinates[0]}"></span>
-        </p>
-        <a th:href="@{/theaters/{theaterId}(theaterId=${theater.theaterId})}">View Details</a>
+    <div class="theater-list">
+        <div class="theater-card" th:each="theater : ${theaters}">
+            <h2 th:text="${theater.location.address.city} + ' Theater'"></h2>
+            <p>
+                <span th:text="${theater.location.address.street1}"></span>,
+                <span th:text="${theater.location.address.city}"></span>,
+                <span th:text="${theater.location.address.state}"></span>
+                <span th:text="${theater.location.address.zipcode}"></span>
+            </p>
+
+            <a th:href="@{/theaters/{theaterId}(theaterId=${theater.theaterId})}">View Details</a>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <a th:if="${currentPage > 0}" th:href="@{/theaters(page=${currentPage - 1})}">&laquo; Previous</a>
+        <a th:if="${currentPage == 0}" class="disabled">&laquo; Previous</a>
+
+        <span class="current-page" th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
+
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{/theaters(page=${currentPage + 1})}">Next &raquo;</a>
+        <a th:if="${currentPage == totalPages - 1}" class="disabled">Next &raquo;</a>
     </div>
 </div>
 
-<div class="pagination">
-    <a th:if="${currentPage > 0}" th:href="@{/theaters(page=${currentPage - 1})}">&laquo; Previous</a>
-    <a th:if="${currentPage == 0}" class="disabled">&laquo; Previous</a>
+<footer th:replace="~{fragments/footer}"></footer>
 
-    <span class="current-page" th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
-
-    <a th:if="${currentPage < totalPages - 1}" th:href="@{/theaters(page=${currentPage + 1})}">Next &raquo;</a>
-    <a th:if="${currentPage == totalPages - 1}" class="disabled">Next &raquo;</a>
-</div>
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Theater Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Bebas Neue', sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
         }
 
         .container {
@@ -23,6 +24,7 @@
         h1 {
             color: #333;
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .details {
@@ -47,7 +49,7 @@
         }
 
         a.back-link {
-            color: #4CAF50;
+            color: #007bff;
             text-decoration: none;
             display: inline-block;
             margin-top: 20px;
@@ -68,10 +70,11 @@
             padding: 10px 20px;
             margin: 5px;
             color: #fff;
-            background-color: #4CAF50;
+            background-color: #007bff;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
+            border: none;
         }
 
         .button.delete {
@@ -79,11 +82,18 @@
         }
 
         .button:hover {
-            opacity: 0.8;
+            opacity: 0.9;
+        }
+
+        .button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
         }
     </style>
 </head>
 <body>
+<nav th:replace="~{fragments/navbar}"></nav>
+
 <div class="container">
     <h1>Theater Details</h1>
 
@@ -122,5 +132,11 @@
 
     <a class="back-link" th:href="@{/theaters}">Back to Theaters</a>
 </div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
