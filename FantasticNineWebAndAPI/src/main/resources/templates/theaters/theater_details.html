@@ -57,6 +57,30 @@
         a.back-link:hover {
             text-decoration: underline;
         }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            color: #fff;
+            background-color: #4CAF50;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .button.delete {
+            background-color: #f44336;
+        }
+
+        .button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -87,6 +111,13 @@
         <iframe th:src="'https://maps.google.com/maps?q=' + ${theater.location.geo.coordinates[1]} + ',' + ${theater.location.geo.coordinates[0]} + '&z=15&output=embed'"
                 width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen=""
                 aria-hidden="false" tabindex="0"></iframe>
+    </div>
+
+    <div class="buttons">
+        <a class="button" th:href="@{/theaters/edit/{id}(id=${theater.theaterId})}">Update</a>
+        <form th:action="@{/theaters/delete/{id}(id=${theater.theaterId})}" method="post" style="display:inline;">
+            <button type="submit" class="button delete">Delete</button>
+        </form>
     </div>
 
     <a class="back-link" th:href="@{/theaters}">Back to Theaters</a>

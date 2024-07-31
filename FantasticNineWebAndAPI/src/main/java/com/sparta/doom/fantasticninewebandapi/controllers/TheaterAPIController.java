@@ -1,4 +1,4 @@
-package com.sparta.doom.fantasticninewebandapi.controllers.api;
+package com.sparta.doom.fantasticninewebandapi.controllers;
 
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.services.TheaterService;

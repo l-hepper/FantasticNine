@@ -49,7 +49,7 @@ public class TheatersWebController {
     }
 
     @GetMapping("/{id}")
-    public String getTheaterDetails(@PathVariable String id, Model model) {
+    public String getTheaterDetails(@PathVariable Integer id, Model model) {
         TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
@@ -61,4 +61,60 @@ public class TheatersWebController {
         return "theaters/theater_details";
     }
 
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("theater", new TheaterDoc());
+        return "theaters/theater_create";
+    }
+
+    @PostMapping
+    public String createTheater(@ModelAttribute TheaterDoc theater) {
+        webClient
+                .post()
+                .uri("/api/theaters")
+                .header("DOOM-API-KEY", key)
+                .bodyValue(theater)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+        return "redirect:/theaters";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable Integer id, Model model) {
+        TheaterDoc theater = webClient
+                .get()
+                .uri("/api/theaters/" + id)
+                .header("DOOM-API-KEY", key)
+                .retrieve()
+                .bodyToMono(TheaterDoc.class)
+                .block();
+        model.addAttribute("theater", theater);
+        return "theaters/theater_update";
+    }
+
+    @PostMapping("/update")
+    public String updateTheater(@ModelAttribute TheaterDoc theater) {
+        webClient
+                .put()
+                .uri("/api/theaters")
+                .header("DOOM-API-KEY", key)
+                .bodyValue(theater)
+                .retrieve()
+                .bodyToMono(TheaterDoc.class)
+                .block();
+        return "redirect:/theaters";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteTheater(@PathVariable Integer id) {
+        webClient
+                .delete()
+                .uri("/api/theaters/" + id)
+                .header("DOOM-API-KEY", key)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+        return "redirect:/theaters";
+    }
 }
