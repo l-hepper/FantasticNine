@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class SchedulesService {
 
-    private SchedulesRepository schedulesRepository;
+    private final SchedulesRepository schedulesRepository;
 
     @Autowired
     public SchedulesService(SchedulesRepository schedulesRepository) {
@@ -23,10 +24,15 @@ public class SchedulesService {
     }
 
     public List<ScheduleDoc> getSchedules() {
-        return schedulesRepository.findAll().stream()
-                .sorted(Comparator.comparing(ScheduleDoc::getStartTime))
-                .toList();
+        return getSchedulesStream().toList();
     }
+
+    public Stream<ScheduleDoc> getSchedulesStream() {
+        return schedulesRepository.findAll().stream()
+                .sorted(Comparator.comparing(ScheduleDoc::getStartTime));
+    }
+    
+    
 
     public Optional<ScheduleDoc> getScheduleById(String Id){
         return schedulesRepository.findById(Id);
@@ -34,11 +40,11 @@ public class SchedulesService {
 
     public List<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre) {
         String theatreId = theatre.getId();
-        return getSchedulesByTheatreId(theatreId);
+        return getSchedulesByTheaterId(theatreId);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatreId(String theatreId) {
-        return getSchedules().stream()
+    public List<ScheduleDoc> getSchedulesByTheaterId(String theatreId) {
+        return getSchedulesStream()
                 .filter(schedule -> schedule.getTheater().getId().equals(theatreId))
                 .toList();
     }
@@ -49,19 +55,19 @@ public class SchedulesService {
     }
 
     public List<ScheduleDoc> getSchedulesByMovieId(String movieId) {
-        return getSchedules().stream()
+        return getSchedulesStream()
                 .filter(schedule -> schedule.getMovie().getId().equals(movieId))
                 .toList();
     }
 
     public List<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
-        return getSchedules().stream()
+        return getSchedulesStream()
                 .filter(schedule -> schedule.getStartTime().isAfter(startTime))
                 .toList();
     }
 
     public List<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
-        return getSchedules().stream()
+        return getSchedulesStream()
                 .filter(schedule -> schedule.getStartTime().isBefore(startTime))
                 .toList();
     }
