@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/schedules")
+@RequestMapping("/api")
 public class SchedulesApiController {
 
     private final SchedulesService schedulesService;
@@ -24,7 +24,7 @@ public class SchedulesApiController {
         this.schedulesService = schedulesService;
     }
 
-    @GetMapping
+    @GetMapping("/schedules")
     public CollectionModel<EntityModel<ScheduleDoc>> getSchedules() {
         List<EntityModel<ScheduleDoc>> scheduleDocs = schedulesService.getSchedules().stream()
                 .map(this::mapScheduleHateoas)
@@ -37,12 +37,12 @@ public class SchedulesApiController {
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/schedules/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> getScheduleById(@PathVariable String id) {
         return ResponseEntity.ok(schedulesService.getScheduleById(id).map(this::mapScheduleHateoas).orElseThrow(NoSuchElementException::new));
     }
 
-    @PostMapping
+    @PostMapping("/schedules")
     public ResponseEntity<EntityModel<ScheduleDoc>> addSchedule(@RequestBody ScheduleDoc newSchedule) {
         if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -51,19 +51,43 @@ public class SchedulesApiController {
         return ResponseEntity.ok().body(newScheduleModel);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable String id) {
         schedulesService.removeSchedule(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/schedules/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule) {
         if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         EntityModel<ScheduleDoc> updatedSchedule = mapScheduleHateoas(schedulesService.updateSchedule(schedule));
         return ResponseEntity.ok().body(updatedSchedule);
+    }
+
+    @GetMapping("theaters/{Id}/schedules")
+    public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getTheaterSchedules(@PathVariable String Id) {
+        List<EntityModel<ScheduleDoc>> schedules = schedulesService.getSchedulesByTheatreId(Id).stream()
+                .map(this::mapScheduleHateoas)
+                .toList();
+        if(schedules.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(CollectionModel.of(schedules)
+                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
+    }
+
+    @GetMapping("movies/{Id}/schedules")
+    public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getMovieSchedules(@PathVariable String Id) {
+        List<EntityModel<ScheduleDoc>> schedules = schedulesService.getSchedulesByMovieId(Id).stream()
+                .map(this::mapScheduleHateoas)
+                .toList();
+        if(schedules.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(CollectionModel.of(schedules)
+                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
     }
 
     private EntityModel<ScheduleDoc> mapScheduleHateoas(ScheduleDoc doc) {
@@ -79,6 +103,5 @@ public class SchedulesApiController {
                 .withRel("theater");
         return EntityModel.of(doc, selfLink, movieLink, theaterLink);
     }
-
 
 }

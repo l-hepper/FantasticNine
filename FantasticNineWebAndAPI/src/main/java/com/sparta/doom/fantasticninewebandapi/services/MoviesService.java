@@ -2,7 +2,7 @@ package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
-import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
+import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;

@@ -1,7 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi;
 
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
-import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
+import com.sparta.doom.fantasticninewebandapi.models.theater.repositories.MoviesRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
