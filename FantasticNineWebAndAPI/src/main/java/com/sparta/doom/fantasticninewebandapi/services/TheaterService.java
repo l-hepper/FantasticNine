@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,11 @@ public class TheaterService {
         }
 
         return theater.get();
+    }
+
+    public List<TheaterDoc> getTheatersByCityName(String cityName) {
+        List<TheaterDoc> theaters = theaterRepository.getTheaterDocsByLocation_Address_City(cityName);
+        return theaters;
     }
 
     public void deleteTheaterByTheaterId(int theaterId) {
