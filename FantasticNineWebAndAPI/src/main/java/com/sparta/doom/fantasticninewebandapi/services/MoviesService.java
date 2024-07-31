@@ -50,6 +50,12 @@ public class MoviesService {
                 .findFirst();
     }
 
+    public List<MovieDoc> getMoviesOnly() {
+        return moviesRepository.findAll().stream()
+                .filter(movieDoc -> "movie".equalsIgnoreCase(movieDoc.getType()))
+                .collect(Collectors.toList());
+    }
+
     public List<MovieDoc> getAllSeries() {
         return moviesRepository.findAll().stream()
                 .filter(movieDoc -> "series".equalsIgnoreCase(movieDoc.getType()))
