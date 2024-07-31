@@ -22,6 +22,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/")
 public class CommentsApiController {
@@ -84,7 +87,6 @@ public class CommentsApiController {
     public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username, Pageable pageable) {
         Page<CommentDoc> commentsPage = commentsService.getCommentsByName(username, pageable);
         PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
-
         return ResponseEntity.ok(pagedModel);
     }
 
@@ -163,4 +165,12 @@ public class CommentsApiController {
         commentsService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    private EntityModel<CommentDoc> commentEntityModel(CommentDoc comment) {
+        Link movieLink = WebMvcLinkBuilder.linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovie_id().toString())).withRel("movie");
+        Link userLink = WebMvcLinkBuilder.linkTo(methodOn(UsersController.class).getUserByEmail(comment.getEmail())).withRel("user");
+        Link selfLink = WebMvcLinkBuilder.linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovie_id(),comment.getId())).withSelfRel();
+        return EntityModel.of(comment, userLink, movieLink, selfLink);
+    }
+}
 }
