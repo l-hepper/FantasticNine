@@ -4,11 +4,14 @@ import com.sparta.doom.fantasticninewebandapi.dtos.*;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import org.springframework.data.domain.Page;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api")
@@ -21,17 +24,17 @@ public class MoviesApiController {
     }
 
     @GetMapping("/movies")
-    public ResponseEntity<List<MovieDoc>> getAllMovies() {
-        List<MovieDoc> movies = moviesService.getAllMovies();
+    public ResponseEntity<Stream<MovieDoc>> getAllMovies() {
+        Stream<MovieDoc> movies = moviesService.getAllMovies();
         return ResponseEntity.ok(movies);
     }
 
     @GetMapping("/movies/pages") // also add ?page=2&size=50 at the end of your endpoint. e.g. http://localhost:8080/api/movies/pages?page=2&size=50
-    public ResponseEntity<Page<MovieDoc>> getAllMovies(
+    public ResponseEntity<Stream<MovieDoc>> getAllMovies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<MovieDoc> moviesPage = moviesService.getAllMovies(page, size);
-        return ResponseEntity.ok(moviesPage);
+        Stream<MovieDoc> moviesStream = moviesService.getAllMovies(page, size);
+        return ResponseEntity.ok(moviesStream);
     }
 
     @GetMapping("/movies/{id}")

@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MoviesService {
@@ -36,13 +37,14 @@ public class MoviesService {
         this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
-    public Page<MovieDoc> getAllMovies(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return moviesRepository.findAll(pageable);
+    public Stream<MovieDoc> getAllMovies(int page, int size) {
+        return getAllMovies()
+                .skip((long) page * size)
+                .limit(size);
     }
 
-    public List<MovieDoc> getAllMovies() {
-        return moviesRepository.findAll();
+    public Stream<MovieDoc> getAllMovies() {
+        return moviesRepository.findAllBy();
     }
 
     public Optional<MovieDoc> getMovieById(String id) {
