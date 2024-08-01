@@ -1,6 +1,5 @@
 package com.sparta.doom.fantasticninewebandapi;
 
-import com.sparta.doom.fantasticninewebandapi.exceptions.CommentNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.CommentsRepository;
 import com.sparta.doom.fantasticninewebandapi.services.CommentsService;
@@ -52,7 +51,7 @@ public class CommentDocServiceTests {
         calendar.set(2001,Calendar.JANUARY,1,0,0,0);
         commentOne.setDate(calendar.getTime());
         commentOne.setEmail("test@test.com");
-        commentOne.setMovie_id(movieId1);
+        commentOne.setMovieId(movieId1);
         commentOne.setText("This is some sample text");
         commentOne.setName("Testing Account");
 
@@ -63,7 +62,7 @@ public class CommentDocServiceTests {
         calendar.set(2002,Calendar.JANUARY,1,0,0,0);
         commentTwo.setDate(calendar.getTime());
         commentTwo.setEmail("test2@test2.com");
-        commentTwo.setMovie_id(movieId2);
+        commentTwo.setMovieId(movieId2);
         commentTwo.setText("This is some sample text again");
         commentTwo.setName("Testing Account2");
 
@@ -72,7 +71,7 @@ public class CommentDocServiceTests {
         calendar.set(2001,Calendar.JANUARY,1,0,0,0);
         commentThree.setDate(calendar.getTime());
         commentThree.setEmail("test@test.com");
-        commentThree.setMovie_id(movieId1);
+        commentThree.setMovieId(movieId1);
         commentThree.setText("This is some sample text that has been changed");
         commentThree.setName("Testing Account");
 
@@ -137,7 +136,7 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByMovieId(commentTwo.getMovie_id());
+        List<CommentDoc> actual = service.getCommentsByMovieId(commentTwo.getMovieid());
         Assertions.assertEquals(expected, actual);
 
     }

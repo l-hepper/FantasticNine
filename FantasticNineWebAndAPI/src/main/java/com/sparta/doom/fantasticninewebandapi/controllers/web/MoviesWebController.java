@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,12 +89,14 @@ public class MoviesWebController {
                 .bodyToMono(MovieDoc.class)
                 .block();
 
-        List<CommentDoc> comments = webClient
-                .get()
-                .uri("/api/movies/"+id+"/comments")
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<CommentDoc>>>() {})
-                .block().getContent().stream().map(EntityModel::getContent).toList();
+        List<CommentDoc> comments = fetchComments(movie.getId(),0);
+
+//        List<CommentDoc> comments = webClient
+//                .get()
+//                .uri("/api/movies/"+id+"/comments")
+//                .retrieve()
+//                .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<CommentDoc>>>() {})
+//                .block().getContent().stream().map(EntityModel::getContent).toList();
 
         List<CommentDoc> returnComments = new ArrayList<>();
 
@@ -128,4 +132,17 @@ public class MoviesWebController {
         return "redirect:/movies/";
     }
 
+    private List<CommentDoc> fetchComments(String movieId, int page) {
+        Mono<PagedModel<CommentDoc>> commentsMono = webClient.get().uri(uriBuilder -> uriBuilder
+                        .path("/api/movies/{movieId}/comments")
+                        .queryParam("page", page)
+                        .queryParam("size",10)
+                        .build(movieId))
+                .retrieve().bodyToMono(new ParameterizedTypeReference<PagedModel<CommentDoc>>() {});
+        PagedModel<CommentDoc> comments = commentsMono.block();
+        if (comments != null) {
+            return new ArrayList<>(comments.getContent());
+        }
+        return new ArrayList<>();
+    }
 }
