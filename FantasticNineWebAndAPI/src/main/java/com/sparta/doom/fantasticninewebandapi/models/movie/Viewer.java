@@ -2,9 +2,8 @@ package com.sparta.doom.fantasticninewebandapi.models.movie;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "viewer")
+@Document
 public class Viewer {
-
     private Integer meter;
     private Integer numReviews;
     private Double rating;
@@ -32,5 +31,4 @@ public class Viewer {
     public void setRating(Double rating) {
         this.rating = rating;
     }
-
 }

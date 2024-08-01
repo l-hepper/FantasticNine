@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Showings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/sandstone/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!--<nav th:replace="~{fragments/navbar :: navbar}"></nav>-->
+<!--For searchType = movie-->
+<!--A table with each theatre and showing time-->
+<div class="table-responsive" th:if="${searchType} == 'movie'">
+    <table class = "table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Theatre</th>
+            <th>Show Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showings : ${schedules}">
+            <!--/*@thymesVar id="getTheater" type=""*/-->
+            <td th:text="${showings.theater.location.address.city} ?: 'N/A'"></td>
+            <td th:text="${showings.startTime} ?: 'N/A'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--For searchType = theater-->
+<!--List each film next to its (multiple) show times-->
+<div class="table-responsive" th:if="${searchType} == 'theater'">
+    <table>
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Show Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showings : ${schedules}">
+            <td th:text="${showings.movie.title} ?: 'N/A'"></td>
+            <td th:text="${showings.startTime} ?: 'N/A'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div
+<!--    For searchType = schedule-->
+<!--Show singular schedule-->
+<div class="table-responsive" th:if="${searchType} == 'schedule'">
+    <table>
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Show Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--For searchType = all-->
+<!--List all schedules in a table-->
+<div class="table-responsive" th:if="${searchType} == 'all'">
+    <table>
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Theater</th>
+            <th>Show Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showing : ${schedules}">
+            <td th:text="${showing.movie.title} ?: 'N/A'"></td>
+            <td th:text="${showing.theater.location.address.city} ?: 'N/A'"></td>
+            <td th:text="${showing.startTime} ?: 'N/A'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
