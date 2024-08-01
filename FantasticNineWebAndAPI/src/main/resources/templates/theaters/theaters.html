@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -130,7 +130,7 @@
 <nav th:replace="~{fragments/navbar}"></nav>
 
 <div class="container">
-    <a class="create-button" href="/theaters/create">Create New Theater</a>
+    <a class="create-button" sec:authorize="hasRole('ROLE_ADMIN')" href="/theaters/create">Create New Theater</a>
 
     <form action="/theaters/cities" method="get" class="mb-4">
         <div class="form-group">
