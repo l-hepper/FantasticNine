@@ -19,6 +19,7 @@ import java.io.IOException;
 
 @Component
 public class TokenRequestFilter extends OncePerRequestFilter {
+
     @Value("${jwt.auth}")
     private String AUTH_HEADER;
 

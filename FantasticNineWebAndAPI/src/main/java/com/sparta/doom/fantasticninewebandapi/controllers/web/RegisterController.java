@@ -27,9 +27,11 @@ public class RegisterController {
     public String register(@ModelAttribute("userDoc") UserDoc userDoc, Model model) {
         webClient.post()
                 .uri("/api/users")
-                .header("DOOM-API-KEY", "unique-api-key-123")
-                .bodyValue(userDoc);
+                .bodyValue(userDoc)
+                .retrieve()
+                .bodyToMono(UserDoc.class)
+                .block();
         model.addAttribute("userDoc", userDoc);
-        return "home";
+        return "redirect:/home";
     }
 }

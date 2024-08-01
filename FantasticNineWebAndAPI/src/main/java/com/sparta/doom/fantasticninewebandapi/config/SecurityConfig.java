@@ -76,10 +76,11 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout/")
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("jwt")
                         .permitAll()
                 );
-
         http.addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
