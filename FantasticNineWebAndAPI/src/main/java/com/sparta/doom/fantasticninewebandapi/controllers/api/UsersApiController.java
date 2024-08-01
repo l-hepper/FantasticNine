@@ -45,6 +45,13 @@ public class UsersApiController {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDoc> getUserByEmail(@PathVariable String email) {
+        Optional<UserDoc> userDoc = usersService.getUserByEmail(email);
+        return userDoc.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+    }
+
     @GetMapping
     public ResponseEntity<Iterable<UserDoc>> getAllUsers() {
         // Check if the authenticated user has FULL_ACCESS
