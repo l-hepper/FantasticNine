@@ -64,21 +64,39 @@ public class MoviesApiController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<MovieDoc> createMovie(@RequestBody MovieDoc movieDoc, @RequestHeader(name = "DOOM-API-KEY") String key) {
-        MovieDoc createdMovie = moviesService.createMovie(movieDoc);
-        return ResponseEntity.status(201).body(createdMovie);
+    public ResponseEntity<MovieDoc> createMovie(@RequestBody MovieDoc movieDoc) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            MovieDoc createdMovie = moviesService.createMovie(movieDoc);
+            return ResponseEntity.status(201).body(createdMovie);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PutMapping("/movies/{id}")
     public ResponseEntity<MovieDoc> updateMovie(@PathVariable String id, @RequestBody MovieDoc movieDoc) {
-        Optional<MovieDoc> updatedMovie = moviesService.updateMovie(id, movieDoc);
-        return updatedMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            Optional<MovieDoc> updatedMovie = moviesService.updateMovie(id, movieDoc);
+            return updatedMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @DeleteMapping("/movies/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable String id) {
-        boolean isDeleted = moviesService.deleteMovie(id);
-        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            boolean isDeleted = moviesService.deleteMovie(id);
+            return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/movies/genres/{genre}")
