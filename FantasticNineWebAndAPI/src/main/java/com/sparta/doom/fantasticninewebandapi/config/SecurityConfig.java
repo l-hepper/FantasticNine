@@ -80,14 +80,7 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-        http
-                .addFilterBefore(new FilterChainProxy(
-                        new DefaultSecurityFilterChain(
-                                new AntPathRequestMatcher("/api/**"),
-                                tokenRequestFilter
-                        )
-                ), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
