@@ -13,8 +13,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -44,7 +47,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .sessionManagement(sessionManagement ->
+                        sessionManagement
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(authRequest -> authRequest
                         // Public pages
                         .requestMatchers("/", "/welcome/").permitAll()
@@ -72,6 +79,16 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .build();
+
+        http
+                .addFilterBefore(new FilterChainProxy(
+                        new DefaultSecurityFilterChain(
+                                new AntPathRequestMatcher("/api/**"),
+                                tokenRequestFilter
+                        )
+                ), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     // dev chain
