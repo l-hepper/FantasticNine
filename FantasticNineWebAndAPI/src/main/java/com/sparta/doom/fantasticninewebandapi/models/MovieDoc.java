@@ -1,13 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
-import com.sparta.doom.fantasticninewebandapi.models.movie.Awards;
-import com.sparta.doom.fantasticninewebandapi.models.movie.Imdb;
-import com.sparta.doom.fantasticninewebandapi.models.movie.Tomatoes;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Arrays;
 
 @Document(collection = "movies")
 public class MovieDoc {
@@ -31,7 +26,7 @@ public class MovieDoc {
     private Integer runtime;
     @Indexed
     private String title;
-    private String tomatoes;
+    private String tomatoes; // Changed to Tomatoes object
     private String type;
     private String[] writers;
     private String year;
