@@ -2,7 +2,6 @@ package com.sparta.doom.fantasticninewebandapi.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.doom.fantasticninewebandapi.dtos.*;
-import com.sparta.doom.fantasticninewebandapi.exceptions.MovieNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.movie.*;
 import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
@@ -53,9 +52,6 @@ public class MoviesService {
     public Optional<MovieDoc> getMovieById(String id) {
         Query query = new Query(Criteria.where("id").is(id));
         MovieDoc movieDoc = mongoTemplate.findOne(query, MovieDoc.class);
-        if (movieDoc == null) {
-            throw new MovieNotFoundException("Movie not found with id: " + id);
-        }
         return Optional.of(movieDoc);
     }
 
@@ -99,7 +95,7 @@ public class MoviesService {
             movieDoc.setId(id);
             return Optional.of(moviesRepository.save(movieDoc));
         } else {
-            throw new MovieNotFoundException("Movie not found with id: " + id);
+            return Optional.empty();
         }
     }
 
@@ -118,7 +114,7 @@ public class MoviesService {
             moviesRepository.deleteById(id);
             return true;
         } else {
-            throw new MovieNotFoundException("Movie not found with id: " + id);
+            return false;
         }
     }
 
@@ -178,7 +174,7 @@ public class MoviesService {
     }
 
     public Optional<MovieDetailsDTO> getMovieDetails(String id) {
-        return Optional.ofNullable(moviesRepository.findById(id).map(movie ->
+        return Optional.of(moviesRepository.findById(id).map(movie ->
                 new MovieDetailsDTO(
                         movie.getId(),
                         movie.getTitle(),
@@ -194,7 +190,7 @@ public class MoviesService {
                         movie.getYear(),
                         movie.getLastupdated()
                 )
-        ).orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + id)));
+        ).orElseThrow());
     }
 
     public Optional<MovieAwardsDTO> getMovieAwards(String movieId) {

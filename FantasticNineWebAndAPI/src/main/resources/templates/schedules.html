@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Showings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/sandstone/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!--For searchType = movie-->
+<!--A table with each theatre and showing time-->
+<div class="table-responsive" th:if="${searchType} == 'movie'">
+    <table class = "table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Theatre</th>
+            <th>Show Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showings : ${schedules}">
+            <td th:text="${showings.getTheatre()}"></td>
+            <td th:text="${showings.getStartTime()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--For searchType = theatre-->
+<!--List each film next to its (multiple) show times-->
+<div class="table-responsive" th:if="${searchType} == 'theatre'">
+    <table>
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Show Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showings : ${schedules}">
+            <td th:text="${showings.getMovie()}"></td>
+            <td th:text="${showings.getStartTime()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

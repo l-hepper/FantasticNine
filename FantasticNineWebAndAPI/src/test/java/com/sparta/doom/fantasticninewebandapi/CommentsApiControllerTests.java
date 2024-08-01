@@ -67,7 +67,7 @@ public class CommentsApiControllerTests {
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
         commentDoc.setId(commentId);
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
         commentDoc.setText("This is a test comment.");
@@ -95,7 +95,7 @@ public class CommentsApiControllerTests {
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
         commentDoc.setId(commentId);
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
         commentDoc.setText("This is a test comment.");
@@ -164,7 +164,7 @@ public class CommentsApiControllerTests {
 
         CommentDoc commentDoc = new CommentDoc();
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4eaf");
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
         commentDoc.setText("This is a test comment.");
@@ -185,7 +185,7 @@ public class CommentsApiControllerTests {
     void testCreateNewCommentReturnsIsCreatedIfCorrect() throws Exception {
         CommentDoc commentDoc = new CommentDoc();
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
         commentDoc.setText("This is a test comment.");
@@ -209,7 +209,7 @@ public class CommentsApiControllerTests {
         CommentDoc commentDoc = new CommentDoc();
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e8");
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setId(commentId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
@@ -234,7 +234,7 @@ public class CommentsApiControllerTests {
         ObjectId movieIdSetUp = new ObjectId("573a1390f29313caabcd4323");
         ObjectId commentIdSetUp = new ObjectId("5a9427648b0beebeb69579e7");
         commentDocSetUp.setId(commentIdSetUp);
-        commentDocSetUp.setMovie_id(movieIdSetUp);
+        commentDocSetUp.setMovieId(movieIdSetUp);
         commentDocSetUp.setEmail("test@example.com");
         commentDocSetUp.setDate(new Date());
         commentDocSetUp.setText("This is a test comment.");
@@ -244,7 +244,7 @@ public class CommentsApiControllerTests {
         CommentDoc commentDoc = new CommentDoc();
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setId(commentId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
@@ -270,7 +270,7 @@ public class CommentsApiControllerTests {
         ObjectId movieIdSetUp = new ObjectId("573a1390f29313caabcd4323");
         ObjectId commentIdSetUp = new ObjectId("5a9427648b0beebeb69579e7");
         commentDocSetUp.setId(commentIdSetUp);
-        commentDocSetUp.setMovie_id(movieIdSetUp);
+        commentDocSetUp.setMovieId(movieIdSetUp);
         commentDocSetUp.setEmail("test@example.com");
         commentDocSetUp.setDate(new Date());
         commentDocSetUp.setText("This is a test comment.");
@@ -280,7 +280,7 @@ public class CommentsApiControllerTests {
         CommentDoc commentDoc = new CommentDoc();
         ObjectId commentId = new ObjectId("5a9427648b0beebeb69579e7");
         ObjectId movieId = new ObjectId("573a1390f29313caabcd4323");
-        commentDoc.setMovie_id(movieId);
+        commentDoc.setMovieId(movieId);
         commentDoc.setId(commentId);
         commentDoc.setEmail("test@example.com");
         commentDoc.setDate(new Date());
@@ -311,7 +311,7 @@ public class CommentsApiControllerTests {
         ObjectId movieIdSetUp = new ObjectId("573a1390f29313caabcd4323");
         ObjectId commentIdSetUp = new ObjectId("5a9427648b0beebeb69579e7");
         commentDocSetUp.setId(commentIdSetUp);
-        commentDocSetUp.setMovie_id(movieIdSetUp);
+        commentDocSetUp.setMovieId(movieIdSetUp);
         commentDocSetUp.setEmail("test@example.com");
         commentDocSetUp.setDate(new Date());
         commentDocSetUp.setText("This is a test comment.");

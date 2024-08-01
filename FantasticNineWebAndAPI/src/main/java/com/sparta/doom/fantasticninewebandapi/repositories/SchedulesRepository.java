@@ -8,6 +8,5 @@ import java.util.stream.Stream;
 
 @Repository
 public interface SchedulesRepository extends MongoRepository<ScheduleDoc, String> {
-
     Stream<ScheduleDoc> findAllBy();
 }

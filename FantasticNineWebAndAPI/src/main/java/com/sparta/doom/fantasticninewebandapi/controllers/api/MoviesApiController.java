@@ -37,7 +37,7 @@ public class MoviesApiController {
         return ResponseEntity.ok(movies);
     }
 
-    @GetMapping("/movies/pages")
+    @GetMapping("/movies/pages") // also add ?page=2&size=50 at the end of your endpoint. e.g. http://localhost:8080/api/movies/pages?page=2&size=50
     public ResponseEntity<List<MovieDoc>> getAllMovies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

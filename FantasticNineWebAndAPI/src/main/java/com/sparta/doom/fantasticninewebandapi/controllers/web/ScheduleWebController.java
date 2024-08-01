@@ -29,64 +29,62 @@ public class ScheduleWebController {
     // TODO Delete
     // TODO Web Page design
     public final WebClient webClient;
-//    @Value("${key}")
-    private String key;
+    @Value("${jwt.auth}")
+    private String AUTH_HEADER;
     @Autowired
     public ScheduleWebController(SchedulesService schedulesService, WebClient webClient) {
         this.webClient = webClient;
     }
     // Redirect gets to a single URL with two parameters
     // Redirect to /schedules/ or /schedules/{id}/{searchType}
-    @GetMapping("/theaters/search/{id}/schedules/")
+    @GetMapping("/theaters/{id}/schedules/")
     public String getSchedulesForTheatre(@PathVariable String id) {
-        return "redirect:/schedules/theater/" +id+"/";
+        return "redirect:/schedules?searchType=theater&id="+id;
+    }
+    @GetMapping("/movies/{id}/schedules/")
+    public String getSchedulesForMovie(@PathVariable String id, Model model) {
+        return "redirect:/schedules?searchType=movie&id="+id;
     }
 
-    @GetMapping("/movies/search/{id}/schedules/")
-    public String getSchedulesForMovie(@PathVariable String id, Model model) {
-        return "redirect:/schedules/movie/" +id+"/";
-    }
-    @GetMapping("/schedules/{searchType}/{id}/")
-    public String getSchedulesSearch(@PathVariable String searchType,@PathVariable String id, Model model) {
+    @GetMapping("/schedules")
+    public String getSchedulesSearch(@RequestParam(defaultValue = "all" ,required = false) String searchType,@RequestParam(required = false) String id, Model model) {
         if (Objects.equals(searchType, "theater")) {
             //schedules by theater id
-            List<ScheduleDoc> schedules = webClient
-                    .get()
-                    .uri("api/schedules")
-                    .header("DOOM-API-KEY", key)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
-                    .block()
-                    .getContent()
-                    .stream()
-                    .map(EntityModel::getContent)
-                    .toList();
-            ArrayList <ScheduleDoc> returnSchedules = new ArrayList<>();
-            assert schedules != null;
-            for (ScheduleDoc schedule : schedules) {
-                if (schedule.getTheater().getId().equals(id)) {
-                    returnSchedules.add(schedule);
+            List<List<ScheduleDoc>> returnSchedules = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                List<ScheduleDoc> schedules = webClient
+                        .get()
+                        .uri("api/theaters/"+id+"/schedules?page="+i)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                        .block()
+                        .getContent()
+                        .stream()
+                        .map(EntityModel::getContent)
+                        .toList();
+                returnSchedules.add(schedules);
+                if (schedules.size() < 10) {
+                    break;
                 }
             }
             model.addAttribute("schedules", returnSchedules);
         } else if (Objects.equals(searchType, "movie")) {
             //schedules by movie id
-            List<ScheduleDoc> schedules = webClient
-                    .get()
-                    .uri("api/schedules")
-                    .header("DOOM-API-KEY", key)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
-                    .block()
-                    .getContent()
-                    .stream()
-                    .map(EntityModel::getContent)
-                    .toList();
-            ArrayList <ScheduleDoc> returnSchedules = new ArrayList<>();
-            assert schedules != null;
-            for (ScheduleDoc schedule : schedules) {
-                if (schedule.getMovie().getId().equals(id)) {
-                    returnSchedules.add(schedule);
+            List<List<ScheduleDoc>> returnSchedules = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                List<ScheduleDoc> schedules = webClient
+                        .get()
+                        .uri("api/movies/"+id+"/schedules?page="+i)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                        .block()
+                        .getContent()
+                        .stream()
+                        .map(EntityModel::getContent)
+                        .toList();
+                returnSchedules.add(schedules);
+                if (schedules.size() < 10) {
+                    break;
                 }
             }
             model.addAttribute("schedules", returnSchedules);
@@ -95,7 +93,6 @@ public class ScheduleWebController {
             List<ScheduleDoc> schedules = webClient
                     .get()
                     .uri("api/schedules/" + id)
-                    .header("DOOM-API-KEY", key)
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
                     .block()
@@ -104,25 +101,20 @@ public class ScheduleWebController {
                     .map(EntityModel::getContent)
                     .toList();
             model.addAttribute("schedules",schedules);
+        } else if (Objects.equals(searchType, "all")) {
+            List<ScheduleDoc> schedules = webClient
+                    .get()
+                    .uri("api/schedules")
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                    .block()
+                    .getContent()
+                    .stream()
+                    .map(EntityModel::getContent)
+                    .toList();
+            model.addAttribute("schedules", schedules);
         }
         model.addAttribute("searchType", searchType);
-        return "schedules/show";
-    }
-    @GetMapping("/schedules/")
-    public String getAllSchedules(Model model) {
-        List<ScheduleDoc> schedules = webClient
-                .get()
-                .uri("api/schedules")
-                .header("DOOM-API-KEY", key)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
-                .block()
-                .getContent()
-                .stream()
-                .map(EntityModel::getContent)
-                .toList();
-        model.addAttribute("schedules", schedules);
-        model.addAttribute("searchType", "all");
         return "schedules/show";
     }
 
@@ -134,26 +126,26 @@ public class ScheduleWebController {
     }
 
     @PostMapping("/schedules/create/")
-    public String createSchedule(@Valid @ModelAttribute ScheduleDoc schedule, Errors errors) {
+    public String createSchedule(@Valid @ModelAttribute ScheduleDoc schedule, Errors errors, @CookieValue(name = "jwt", required = false) String jwtToken) {
         if (errors.hasErrors()) {
             throw new IllegalArgumentException("Invalid schedule: " + errors);
         } else {
             webClient.post()
                     .uri("api/schedules/")
-                    .header("DOOM-API-KEY", key)
+                    .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .bodyValue(schedule);
             return "redirect:/schedules/schedule/" + schedule.getId() + "/";
         }
     }
 
     @PostMapping("/schedules/update/{id}/")
-    public String updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule, Model model, Errors errors) {
+    public String updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule, Model model, Errors errors, @CookieValue(name = "jwt", required = false) String jwtToken) {
         if (errors.hasErrors()) {
             throw new IllegalArgumentException("Invalid schedule: " + errors);
         } else {
             webClient.put()
-                    .uri("api/schedules/" + schedule.getId())
-                    .header("DOOM-API-KEY", key)
+                    .uri("api/schedules/" + id)
+                    .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .bodyValue(schedule)
                     .retrieve()
                     .bodyToMono(ScheduleDoc.class)
@@ -162,12 +154,15 @@ public class ScheduleWebController {
         }
     }
 
-    @GetMapping("/schedules/delete/{id}/")
-    public String deleteSchedule(@PathVariable String id) {
+    @PostMapping("/schedules/delete/{id}/")
+    public String deleteSchedule(@PathVariable String id, @CookieValue(name = "jwt", required = false) String jwtToken) {
         webClient
                 .delete()
                 .uri("api/schedules/" + id)
-                .header("DOOM-API-KEY", key);
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
+                .retrieve()
+                .bodyToMono(ScheduleDoc.class)
+                .block();
         return "redirect:/schedules/";
     }
 }
