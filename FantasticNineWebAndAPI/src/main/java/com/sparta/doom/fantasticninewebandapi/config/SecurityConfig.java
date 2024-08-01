@@ -20,45 +20,45 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http.csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authRequest -> authRequest
-//                        // Public pages
-//                        .requestMatchers("/", "/welcome/").permitAll()
-//                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
-//                        .requestMatchers("/mflix/**").permitAll()
-//
-//                        // API
-//                        .requestMatchers("/api/**").permitAll()
-//
-//                        // Web
-//                        .requestMatchers("/mflix/movies/**", "/mflix/theaters/**", "/mflix/users/**").permitAll()
-//                        .requestMatchers("/mflix/movies/create/", "/mflix/theaters/create/", "/mflix/users/create/").hasRole("ADMIN")
-//                        .requestMatchers("/mflix/movies/{id}/", "/mflix/theaters/{id}/", "/mflix/users/{id}/").hasRole("ADMIN")
-//                        .requestMatchers("/mflix/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
-//                        .requestMatchers("/mflix/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/login/")
-//                        .defaultSuccessUrl("/mflix/", true)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout/")
-//                        .permitAll()
-//                )
-//                .build();
-//    }
-
-    // dev chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authRequest ->
-                        authRequest.anyRequest().permitAll())
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authRequest -> authRequest
+                        // Public pages
+                        .requestMatchers("/", "/welcome/").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
+                        .requestMatchers("/**").permitAll()
+
+                        // API
+                        .requestMatchers("/api/**").permitAll()
+
+                        // Web
+                        .requestMatchers("/movies/**", "/theaters/**", "/users/**").permitAll()
+                        .requestMatchers("/movies/create/", "/theaters/create/", "/users/create/").hasRole("ADMIN")
+                        .requestMatchers("/movies/{id}/", "/theaters/{id}/", "/users/{id}/").hasRole("ADMIN")
+                        .requestMatchers("/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout/")
+                        .permitAll()
+                )
                 .build();
     }
+
+    // dev chain
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(authRequest ->
+//                        authRequest.anyRequest().permitAll())
+//                .build();
+//    }
 }
