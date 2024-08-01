@@ -6,6 +6,7 @@ import com.sparta.doom.fantasticninewebandapi.services.SecurityService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -88,7 +89,10 @@ public class CommentsApiController {
     }
 
     @GetMapping("/users/name/{username}/comments")
-    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username, Pageable pageable) {
+    public ResponseEntity<PagedModel<CommentDoc>> getCommentsByUsername(@PathVariable("username") String username
+            ,@RequestParam(value = "page", defaultValue = "0") int page
+            ,@RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page,size);
         Page<CommentDoc> commentsPage = commentsService.getCommentsByName(username, pageable);
         PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
         return ResponseEntity.ok(pagedModel);
@@ -129,12 +133,6 @@ public class CommentsApiController {
 
     @PostMapping("/movies/{movie}/comments/create")
     public ResponseEntity<EntityModel<CommentDoc>> createComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @RequestBody CommentDoc newComment) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         if(!newComment.getMovie_id().toString().equals(movieId.toString())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -145,12 +143,7 @@ public class CommentsApiController {
     }
     @PutMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> updateComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @PathVariable("commentId") ObjectId commentId, @RequestBody CommentDoc newComment) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
+
         CommentDoc oldComment = commentsService.getCommentById(commentId);
         if(oldComment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -163,12 +156,6 @@ public class CommentsApiController {
     }
     @DeleteMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<CommentDoc> deleteComment(@RequestHeader(name = "DOOM-API-KEY") String key, @PathVariable("commentId") ObjectId commentId) {
-        Optional<String> requestRole = securityService.getRoleFromKey(key);
-        if (requestRole.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No key found");
-        } else if (!requestRole.get().equals("FULL_ACCESS")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         CommentDoc comment = commentsService.getCommentById(commentId);
         if(comment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

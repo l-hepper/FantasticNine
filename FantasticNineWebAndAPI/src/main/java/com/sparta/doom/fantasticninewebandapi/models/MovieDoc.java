@@ -1,6 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "movies")
@@ -23,6 +24,7 @@ public class MovieDoc {
     private String rated;
     private String released;
     private Integer runtime;
+    @Indexed
     private String title;
     private String tomatoes; // Changed to Tomatoes object
     private String type;

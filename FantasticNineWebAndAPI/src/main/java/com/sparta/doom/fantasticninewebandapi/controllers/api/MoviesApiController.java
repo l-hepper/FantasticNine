@@ -1,8 +1,10 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
+import com.sparta.doom.fantasticninewebandapi.dtos.MovieSummaryDTO;
 import com.sparta.doom.fantasticninewebandapi.dtos.*;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
