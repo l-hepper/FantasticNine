@@ -10,49 +10,61 @@
     <link rel="stylesheet" th:href="@{/css/modalStyles.css}">
     <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
 </head>
-<body>
 <nav th:replace="~{fragments/navbar}"></nav>
-<h1>Schedules</h1>
 <!--For searchType = movie-->
 <!--A table with each theatre and showing time-->
-<div class="table-responsive" th:if="${searchType} == 'movie'">
-    <h2 th:text="'Showing Schedules for: '+${schedules[0].movie.title}"></h2>
-    <table class = "table table-bordered table-striped">
-        <thead class="table-dark">
-        <tr>
-            <th>Theater</th>
-            <th>Show Time</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="showings : ${schedules}">
-            <!--/*@thymesVar id="getTheater" type=""*/-->
-            <td class="card-text" th:text="${showings.theater.location.address.city}"></td>
-            <td class="card-text" th:text="${showings.startTime.format('mm:HH')}"></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container my-4" style="max-width: 80vw; margin: auto;">
+    <div class="row">
+        <div class="col-12">
+            <h1 style="width: fit-content; margin: auto;">Schedules!</h1>
+            <br>
+        </div>
+    </div>
+<div th:if="${searchType} == 'movie'">
+    <div class=" card-container">
+        <div th:each="showings : ${schedules}">
+            <a th:href="@{/movies/{id}(id=${showings.getId()})}">
+                <div class="card">
+                    <div class="card" th:style="|background-image: url('${showings.movie.poster}'); background-size: cover; background-position: center;|"
+                         th:if="${showings.movie.getPoster() != null}">
+                        <h5 class="card-title" th:text="${showings.theater.location.address.city}">Theater City</h5>
+                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card" th:unless="${showings.movie.getPoster() != null}">
+                        <h5 class="card-title" th:text="${showings.theater.location.address.city}">Theater City</h5>
+                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
 <!--For searchType = theater-->
 <!--List each film next to its (multiple) show times-->
 <div class="table-responsive" th:if="${(searchType == 'theater') || (searchType == 'schedule')}">
-    <h2 th:text="'Showing Schedules at: '+${schedules[0].theater.location.address.city}+' theater'"></h2>
-    <table class = "table table-bordered table-striped">
-        <thead class="table-dark">
-        <tr>
-            <th>Movie</th>
-            <th>Show Times</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="showings : ${schedules}">
-            <td class="card-text" th:text="${showings.movie.title}"></td>
-            <td class="card-text" th:text="${showings.startTime.format('mm:HH')}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class=" card-container">
+        <div th:each="showings : ${schedules}">
+            <a th:href="@{/movies/{id}(id=${showings.getId()})}">
+                <div class="card" th:style="|background-image: url('${showings.movie.poster}'); background-size: cover; background-position: center;|"
+                     th:if="${showings.movie.getPoster() != null}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
+                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                    </div>
+                </div>
+                <div class="card" th:unless="${showings.movie.getPoster() != null}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
+                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
-<div
+
 <!--    For searchType = schedule-->
 <!--Show singular schedule-->
 <!--For searchType = all-->
@@ -64,18 +76,22 @@
         <tr>
             <th>Movie</th>
             <th>Theater</th>
-            <th>Show Times</th>
+            <th>Show Time</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="showing : ${schedules}">
             <td th:text="${showing.movie.title}"></td>
             <td th:text="${showing.theater.location.address.city}"></td>
-            <td th:text="${showing.startTime}"></td>
+            <td class="card-text" th:text="${#temporals.format(showing.startTime, 'HH:mm, dd-MMM')}"></td>
         </tr>
         </tbody>
     </table>
 </div>
+</div>
 <footer th:replace="~{fragments/footer}"></footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

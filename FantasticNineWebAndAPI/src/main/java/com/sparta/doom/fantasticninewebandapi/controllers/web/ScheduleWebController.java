@@ -41,7 +41,6 @@ public class ScheduleWebController {
     public String getSchedulesForTheatre(@PathVariable String id) {
         return "redirect:/schedules/theater/" +id+"/";
     }
-
     @GetMapping("/movies/{id}/schedules/")
     public String getSchedulesForMovie(@PathVariable String id, Model model) {
         return "redirect:/schedules/movie/" +id+"/";
