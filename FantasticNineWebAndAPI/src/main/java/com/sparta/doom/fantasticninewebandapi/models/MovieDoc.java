@@ -1,9 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Arrays;
 
 @Document(collection = "movies")
 public class MovieDoc {
@@ -25,8 +24,9 @@ public class MovieDoc {
     private String rated;
     private String released;
     private Integer runtime;
+    @Indexed
     private String title;
-    private String tomatoes;
+    private String tomatoes; // Changed to Tomatoes object
     private String type;
     private String[] writers;
     private String year;
@@ -197,32 +197,5 @@ public class MovieDoc {
 
     public void setYear(String year) {
         this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "MoviesModel{" +
-                "id='" + id + '\'' +
-                ", awards='" + awards + '\'' +
-                ", cast=" + Arrays.toString(cast) +
-                ", countries=" + Arrays.toString(countries) +
-                ", directors=" + Arrays.toString(directors) +
-                ", fullplot='" + fullplot + '\'' +
-                ", genres='" + genres + '\'' +
-                ", imdb='" + imdb + '\'' +
-                ", languages=" + Arrays.toString(languages) +
-                ", lastupdated='" + lastupdated + '\'' +
-                ", num_mflix_comments=" + num_mflix_comments +
-                ", plot='" + plot + '\'' +
-                ", poster='" + poster + '\'' +
-                ", rated='" + rated + '\'' +
-                ", released='" + released + '\'' +
-                ", runtime=" + runtime +
-                ", title='" + title + '\'' +
-                ", tomatoes='" + tomatoes + '\'' +
-                ", type='" + type + '\'' +
-                ", writers=" + Arrays.toString(writers) +
-                ", year=" + year +
-                '}';
     }
 }

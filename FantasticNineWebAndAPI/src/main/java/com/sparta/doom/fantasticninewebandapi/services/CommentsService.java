@@ -5,6 +5,8 @@ import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.CommentsRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +34,15 @@ public class CommentsService {
         return commentsRepository.findById(id).orElse(null);
         //orElseThrow(()-> new CommentNotFoundException("comment not found with id: " + id));
     }
+
+    public Page<CommentDoc> getCommentsByName(String name, Pageable pageable) {
+        return commentsRepository.findByNameContainingIgnoreCase(name.replaceAll("-", " "), pageable);
+    }
+
+    public Page<CommentDoc> getCommentsByEmailAddress(String email, Pageable pageable) {
+        return commentsRepository.findByEmailContainingIgnoreCase(email, pageable);
+    }
+
     public List<CommentDoc> getCommentsByName(String name){
         List<CommentDoc> commentDocList = new ArrayList<>();
         for(CommentDoc comment : commentsRepository.findAll()){
@@ -90,7 +101,6 @@ public class CommentsService {
         return comment;
 
     }
-
 
     public void deleteComment(ObjectId id) {
         if(commentsRepository.existsById(id)){

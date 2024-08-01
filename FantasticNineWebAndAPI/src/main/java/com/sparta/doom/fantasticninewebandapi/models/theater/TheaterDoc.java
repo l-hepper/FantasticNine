@@ -9,7 +9,7 @@ public class TheaterDoc {
     @Id
     private String id;
     private Location location;
-    private int theaterId;
+    private Integer theaterId;
 
     public String getId() {
         return id;
@@ -27,11 +27,11 @@ public class TheaterDoc {
         this.location = location;
     }
 
-    public int getTheaterId() {
+    public Integer getTheaterId() {
         return theaterId;
     }
 
-    public void setTheaterId(int theaterId) {
+    public void setTheaterId(Integer theaterId) {
         this.theaterId = theaterId;
     }
 }

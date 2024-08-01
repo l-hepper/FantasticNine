@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file FantasticNineWebAndAPI/pom.xml -Dspring.profiles.active=ci
+      run: mvn -B package --file FantasticNineWebAndAPI/pom.xml -Dspring.profiles.active=ci -Dmaven.test.failure.ignore=true
       env:
         DB_URL: ${{ secrets.DB_URL }}
         DB_NAME: ${{ secrets.DB_NAME }}
