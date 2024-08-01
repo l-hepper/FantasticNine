@@ -28,13 +28,15 @@ public class UserPageWebController {
     }
 
     @GetMapping("/my_account")
-    public String userPage() {
+    public String userPage(Model model)
+    {
+
         return "users/my_account";
     }
 
     @PostMapping("/my_account")
     public String userUpdatePage(Model model, UserDoc userDoc) {
-        return "users/my_acocunt";
+        return "users/my_account";
     }
 
     @GetMapping("/user/{userId}")
@@ -45,7 +47,7 @@ public class UserPageWebController {
         List<CommentDoc> withMovieTitle = new ArrayList<>();
 
         for(CommentDoc commentDoc : commentDocList) {
-            MovieDoc movie = webClient.get().uri("/api/movies/" + commentDoc.getMovie_id().toString()).retrieve().bodyToMono(MovieDoc.class).block();
+            MovieDoc movie = webClient.get().uri("/api/movies/" + commentDoc.getMovieId().toString()).retrieve().bodyToMono(MovieDoc.class).block();
             CommentDoc commentWithTitle = commentDoc;
             commentWithTitle.setName(movie.getTitle());
             withMovieTitle.add(commentWithTitle);

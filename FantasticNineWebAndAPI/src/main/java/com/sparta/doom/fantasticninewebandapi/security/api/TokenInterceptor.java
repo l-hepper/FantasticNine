@@ -32,7 +32,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (requestURI.startsWith("/authenticate")) {
+        if (!requestURI.endsWith("create")) {
             return true;
         }
 

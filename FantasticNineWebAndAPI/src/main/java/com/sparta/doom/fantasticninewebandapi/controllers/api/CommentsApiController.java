@@ -39,11 +39,22 @@ public class CommentsApiController {
         this.securityService = securityService;
     }
 
+//    @GetMapping("/movies/{movie}/comments")
+//    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getComments(@PathVariable("movie") ObjectId movie) {
+//        List<EntityModel<CommentDoc>> comments = commentsService.getCommentsByMovieId(movie).stream().map(this::commentEntityModel).toList();
+//        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+//    }
+
     @GetMapping("/movies/{movie}/comments")
-    public ResponseEntity<CollectionModel<EntityModel<CommentDoc>>> getComments(@PathVariable("movie") ObjectId movie) {
-        List<EntityModel<CommentDoc>> comments = commentsService.getCommentsByMovieId(movie).stream().map(this::commentEntityModel).toList();
-        return new ResponseEntity<>(CollectionModel.of(comments), HttpStatus.OK);
+    public ResponseEntity<PagedModel<CommentDoc>> getCommentsPaged(@PathVariable("movie") ObjectId movieId
+            ,@RequestParam(value = "page", defaultValue = "0") int page
+            ,@RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<CommentDoc> commentsPage = commentsService.getCommentsByMovie(movieId, pageable);
+        PagedModel<CommentDoc> pagedModel = PagedModel.of(commentsPage.getContent(), new PagedModel.PageMetadata(commentsPage.getSize(), commentsPage.getNumber(), commentsPage.getTotalElements()));
+        return ResponseEntity.ok(pagedModel);
     }
+
 
     @GetMapping("/movies/{movie}/comments/id/{commentId}")
     public ResponseEntity<EntityModel<CommentDoc>> getComment(@PathVariable("movie") ObjectId movie, @PathVariable("commentId") ObjectId commentId) {
@@ -51,12 +62,12 @@ public class CommentsApiController {
         if (comment == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(!comment.getMovie_id().equals(movie)) {
+        if(!comment.getMovieId().equals(movie)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         EntityModel<CommentDoc> commentDocEntityModel = EntityModel.of(comment
-                ,linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovie_id().toString())).withRel("movie")
-                ,linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovie_id(),comment.getId())).withSelfRel());
+                ,linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovieId().toString())).withRel("movie")
+                ,linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovieId(),comment.getId())).withSelfRel());
         return new ResponseEntity<>(commentDocEntityModel, HttpStatus.OK);
     }
 
@@ -132,7 +143,7 @@ public class CommentsApiController {
 
     @PostMapping("/movies/{movie}/comments/create")
     public ResponseEntity<EntityModel<CommentDoc>> createComment(@RequestHeader(name = "DOOM-API-KEY") String key,@PathVariable("movie") ObjectId movieId, @RequestBody CommentDoc newComment) {
-        if(!newComment.getMovie_id().toString().equals(movieId.toString())){
+        if(!newComment.getMovieId().toString().equals(movieId.toString())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         commentsService.createComment(newComment);
@@ -147,7 +158,7 @@ public class CommentsApiController {
         if(oldComment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(!oldComment.getMovie_id().equals(movieId)){
+        if(!oldComment.getMovieId().equals(movieId)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         commentsService.updateComment(newComment);
@@ -163,9 +174,9 @@ public class CommentsApiController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     private EntityModel<CommentDoc> commentEntityModel(CommentDoc comment) {
-        Link movieLink = WebMvcLinkBuilder.linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovie_id().toString())).withRel("movie");
+        Link movieLink = WebMvcLinkBuilder.linkTo(methodOn(MoviesApiController.class).getMovieById(comment.getMovieId().toString())).withRel("movie");
 //        Link userLink = WebMvcLinkBuilder.linkTo(methodOn(UsersController.class).getUserByEmail(comment.getEmail())).withRel("user");
-        Link selfLink = WebMvcLinkBuilder.linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovie_id(),comment.getId())).withSelfRel();
+        Link selfLink = WebMvcLinkBuilder.linkTo(methodOn(CommentsApiController.class).getComment(comment.getMovieId(),comment.getId())).withSelfRel();
         return EntityModel.of(comment, /*userLink,*/ movieLink, selfLink);
     }
 }
