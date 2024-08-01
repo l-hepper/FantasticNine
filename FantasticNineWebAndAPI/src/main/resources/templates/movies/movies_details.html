@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCardStyles.css}">
+</head>
+
+<body style="background: black">
+
+<nav th:replace="~{fragments/navbar}"></nav>
+
+<div class="d-flex container justify-content-center m-auto">
+    <div class="card" id="details-card-img" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
+         th:if="${movie.getPoster() != null}">
+    </div>
+    <div class="card" id="details-card-black" th:unless="${movie.getPoster() != null}"></div>
+    <div class="card" id="details-card-text">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
+            <p class="card-text" th:text="${movie.getYear()}"></p>
+            <p class="card-text" th:text="${movie.getFullplot()}"></p>
+            <p class="card-text" th:text="'Runtime: ' + ${movie.getRuntime()}"></p>
+            <p class="card-text" th:text="'Directors: ' + ${movie.getDirectors()}"></p>
+            <p class="card-text" th:text="'Actors: ' + ${movie.getCast()}"></p>
+            <p class="card-text" th:text="'Writers: ' + ${movie.getWriters()}"></p>
+            <p class="card-text" th:text="'Genres: ' + ${movie.getGenres()}"></p>
+            <p class="card-text" th:text="'Awwards: ' + ${movie.getAwards()}"></p>
+            <p class="card-text" th:text="'IMDB Rating: ' + ${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'"></p>
+            <p class="card-text" th:text="'Rated: ' + ${movie.getRated()}"></p>
+            <p class="card-text" th:text="'Tomatoes: ' + ${movie.getTomatoes()}"></p>
+            <p class="card-text" th:text="'Countries: ' + ${movie.getCountries()}"></p>
+            <p class="card-text" th:text="'Languages: ' + ${movie.getLanguages()}"></p>
+            <p class="card-text" th:text="'Released: ' + ${movie.getReleased()}"></p>
+            <p class="card-text" th:text="'Type: ' + ${movie.getType()}"></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

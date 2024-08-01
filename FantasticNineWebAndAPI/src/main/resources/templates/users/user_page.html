@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doomflix - Your Ultimate Movie Database</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/landingStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/userPageStyles.css}">
+    <style>
+        .header-background {
+            background-image: url('/images/doom_head.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            color: white;
+        }
+
+        .header-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .header-background .container {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+
+<header class="jumbotron jumbotron-fluid bg-dark text-white text-center header-background">
+    <div class="container">
+        <h1 th:text="*{userDocName}" class="display-4">Welcome to Doomflix</h1>
+        <p class="lead">Public profile</p>
+    </div>
+</header>
+
+<div class="comments-wrapper">
+    <div class="container comments-container">
+        <div class="follow-button-container">
+            <button class="btn btn-primary">Follow User</button>
+        </div>
+        <div class="profile-image-container">
+            <img src="/images/blank-profile.jpg" alt="Profile Image" class="profile-image">
+        </div>
+        <h2 class="text-center">Latest Comments</h2>
+        <div th:each="comment : ${commentDocList}" class="comment">
+            <p th:text="${comment.getText()}">Sample comment content</p>
+            <small class="text-muted">
+                <a th:href="@{/movies/search/{id}(id=${comment.getMovie_id()})}" th:text="${comment.getName()}">Movie Title</a>
+            </small>
+            <div>
+            <small class="text-muted" th:text="${comment.getDate()}">Comment Date</small>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer}"></footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

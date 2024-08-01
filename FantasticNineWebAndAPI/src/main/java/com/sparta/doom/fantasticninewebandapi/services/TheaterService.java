@@ -53,7 +53,7 @@ public class TheaterService {
     public TheaterDoc updateTheater(TheaterDoc theaterDoc) {
         Optional<TheaterDoc> foundTheater = theaterRepository.findTheaterModelByTheaterId(theaterDoc.getTheaterId());
         if (!foundTheater.isPresent()) {
-            throw new ResourceAccessException("Theater with id " + theaterDoc.getTheaterId() + " does not exist. Unable to update.");
+            throw new ResourceAccessException("Theater with id " + theaterDoc.getId() + " does not exist. Unable to update.");
         }
         TheaterDoc toReturn = theaterRepository.save(theaterDoc);
         return toReturn;
