@@ -29,8 +29,8 @@ public class ScheduleWebController {
     // TODO Delete
     // TODO Web Page design
     public final WebClient webClient;
-//    @Value("${key}")
-    private String key;
+    @Value("${jwt.auth}")
+    private String AUTH_HEADER;
     @Autowired
     public ScheduleWebController(SchedulesService schedulesService, WebClient webClient) {
         this.webClient = webClient;
@@ -39,15 +39,15 @@ public class ScheduleWebController {
     // Redirect to /schedules/ or /schedules/{id}/{searchType}
     @GetMapping("/theaters/{id}/schedules/")
     public String getSchedulesForTheatre(@PathVariable String id) {
-        return "redirect:/schedules/theater/" +id+"/";
+        return "redirect:/schedules?searchType=theater&id="+id;
     }
     @GetMapping("/movies/{id}/schedules/")
     public String getSchedulesForMovie(@PathVariable String id, Model model) {
-        return "redirect:/schedules/movie/" +id+"/";
+        return "redirect:/schedules?searchType=movie&id="+id;
     }
 
-    @GetMapping("/schedules/{searchType}/{id}/")
-    public String getSchedulesSearch(@PathVariable String searchType,@PathVariable String id, Model model) {
+    @GetMapping("/schedules")
+    public String getSchedulesSearch(@RequestParam(defaultValue = "all" ,required = false) String searchType,@RequestParam(required = false) String id, Model model) {
         if (Objects.equals(searchType, "theater")) {
             //schedules by theater id
             List<List<ScheduleDoc>> returnSchedules = new ArrayList<>();
@@ -101,24 +101,20 @@ public class ScheduleWebController {
                     .map(EntityModel::getContent)
                     .toList();
             model.addAttribute("schedules",schedules);
+        } else if (Objects.equals(searchType, "all")) {
+            List<ScheduleDoc> schedules = webClient
+                    .get()
+                    .uri("api/schedules")
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                    .block()
+                    .getContent()
+                    .stream()
+                    .map(EntityModel::getContent)
+                    .toList();
+            model.addAttribute("schedules", schedules);
         }
         model.addAttribute("searchType", searchType);
-        return "schedules/show";
-    }
-    @GetMapping("/schedules/")
-    public String getAllSchedules(Model model) {
-        List<ScheduleDoc> schedules = webClient
-                .get()
-                .uri("api/schedules")
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
-                .block()
-                .getContent()
-                .stream()
-                .map(EntityModel::getContent)
-                .toList();
-        model.addAttribute("schedules", schedules);
-        model.addAttribute("searchType", "all");
         return "schedules/show";
     }
 
@@ -148,7 +144,7 @@ public class ScheduleWebController {
             throw new IllegalArgumentException("Invalid schedule: " + errors);
         } else {
             webClient.put()
-                    .uri("api/schedules/" + schedule.getId())
+                    .uri("api/schedules/" + id)
                     .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .bodyValue(schedule)
                     .retrieve()
@@ -163,7 +159,10 @@ public class ScheduleWebController {
         webClient
                 .delete()
                 .uri("api/schedules/" + id)
-                .header(AUTH_HEADER, "Bearer " + jwtToken);
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
+                .retrieve()
+                .bodyToMono(ScheduleDoc.class)
+                .block();
         return "redirect:/schedules/";
     }
 }

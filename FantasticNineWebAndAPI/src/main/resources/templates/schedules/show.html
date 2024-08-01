@@ -51,13 +51,13 @@
                                      th:if="${showings.movie.getPoster() != null}">
                                     <div class="card-body">
                                         <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
-                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM-yy')}">Show Time</p>
                                     </div>
                                 </div>
                                 <div class="card" th:unless="${showings.movie.getPoster() != null}">
                                     <div class="card-body">
                                         <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
-                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM-yy')}">Show Time</p>
                                     </div>
                                 </div>
                             </a>
@@ -97,45 +97,11 @@
             <tr th:each="showing : ${schedules}">
                 <td th:text="${showing.movie.title}"></td>
                 <td th:text="${showing.theater.location.address.city}"></td>
-                <td class="card-text" th:text="${#temporals.format(showing.startTime, 'HH:mm, dd-MMM')}"></td>
+                <td class="card-text" th:text="${#temporals.format(showing.startTime, 'HH:mm, dd-MMM-yy')}"></td>
             </tr>
             </tbody>
         </table>
-        <nav th:replace="~{fragments/pagination}"></nav>
-        <ul class="pagination">
-            <li class="page-item" th:classappend="${schedules.first} ? 'disabled'">
-                <a class="page-link" th:href="@{/cities(page=0, size=${schedules.size})}" aria-label="First">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
 
-            <li class="page-item" th:classappend="${cityPage.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/cities(page=${cityPage.number - 1}, size=${cityPage.size})}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <th:block th:with="startPage=${cityPage.number > 3 ? cityPage.number - 2 : 1}">
-                <th:block th:with="endPage=${cityPage.number < cityPage.totalPages - 3 ? cityPage.number + 3 : cityPage.totalPages}">
-                    <li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}"
-                        th:classappend="${cityPage.number == i - 1} ? 'active'">
-                        <a class="page-link" th:href="@{/cities(page=${i - 1}, size=${cityPage.size})}" th:text="${i}">1</a>
-                    </li>
-                </th:block>
-            </th:block>
-
-            <li class="page-item" th:classappend="${cityPage.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/cities(page=${cityPage.number + 1}, size=${cityPage.size})}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${cityPage.last} ? 'disabled'">
-                <a class="page-link" th:href="@{/cities(page=${cityPage.totalPages - 1}, size=${cityPage.size})}" aria-label="Last">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-        </ul>
     </div>
 </div>
 <footer th:replace="~{fragments/footer}"></footer>
