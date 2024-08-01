@@ -230,4 +230,8 @@ public class MoviesService {
         });
     }
 
+    public long getNumberOfMovies() {
+        return moviesRepository.count();
+    }
+
 }
