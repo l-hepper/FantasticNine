@@ -83,8 +83,6 @@ public class TheatersWebController {
                     .collectList()
                     .block();
 
-            System.out.println("Received theaters: " + theaters);
-
             if (theaters == null || theaters.isEmpty()) {
                 model.addAttribute("message", "No theaters found in " + cityName);
             } else {
@@ -98,6 +96,7 @@ public class TheatersWebController {
 
         return "theaters/theaters_by_city";
     }
+
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
@@ -183,15 +182,12 @@ public class TheatersWebController {
         return "redirect:/theaters";
     }
 
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteTheater(@PathVariable Integer id) {
         webClient
                 .delete()
                 .uri("/api/theaters/" + id)
-                .header("DOOM-API-KEY", key)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
+                .header("DOOM-API-KEY", key);
         return "redirect:/theaters";
     }
 }
