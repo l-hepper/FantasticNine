@@ -136,7 +136,7 @@ public class CommentDocServiceTests {
         commentList.add(commentOne);
         commentList.add(commentTwo);
         when(commentsRepository.findAll()).thenReturn(commentList);
-        List<CommentDoc> actual = service.getCommentsByMovieId(commentTwo.getMovieid());
+        List<CommentDoc> actual = service.getCommentsByMovieId(commentTwo.getMovieId());
         Assertions.assertEquals(expected, actual);
 
     }
