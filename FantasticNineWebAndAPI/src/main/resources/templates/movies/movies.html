@@ -74,7 +74,7 @@
     </div>
     <div class="card-container">
         <div th:each="movie : ${movies}">
-            <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">
+            <a th:href="@{/movies/{id}(id=${movie.getId()})}">
                 <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"
                      th:if="${movie.getPoster() != null}">
                     <div class="card-body">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </a>
-            <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">
+            <a th:href="@{/movies/{id}(id=${movie.getId()})}">
                 <div class="card" th:unless="${movie.getPoster() != null}">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>
@@ -100,15 +100,17 @@
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                        <a class="page-link" th:href="@{/movies(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
+                        <a class="page-link" th:href="@{/movies/pages(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
-                        <a class="page-link" th:href="@{/movies(page=${i}, size=${pageSize})}" th:text="${i + 1}">1</a>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">
+                            <span th:text="${currentPage + 1}">1</span>
+                        </a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
-                        <a class="page-link" th:href="@{/movies(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
+                        <a class="page-link" th:href="@{/movies/pages(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>

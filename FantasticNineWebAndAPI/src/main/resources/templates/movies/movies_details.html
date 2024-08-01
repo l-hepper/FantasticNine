@@ -24,16 +24,31 @@
             <p class="card-text" th:text="${movie.getYear()}"></p>
             <p class="card-text" th:text="${movie.getFullplot()}"></p>
             <p class="card-text" th:text="'Runtime: ' + ${movie.getRuntime()}"></p>
-            <p class="card-text" th:text="'Directors: ' + ${movie.getDirectors()}"></p>
-            <p class="card-text" th:text="'Actors: ' + ${movie.getCast()}"></p>
-            <p class="card-text" th:text="'Writers: ' + ${movie.getWriters()}"></p>
+            <div class="d-flex card-text">
+                <p class="card-text mr-1">Directors:</p>
+                <p class="card-text" th:each="director : ${movie.getDirectors()}" th:text="${director}"></p>
+            </div>
+            <div class="d-flex card-text">
+                <p class="card-text mr-1">Actors:</p>
+                <p class="card-text" th:each="actor : ${movie.getCast()}" th:text="${actor}"></p>
+            </div>
+            <div class="d-flex card-text">
+                <p class="card-text mr-1">Writers:</p>
+                <p class="card-text" th:each="writer : ${movie.getWriters()}" th:text="${writer}"></p>
+            </div>
             <p class="card-text" th:text="'Genres: ' + ${movie.getGenres()}"></p>
-            <p class="card-text" th:text="'Awwards: ' + ${movie.getAwards()}"></p>
+            <p class="card-text" th:text="'Awards: ' + ${movie.getAwards().split(' ')[5]}"></p>
             <p class="card-text" th:text="'IMDB Rating: ' + ${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'"></p>
             <p class="card-text" th:text="'Rated: ' + ${movie.getRated()}"></p>
             <p class="card-text" th:text="'Tomatoes: ' + ${movie.getTomatoes()}"></p>
-            <p class="card-text" th:text="'Countries: ' + ${movie.getCountries()}"></p>
-            <p class="card-text" th:text="'Languages: ' + ${movie.getLanguages()}"></p>
+            <div class="d-flex card-text">
+                <p class="card-text mr-1">Countries:</p>
+                <p class="card-text" th:each="country : ${movie.getCountries()}" th:text="${country}"></p>
+            </div>
+            <div class="d-flex card-text">
+                <p class="card-text mr-1">Languages:</p>
+                <p class="card-text" th:each="language : ${movie.getLanguages()()}" th:text="${language}"></p>
+            </div>
             <p class="card-text" th:text="'Released: ' + ${movie.getReleased()}"></p>
             <p class="card-text" th:text="'Type: ' + ${movie.getType()}"></p>
         </div>

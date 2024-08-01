@@ -37,6 +37,10 @@ public class MoviesService {
         this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
+    public long getNumberOfMovies() {
+        return moviesRepository.count();
+    }
+
     public Stream<MovieDoc> getAllMovies(int page, int size) {
         return getAllMovies()
                 .skip((long) page * size)

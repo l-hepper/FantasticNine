@@ -1,13 +1,8 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
-import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,51 +11,31 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/movies")
 public class MoviesWebController {
 
     public final WebClient webClient;
+    private final MoviesService moviesService;
 
     @Value("${key}")
     private String key;
 
-    public MoviesWebController(WebClient webClient) {
+    public MoviesWebController(WebClient webClient, MoviesService moviesService) {
         this.webClient = webClient;
+        this.moviesService = moviesService;
     }
 
     @GetMapping
     public String getMovies(Model model) {
-        return "redirect:/movies/pages?page=0&size=20";
+        return "redirect:/movies/pages";
     }
-
-//    @GetMapping()
-//    public String getMovies(Model model) {
-//        ResponseEntity<List<MovieDoc>> moviesResponse = webClient
-//                .get()
-//                .uri("/api/movies")
-//                .header("DOOM-API-KEY", key)
-//                .retrieve()
-//                .toEntityList(MovieDoc.class)
-//                .block();
-//
-//        ArrayList<MovieDoc> moviesList = new ArrayList<>();
-//        if (moviesResponse.hasBody()) {
-//            for (int i = 0; i<10; i++) {
-//                moviesList.add(moviesResponse.getBody().get(i));
-//            }
-//        }
-//
-//        model.addAttribute("movies", moviesList);
-//        return "movies/movies";
-//    }
 
     @GetMapping("/pages")
     public String getMovies(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "21") int size,
             Model model) {
         ResponseEntity<List<MovieDoc>> moviesResponse = webClient
                 .get()
@@ -70,43 +45,14 @@ public class MoviesWebController {
                 .toEntityList(MovieDoc.class)
                 .block();
 
-        ArrayList<MovieDoc> moviesList = new ArrayList<>();
-        if (moviesResponse.hasBody()) {
-            for (int i = 0; i<10; i++) {
-                moviesList.add(moviesResponse.getBody().get(i));
-            }
-        }
+        long totalPages = moviesService.getNumberOfMovies() / size;
 
-        model.addAttribute("movies", moviesList);
+        model.addAttribute("movies", moviesResponse.getBody());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", totalPages);
         return "movies/movies";
     }
-
-
-
-
-//    @GetMapping
-//    public String getTheatres(
-//            @RequestParam(defaultValue = "0") int page,
-//            Model model) {
-//        List<TheaterDoc> theaters = webClient
-//                .get()
-//                .uri("/api/theaters")
-//                .header("DOOM-API-KEY", key)
-//                .retrieve()
-//                .bodyToFlux(TheaterDoc.class)
-//                .collectList()
-//                .block();
-//
-//        int start = page * PAGE_SIZE;
-//        int end = Math.min(start + PAGE_SIZE, theaters.size());
-//
-//        List<TheaterDoc> paginatedTheaters = theaters.subList(start, end);
-//
-//        model.addAttribute("theaters", paginatedTheaters);
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", (int) Math.ceil((double) theaters.size() / PAGE_SIZE));
-//        return "theaters/theaters";
-//    }
 
     @GetMapping("/search/{movieName}")
     public String getSearchedMovies(@PathVariable String movieName, Model model) {
