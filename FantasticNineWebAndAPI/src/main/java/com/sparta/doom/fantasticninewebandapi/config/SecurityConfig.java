@@ -42,49 +42,50 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authRequest -> authRequest
+                        // Public pages
+                        .requestMatchers("/", "/welcome/").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
+                        .requestMatchers("/**").permitAll()
+
+                        // API
+                        .requestMatchers("/api/**").permitAll()
+
+                        // Web
+                        .requestMatchers("/movies/**", "/theaters/**", "/users/**").permitAll()
+                        .requestMatchers("/movies/create/", "/theaters/create/", "/users/create/").hasRole("ADMIN")
+                        .requestMatchers("/movies/{id}/", "/theaters/{id}/", "/users/{id}/").hasRole("ADMIN")
+                        .requestMatchers("/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login/")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout/")
+                        .permitAll()
+                )
+                .build();
+    }
+
+    // dev chain
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        return http
-//        .sessionManagement(sessionManagement ->
-//                        sessionManagement
-//                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                )
 //                .csrf(AbstractHttpConfigurer::disable)
 //                .authorizeHttpRequests(authRequest ->
 //                        authRequest
-//                                .requestMatchers("/", "/welcome/").permitAll()
-//                                .requestMatchers("/api/**").hasRole("ADMIN")
-//                                .requestMatchers("/mflix/**").hasAnyRole("USER", "ADMIN")
-//                                .requestMatchers("/mflix/movies/create/", "/mflix/theaters/create/", "/mflix/users/create/").hasRole("ADMIN")
-//                                .requestMatchers("/mflix/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
-//                                .requestMatchers("/mflix/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
+//                                .requestMatchers("/**").permitAll()
 //                                .anyRequest().authenticated()
 //                )
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/login/")
-//                        .defaultSuccessUrl("/mflix/", true)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout/")
-//                        .permitAll()
-//                )
-//                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+////                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
 //                .build();
-//    }
 
-    // dev chain
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authRequest ->
-                        authRequest
-                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
 }
