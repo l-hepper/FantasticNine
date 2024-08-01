@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,16 +45,18 @@ public class MoviesService {
 
     public List<MovieDoc> getAllMovies(int page, int size) {
         Query query = new Query();
-
         int skip = page * size;
         query.skip(skip).limit(size);
-
         return mongoTemplate.find(query, MovieDoc.class);
     }
 
     public Optional<MovieDoc> getMovieById(String id) {
-        return Optional.ofNullable(moviesRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + id)));
+        Query query = new Query(Criteria.where("id").is(id));
+        MovieDoc movieDoc = mongoTemplate.findOne(query, MovieDoc.class);
+        if (movieDoc == null) {
+            throw new MovieNotFoundException("Movie not found with id: " + id);
+        }
+        return Optional.of(movieDoc);
     }
 
     public Optional<MovieDoc> getMovieByTitle(String title) {
@@ -120,13 +123,13 @@ public class MoviesService {
     }
 
     public List<MovieDoc> getMoviesByGenre(String genre) {
-        return moviesRepository.findAll().stream()
-                .filter(movieDoc -> movieDoc.getGenres() != null &&
-                        Arrays.stream(movieDoc.getGenres().split(","))
-                                .map(String::trim)
-                                .map(String::toLowerCase)
-                                .anyMatch(genre.toLowerCase()::equals))
-                .collect(Collectors.toList());
+        if (genre == null || genre.trim().isEmpty()) {
+            return List.of();
+        }
+        String normalizedGenre = genre.trim().toLowerCase();
+        Query query = new Query(Criteria.where("genres")
+                .regex(".*\\b" + Pattern.quote(normalizedGenre) + "\\b.*", "i"));
+        return mongoTemplate.find(query, MovieDoc.class);
     }
 
     private List<MovieDoc> getTop10ByImdbRatingAndType(String type) {
@@ -136,11 +139,8 @@ public class MoviesService {
         if (type != null) {
             query.addCriteria(Criteria.where("type").is(type));
         }
-
         query.with(Sort.by(Sort.Order.desc("imdb.rating")));
-
         List<MovieDoc> allItems = mongoTemplate.find(query.limit(20), MovieDoc.class);
-
         return allItems.stream()
                 .filter(distinctByKey(MovieDoc::getTitle))
                 .limit(10)
