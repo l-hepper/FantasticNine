@@ -21,8 +21,8 @@ public class TheatersWebController {
 
     private final WebClient webClient;
 
-    @Value("${key}")
-    private String key;
+    @Value("${jwt.auth}")
+    private String AUTH_HEADER;
 
     private static final int PAGE_SIZE = 10;
 
@@ -38,7 +38,7 @@ public class TheatersWebController {
         List<TheaterDoc> theaters = webClient
                 .get()
                 .uri("/api/theaters")
-                .header("DOOM-API-KEY", key)
+                .header(AUTH_HEADER, )
                 .retrieve()
                 .bodyToFlux(TheaterDoc.class)
                 .collectList()
@@ -60,7 +60,7 @@ public class TheatersWebController {
         TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
-                .header("DOOM-API-KEY", key)
+                .header(AUTH_HEADER, )
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
                 .block();
@@ -77,7 +77,7 @@ public class TheatersWebController {
                             .path("/api/theaters/cities")
                             .queryParam("cityName", cityName)
                             .build())
-                    .header("DOOM-API-KEY", key)
+                    .header(AUTH_HEADER, )
                     .retrieve()
                     .bodyToFlux(TheaterDoc.class)
                     .collectList()
@@ -144,7 +144,7 @@ public class TheatersWebController {
         try {
             webClient.post()
                     .uri("/api/theaters")
-                    .header("DOOM-API-KEY", key)
+                    .header(AUTH_HEADER, )
                     .bodyValue(theater)
                     .retrieve()
                     .bodyToMono(Void.class)
@@ -161,7 +161,7 @@ public class TheatersWebController {
         TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
-                .header("DOOM-API-KEY", key)
+                .header(AUTH_HEADER,)
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
                 .block();
@@ -174,7 +174,7 @@ public class TheatersWebController {
         webClient
                 .put()
                 .uri("/api/theaters")
-                .header("DOOM-API-KEY", key)
+                .header(AUTH_HEADER, )
                 .bodyValue(theater)
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
@@ -187,7 +187,7 @@ public class TheatersWebController {
         webClient
                 .delete()
                 .uri("/api/theaters/" + id)
-                .header("DOOM-API-KEY", key);
+                .header(AUTH_HEADER, );
         return "redirect:/theaters";
     }
 }
