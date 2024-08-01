@@ -48,6 +48,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -77,8 +78,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout/")
                         .permitAll()
-                )
-                .build();
+                );
 
         http
                 .addFilterBefore(new FilterChainProxy(
