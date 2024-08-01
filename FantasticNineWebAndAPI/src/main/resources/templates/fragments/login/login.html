@@ -1,4 +1,4 @@
-<div class="modal fade dark-modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="createCityModalLabel" aria-hidden="true">
+<div class="modal fade dark-modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="loginForm" method="post" autocomplete="off">
+            <form id="loginForm" th:action="@{/authenticate}" method="post" autocomplete="off">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -18,12 +18,55 @@
                         <input type="password" id="password" name="password" class="form-control" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    <div th:if="${error}">
+                        <p th:text="${error}"></p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <p>Don't have an account?</p>
-                    <button type="button" class="btn btn-primary btn-block">Create account</button>
+                    <a href="register" class="btn btn-primary btn-block">Create account</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const loginData = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            fetch('/authenticate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        response.json().then(data => {
+                            console.log('Login successful:', data);
+                            window.location.reload();
+                        });
+                    } else {
+                        response.json().then(data => {
+                            console.error('Login failed:', data);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Network error:', error);
+                });
+        });
+    });
+</script>

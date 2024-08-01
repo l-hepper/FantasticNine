@@ -78,9 +78,12 @@ public class MoviesService {
     }
 
     public List<MovieDoc> getMoviesByPartialTitle(String title) {
-        return moviesRepository.findAll().stream()
-                .filter(movieDoc -> movieDoc.getTitle().toLowerCase().contains(title.toLowerCase()))
-                .collect(Collectors.toList());
+        if (title == null || title.isEmpty()) {
+            return List.of();
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i"));
+        return mongoTemplate.find(query, MovieDoc.class);
     }
 
     public MovieDoc createMovie(MovieDoc movieDoc) {

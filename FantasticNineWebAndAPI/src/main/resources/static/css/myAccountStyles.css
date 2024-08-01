@@ -1,0 +1,150 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.carousel-card {
+    background-color: #1e1e1e;
+    border: none;
+    height: fit-content;
+    max-width: fit-content;
+    flex: 1 1 20%;
+    margin-left: 10px;
+}
+
+.carousel-card img {
+    height: 300px;
+    object-fit: cover;
+}
+
+.carousel-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+}
+
+.carousel-container {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5%;
+}
+
+.carousel-control-prev {
+    left: -5%;
+}
+
+.carousel-control-next {
+    right: -5%;
+}
+
+#top-movies-all-time-carousel, #by-genre-carousel, .carousel-inner, #top-ten-series-carousel {
+    display: flex;
+    width: fit-content;
+    max-width: 1050px;
+    margin: auto;
+}
+
+.card {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+.card:hover {
+    cursor: pointer;
+}
+
+.card-title, .card-text {
+    color: #ffffff;
+}
+
+.footer {
+    background-color: #1e1e1e;
+    padding: 20px 0;
+    text-align: center;
+}
+
+
+.card-container {
+    flex: 0 0 auto;
+    width: 20%;
+    margin-right: 10px;
+}
+
+
+.jumbotron {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    margin-bottom: 0;
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.jumbotron .card {
+    background-color: #1e1e1e;
+    border: 1px solid #343a40;
+    display: flex;
+    flex-direction: column;
+}
+
+.jumbotron .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.jumbotron .card-title, .jumbotron .card-text {
+    color: #ffffff;
+}
+
+.jumbotron .card .btn {
+    margin-top: auto;
+}
+
+.btn-doomflix-theme {
+    color: #ffffff;
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
+
+.btn-doomflix-theme:hover {
+    color: #ffffff;
+    background-color: #cc0000;
+    border-color: #cc0000;
+}
+
+.btn-doomflix-theme:focus, .btn-doomflix-theme.focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.5);
+}
+.update-info .btn-outline-success {
+    color: #ffffff;
+    border-color: #ff0000;
+}
+
+.update-info .btn-outline-success:hover {
+    color: #ffffff;
+    background-color: #ff0006;
+    border-color: #ff0000;
+}
+
+.btn-custom-width {
+    width: 100%;
+}
+
+.main-content{
+    margin-top: 20px;
+}

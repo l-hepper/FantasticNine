@@ -1,16 +1,26 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
+import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
+import com.sparta.doom.fantasticninewebandapi.models.UserDoc;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/movies")
@@ -54,21 +64,21 @@ public class MoviesWebController {
         return "movies/movies";
     }
 
-    @GetMapping("/search/{movieName}")
-    public String getSearchedMovies(@PathVariable String movieName, Model model) {
-        ResponseEntity<List<MovieDoc>> movies = webClient
+    @GetMapping("/search")
+    public String searchMovies(@RequestParam String query, Model model) {
+        ResponseEntity<List<MovieDoc>> moviesResponse = webClient
                 .get()
-                .uri("/api/movies/search/" + movieName)
+                .uri("/api/movies/search/" + query)
                 .header("DOOM-API-KEY", key)
                 .retrieve()
                 .toEntityList(MovieDoc.class)
                 .block();
-        ArrayList<MovieDoc> moviesList = new ArrayList<>();
-        if (movies.hasBody()) {
-            for (int i = 0; i<10; i++) {
-                moviesList.add(movies.getBody().get(i));
-            }
+
+        List<MovieDoc> moviesList = new ArrayList<>();
+        if (moviesResponse.hasBody()) {
+            moviesList = moviesResponse.getBody().stream().limit(10).collect(Collectors.toList());
         }
+
         model.addAttribute("movies", moviesList);
         return "movies/movies";
     }
@@ -82,6 +92,21 @@ public class MoviesWebController {
                 .retrieve()
                 .bodyToMono(MovieDoc.class)
                 .block();
+
+        List<CommentDoc> comments = fetchComments(movie.getId(),0);
+
+        List<CommentDoc> returnComments = new ArrayList<>();
+
+        for(CommentDoc comment : comments) {
+            String emailAddress = comment.getEmail();
+            UserDoc user = webClient.get().uri("/api/users/email/"+emailAddress)
+                    .retrieve().bodyToMono(UserDoc.class).block();
+            CommentDoc commentWithId = comment;
+            commentWithId.setEmail(user.getId());
+            returnComments.add(commentWithId);
+        }
+
+        model.addAttribute("comments", returnComments);
         model.addAttribute("movie", movie);
         return "movies/movies_details";
     }
@@ -98,7 +123,7 @@ public class MoviesWebController {
                 .header("DOOM-API-KEY", key)
                 .bodyValue(moviesModel);
         model.addAttribute("movie", moviesModel);
-        return "redirect:/movies/search/" + moviesModel.getId();
+        return "redirect:/movies/" + moviesModel.getId();
     }
 
     @PostMapping("/update/{id}")
@@ -108,7 +133,7 @@ public class MoviesWebController {
                 .header("DOOM-API-KEY", key)
                 .bodyValue(moviesModel);
         model.addAttribute("movie", moviesModel);
-        return "redirect:/movies/search" + id;
+        return "redirect:/movies/" + id;
     }
 
     @GetMapping("/delete/{id}")
@@ -119,4 +144,17 @@ public class MoviesWebController {
         return "redirect:/movies";
     }
 
+    private List<CommentDoc> fetchComments(String movieId, int page) {
+        Mono<PagedModel<CommentDoc>> commentsMono = webClient.get().uri(uriBuilder -> uriBuilder
+                        .path("/api/movies/{movieId}/comments")
+                        .queryParam("page", page)
+                        .queryParam("size",10)
+                        .build(movieId))
+                .retrieve().bodyToMono(new ParameterizedTypeReference<PagedModel<CommentDoc>>() {});
+        PagedModel<CommentDoc> comments = commentsMono.block();
+        if (comments != null) {
+            return new ArrayList<>(comments.getContent());
+        }
+        return new ArrayList<>();
+    }
 }
