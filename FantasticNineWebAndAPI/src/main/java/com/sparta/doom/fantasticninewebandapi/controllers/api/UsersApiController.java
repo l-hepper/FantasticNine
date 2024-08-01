@@ -26,6 +26,7 @@ public class UsersApiController {
 
     @PostMapping
     public ResponseEntity<UserDoc> createUser(@RequestBody UserDoc userDoc) {
+        // Check if the authenticated user has FULL_ACCESS
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
@@ -43,6 +44,13 @@ public class UsersApiController {
         return userDoc
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDoc> getUserByEmail(@PathVariable String email) {
+        Optional<UserDoc> userDoc = usersService.getUserByEmail(email);
+        return userDoc.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
 
     @GetMapping
@@ -77,6 +85,7 @@ public class UsersApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        // Check if the authenticated user has FULL_ACCESS
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
