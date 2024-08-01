@@ -37,12 +37,12 @@ public class ScheduleWebController {
     }
     // Redirect gets to a single URL with two parameters
     // Redirect to /schedules/ or /schedules/{id}/{searchType}
-    @GetMapping("/theaters/search/{id}/schedules/")
+    @GetMapping("/theaters/{id}/schedules/")
     public String getSchedulesForTheatre(@PathVariable String id) {
         return "redirect:/schedules/theater/" +id+"/";
     }
 
-    @GetMapping("/movies/search/{id}/schedules/")
+    @GetMapping("/movies/{id}/schedules/")
     public String getSchedulesForMovie(@PathVariable String id, Model model) {
         return "redirect:/schedules/movie/" +id+"/";
     }
