@@ -1,12 +1,17 @@
-package com.sparta.doom.fantasticninewebandapi.models.movie;
+package com.sparta.doom.fantasticninewebandapi.dtos;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-public class Critic {
+public class ViewerDTO {
     private Integer meter;
     private Integer numReviews;
     private Double rating;
+
+    public ViewerDTO() {}
+
+    public ViewerDTO(Integer meter, Integer numReviews, Double rating) {
+        this.meter = meter;
+        this.numReviews = numReviews;
+        this.rating = rating;
+    }
 
     public Integer getMeter() {
         return meter;

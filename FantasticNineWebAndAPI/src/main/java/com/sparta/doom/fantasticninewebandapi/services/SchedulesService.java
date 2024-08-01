@@ -5,67 +5,117 @@ import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SchedulesService {
 
-    private SchedulesRepository schedulesRepository;
+    private final SchedulesRepository schedulesRepository;
 
     @Autowired
     public SchedulesService(SchedulesRepository schedulesRepository) {
         this.schedulesRepository = schedulesRepository;
     }
 
-    public List<ScheduleDoc> getSchedules() {
-        return schedulesRepository.findAll();
+
+    public Stream<ScheduleDoc> getAllSchedules() {
+        return schedulesRepository.findAllBy()
+                .sorted(Comparator.comparing(ScheduleDoc::getStartTime));
+    }
+
+    public Stream<ScheduleDoc> getFutureSchedules(){
+        LocalDateTime now = LocalDateTime.now();
+        return schedulesRepository.findAllBy()
+                .filter(schedule -> schedule.getStartTime().isAfter(now))
+                .sorted(Comparator.comparing(ScheduleDoc::getStartTime));
+    }
+
+    public Stream<ScheduleDoc> getAllSchedules(int page, int size) {
+        return paginate(getAllSchedules(),page,size);
+    }
+
+    public Stream<ScheduleDoc> getFutureSchedules(int page, int size){
+        return paginate(getFutureSchedules(),page,size);
+    }
+
+    public Stream<ScheduleDoc> getSchedules() {
+        return getFutureSchedules();
+    }
+
+    public Stream<ScheduleDoc> getSchedules(int page, int size) {
+        return paginate(getSchedules(),page,size);
+
+    }
+
+    private Stream<ScheduleDoc> paginate(Stream<ScheduleDoc> schedules,int page, int size) {
+        return schedules
+                .skip((long) page * size)
+                .limit(size);
     }
 
     public Optional<ScheduleDoc> getScheduleById(String Id){
         return schedulesRepository.findById(Id);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre) {
+    public Stream<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre) {
         String theatreId = theatre.getId();
-        return getSchedulesByTheatreId(theatreId);
+        return getSchedulesByTheaterId(theatreId);
     }
 
-    public List<ScheduleDoc> getSchedulesByTheatreId(String theatreId) {
-        return schedulesRepository.findAll().stream()
-                .filter(schedule -> schedule.getTheater().getId().equals(theatreId))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByTheaterId(String theatreId) {
+        return getSchedules()
+                .filter(schedule -> schedule.getTheater().getId().equals(theatreId));
     }
 
-    public List<ScheduleDoc> getSchedulesByMovie(MovieDoc movie) {
+    public Stream<ScheduleDoc> getSchedulesByTheaterId(String theatreId, int page, int size) {
+        return paginate(getSchedulesByTheaterId(theatreId),page,size);
+    }
+
+    public Stream<ScheduleDoc> getSchedulesByTheatre(TheaterDoc theatre, int page, int size) {
+        String theatreId = theatre.getId();
+        return paginate(getSchedulesByTheaterId(theatreId),page,size);
+    }
+
+
+    public Stream<ScheduleDoc> getSchedulesByMovie(MovieDoc movie) {
         String movieId = movie.getId();
         return getSchedulesByMovieId(movieId);
     }
 
-    public List<ScheduleDoc> getSchedulesByMovieId(String movieId) {
-        return schedulesRepository.findAll().stream()
-                .filter(schedule -> schedule.getMovie().getId().equals(movieId))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByMovieId(String movieId) {
+        return getSchedules()
+                .filter(schedule -> schedule.getMovie().getId().equals(movieId));
     }
 
-    public List<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
-        return schedulesRepository.findAll().stream()
-                .filter(schedule -> schedule.getStartTime().isAfter(startTime))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByMovie(MovieDoc movie, int page, int size) {
+        String movieId = movie.getId();
+        return getSchedulesByMovieId(movieId, page, size);
     }
 
-    public List<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
-        return schedulesRepository.findAll().stream()
-                .filter(schedule -> schedule.getStartTime().isBefore(startTime))
-                .toList();
+    public Stream<ScheduleDoc> getSchedulesByMovieId(String movieId, int page, int size) {
+        return paginate(getSchedulesByMovieId(movieId),page,size);
+    }
+
+    public Stream<ScheduleDoc> getSchedulesByStartTimeAfter(LocalDateTime startTime) {
+        return getSchedules()
+                .filter(schedule -> schedule.getStartTime().isAfter(startTime));
+    }
+
+    public Stream<ScheduleDoc> getSchedulesByStartTimeBefore(LocalDateTime startTime) {
+        return getSchedules()
+                .filter(schedule -> schedule.getStartTime().isBefore(startTime));
     }
 
 
-    public ScheduleDoc addSchedule(ScheduleDoc scheduleDoc) {
-        return schedulesRepository.save(scheduleDoc);
+    public Optional<ScheduleDoc> addSchedule(ScheduleDoc scheduleDoc) {
+        return Optional.of(schedulesRepository.save(scheduleDoc));
     }
 
     public void removeSchedule(String id) {
@@ -75,12 +125,7 @@ public class SchedulesService {
         schedulesRepository.delete(scheduleDoc);
     }
 
-    public ScheduleDoc updateSchedule(ScheduleDoc scheduleDoc) {
-        return schedulesRepository.save(scheduleDoc);
+    public Optional<ScheduleDoc> updateSchedule(ScheduleDoc scheduleDoc) {
+        return Optional.of(schedulesRepository.save(scheduleDoc));
     }
-
-
-
-
-
 }
