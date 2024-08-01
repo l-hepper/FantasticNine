@@ -77,8 +77,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout/")
                         .permitAll()
-                )
-                .build();
+                );
+
 
         http
                 .addFilterBefore(new FilterChainProxy(

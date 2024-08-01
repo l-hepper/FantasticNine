@@ -37,7 +37,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader(AUTH_HEADER);
         String requestURI = request.getRequestURI();
 
-        if (!requestURI.endsWith("create")) {
+        if (requestURI.startsWith("/authenticate")) {
             chain.doFilter(request, response);
             return;
         }

@@ -26,8 +26,13 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();
+        String method = request.getMethod();
 
-        if (!requestURI.endsWith("create")) {
+        if (method.equalsIgnoreCase("GET")) {
+            return true;
+        }
+
+        if (requestURI.startsWith("/authenticate")) {
             return true;
         }
 
