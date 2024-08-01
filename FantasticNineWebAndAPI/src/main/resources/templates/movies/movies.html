@@ -1,55 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Movies!</title>-->
-<!--    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">-->
-<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
-<!--    <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">-->
-<!--    <link rel="stylesheet" th:href="@{/css/movieCardStyles.css}">-->
-<!--</head>-->
-
-<!--<body>-->
-
-<!--<nav th:replace="~{fragments/navbar}"></nav>-->
-
-<!--<div class="container my-4" style="max-width: 80vw; margin: auto;">-->
-<!--    <div class="row">-->
-<!--        <div class="col-12">-->
-<!--            <h1 style="width: fit-content; margin: auto;">Movies!</h1>-->
-<!--            <br>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="card-container">-->
-<!--        <div th:each="movie : ${movies}">-->
-<!--            <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">-->
-<!--                <div class="card" th:style="|background-image: url('${movie.poster}'); background-size: cover; background-position: center;|"-->
-<!--                     th:if="${movie.getPoster() != null}">-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>-->
-<!--                        <p class="card-text" th:text="${movie.getYear()}">Year</p>-->
-<!--                        <p class="card-text" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </a>-->
-<!--            <a th:href="@{/movies/search/{id}(id=${movie.getId()})}">-->
-<!--                <div class="card" th:unless="${movie.getPoster() != null}">-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 class="card-title" th:text="${movie.getTitle()}">Movie Title</h5>-->
-<!--                        <p class="card-text" th:text="${movie.getYear()}">Year</p>-->
-<!--                        <p class="card-text p-0 m-0" th:text="${movie.getImdb().split(' ')[1].substring(0, 3)} + '/10'">Year</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </a>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-<!--</body>-->
-<!--</html>-->
-
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,16 +9,16 @@
     <link rel="stylesheet" th:href="@{/css/movieCardStyles.css}">
 </head>
 
-<body>
+<body style="background: #121212">
 
 <nav th:replace="~{fragments/navbar}"></nav>
 
 <div class="container my-4" style="max-width: 80vw; margin: auto;">
     <div class="row">
-        <div class="col-12">
-            <h1 style="width: fit-content; margin: auto;">Movies!</h1>
-            <br>
-        </div>
+<!--        <div class="col-12">-->
+<!--            <h1 style="width: fit-content; margin: auto;">Movies!</h1>-->
+<!--            <br>-->
+<!--        </div>-->
     </div>
     <div class="card-container">
         <div th:each="movie : ${movies}">
@@ -96,26 +44,30 @@
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-12">
+        <div class="col-4" ></div>
+        <div class="col-4">
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                        <a class="page-link" th:href="@{/movies/pages(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
+                        <a class="btn btn-dark" th:href="@{/movies/pages(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item active">
-                        <a class="page-link" href="#">
+                        <a class="btn btn-dark" href="#">
                             <span th:text="${currentPage + 1}">1</span>
                         </a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
-                        <a class="page-link" th:href="@{/movies/pages(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
+                        <a class="btn btn-dark" th:href="@{/movies/pages(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
+        </div>
+        <div class="col-4">
+            <a class="btn btn-dark float-right" th:href="@{/movies/create}" type="button">Add</a>
         </div>
     </div>
 </div>

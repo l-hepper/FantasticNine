@@ -41,10 +41,13 @@ public class MoviesService {
         return moviesRepository.count();
     }
 
-    public Stream<MovieDoc> getAllMovies(int page, int size) {
-        return getAllMovies()
-                .skip((long) page * size)
-                .limit(size);
+    public List<MovieDoc> getAllMovies(int page, int size) {
+        Query query = new Query();
+
+        int skip = page * size;
+        query.skip(skip).limit(size);
+
+        return mongoTemplate.find(query, MovieDoc.class);
     }
 
     public Stream<MovieDoc> getAllMovies() {
