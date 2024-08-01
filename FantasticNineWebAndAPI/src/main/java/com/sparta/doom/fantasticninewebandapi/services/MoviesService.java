@@ -37,14 +37,18 @@ public class MoviesService {
         this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
-    public Stream<MovieDoc> getAllMovies(int page, int size) {
-        return getAllMovies()
-                .skip((long) page * size)
-                .limit(size);
+    public List<MovieDoc> getAllMovies() {
+        Query query = new Query();
+        return mongoTemplate.find(query, MovieDoc.class);
     }
 
-    public Stream<MovieDoc> getAllMovies() {
-        return moviesRepository.findAllBy();
+    public List<MovieDoc> getAllMovies(int page, int size) {
+        Query query = new Query();
+
+        int skip = page * size;
+        query.skip(skip).limit(size);
+
+        return mongoTemplate.find(query, MovieDoc.class);
     }
 
     public Optional<MovieDoc> getMovieById(String id) {
@@ -53,9 +57,13 @@ public class MoviesService {
     }
 
     public Optional<MovieDoc> getMovieByTitle(String title) {
-        return moviesRepository.findAll().stream()
-                .filter(movieDoc -> movieDoc.getTitle().contains(title))
-                .findFirst();
+        if (title == null || title.isEmpty()) {
+            return Optional.empty();
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i"));
+        MovieDoc movieDoc = mongoTemplate.findOne(query, MovieDoc.class);
+        return Optional.ofNullable(movieDoc);
     }
 
     public List<MovieDoc> getMoviesOnly() {
