@@ -59,7 +59,7 @@
         <div th:each="comment : ${commentDocList}" class="comment">
             <p th:text="${comment.getText()}">Sample comment content</p>
             <small class="text-muted">
-                <a th:href="@{/movies/search/{id}(id=${comment.getMovieId()})}" th:text="${comment.getName()}">Movie Title</a>
+                <a th:href="@{/movies/{id}(id=${comment.getMovieId()})}" th:text="${comment.getName()}">Movie Title</a>
             </small>
             <div>
             <small class="text-muted" th:text="${comment.getDate()}">Comment Date</small>
