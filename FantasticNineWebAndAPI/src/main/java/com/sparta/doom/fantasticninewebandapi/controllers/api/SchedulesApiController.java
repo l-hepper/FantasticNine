@@ -30,11 +30,19 @@ public class SchedulesApiController {
     }
 
     @GetMapping("/schedules")
-    public CollectionModel<EntityModel<ScheduleDoc>> getSchedules() {
-        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getSchedules());
+    public CollectionModel<EntityModel<ScheduleDoc>> getSchedules(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getSchedules(page, size));
 
         return scheduleModel
-                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel());
+                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules(page, size)).withSelfRel());
+    }
+
+    @GetMapping("/schedules/all")
+    public CollectionModel<EntityModel<ScheduleDoc>> getAllSchedules(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getAllSchedules(page, size));
+
+        return scheduleModel
+                .add(linkTo(methodOn(SchedulesApiController.class).getAllSchedules(page, size)).withSelfRel());
     }
 
     @GetMapping("/schedules/{id}")
@@ -44,7 +52,6 @@ public class SchedulesApiController {
 
     @PostMapping("/schedules")
     public ResponseEntity<EntityModel<ScheduleDoc>> addSchedule(@RequestBody ScheduleDoc newSchedule) {
-        checkApiKey();
         if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -54,14 +61,12 @@ public class SchedulesApiController {
 
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable String id) {
-        checkApiKey();
         schedulesService.removeSchedule(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/schedules/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule) {
-        checkApiKey();
         if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -70,17 +75,17 @@ public class SchedulesApiController {
     }
 
     @GetMapping("theaters/{Id}/schedules")
-    public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getTheaterSchedules(@PathVariable String Id) {
-        CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByTheaterId(Id));
+    public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getTheaterSchedules(@PathVariable String Id,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByTheaterId(Id,page,size));
         return ResponseEntity.ok(schedulesModel
-                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
+                .add(linkTo(methodOn(SchedulesApiController.class).getTheaterSchedules(Id,page,size)).withSelfRel()));
     }
 
     @GetMapping("movies/{Id}/schedules")
-    public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getMovieSchedules(@PathVariable String Id) {
-        CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByMovieId(Id));
+    public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getMovieSchedules(@PathVariable String Id,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByMovieId(Id,page,size));
         return ResponseEntity.ok(schedulesModel
-                .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
+                .add(linkTo(methodOn(SchedulesApiController.class).getMovieSchedules(Id,page,size)).withSelfRel()));
     }
 
     private CollectionModel<EntityModel<ScheduleDoc>> getCollectionModelOf(Stream<ScheduleDoc> schedules) {
@@ -106,15 +111,6 @@ public class SchedulesApiController {
                 .slash(doc.getTheater().getId())
                 .withRel("theater");
         return EntityModel.of(doc, selfLink, movieLink, theaterLink);
-    }
-
-    private void checkApiKey() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-
-        if (userDetails.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "only Admins are allowed to perform this action");
-        }
     }
 
 }
