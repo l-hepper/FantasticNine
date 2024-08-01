@@ -9,42 +9,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
 public class UsersApiController {
 
     private final UsersService usersService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsersApiController(UsersService usersService, PasswordEncoder passwordEncoder) {
+    public UsersApiController(UsersService usersService) {
         this.usersService = usersService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping
     public ResponseEntity<UserDoc> createUser(@RequestBody UserDoc userDoc) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        // Check if the authenticated user has FULL_ACCESS
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
-//        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
-//            UserDoc createdUser = usersService.createUser(userDoc);
-//            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-//        }
-        userDoc.setPermissions(new HashSet<String>(Set.of("ROLE_USER")));
-        userDoc.setPassword(passwordEncoder.encode(userDoc.getPassword()));
-        UserDoc createdUser = usersService.createUser(userDoc);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            UserDoc createdUser = usersService.createUser(userDoc);
+            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        }
 
-//        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDoc> getUserById(@PathVariable String id) {
         Optional<UserDoc> userDoc = usersService.getUserById(id);
@@ -92,6 +85,7 @@ public class UsersApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        // Check if the authenticated user has FULL_ACCESS
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
