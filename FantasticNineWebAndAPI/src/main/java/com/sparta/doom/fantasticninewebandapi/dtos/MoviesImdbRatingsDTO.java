@@ -7,7 +7,6 @@ public class MoviesImdbRatingsDTO {
     private Double rating;
     private Integer votes;
 
-    // Default constructor
     public MoviesImdbRatingsDTO() {
     }
 
@@ -19,7 +18,6 @@ public class MoviesImdbRatingsDTO {
         this.votes = votes;
     }
 
-    // Getters and Setters
     public String getMovieId() {
         return movieId;
     }

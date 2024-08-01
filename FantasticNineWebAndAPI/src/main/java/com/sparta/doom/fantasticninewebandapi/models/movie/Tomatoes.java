@@ -148,9 +148,8 @@ public class Tomatoes {
     }
 
     public static class LastUpdated {
-        private String date;  // Adjust field names according to actual JSON
+        private String date;
 
-        // Getters and Setters
         public String getDate() {
             return date;
         }

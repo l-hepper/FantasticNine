@@ -8,7 +8,6 @@ public class Viewer {
     private Integer numReviews;
     private Double rating;
 
-    // Getters and Setters
     public Integer getMeter() {
         return meter;
     }

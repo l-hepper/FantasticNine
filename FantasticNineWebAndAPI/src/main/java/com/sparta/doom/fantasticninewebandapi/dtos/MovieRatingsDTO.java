@@ -6,8 +6,8 @@ public class MovieRatingsDTO {
     private Integer imdbId;
     private Double imdbRating;
     private Integer imdbVotes;
-    private String criticInfo;  // Changed to JSON string
-    private String viewerInfo;  // Changed to JSON string
+    private String criticInfo;
+    private String viewerInfo;
     private String tomatoesLastUpdated;
     private String tomatoesWebsite;
 

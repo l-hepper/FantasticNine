@@ -214,7 +214,6 @@ public class MoviesService {
                             moviesImdbRatingsDTO.getVotes()
                     );
                 } catch (Exception e) {
-                    // Handle parsing exception if needed
                     e.printStackTrace();
                 }
             }
