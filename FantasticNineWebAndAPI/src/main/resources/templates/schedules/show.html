@@ -4,45 +4,10 @@
     <meta charset="UTF-8">
     <title>Showings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/sandstone/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .card {
-            position: relative;
-            overflow: hidden;
-            height: 200px;
-            width: fit-content;
-            background-color: black;
-        }
-
-        .card::before {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, black, transparent 50%);
-            z-index: 1;
-        }
-
-        .card-body {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px;
-            z-index: 2;
-            color: white;
-        }
-
-        .card-title {
-            margin: 0;
-        }
-    </style>
 </head>
 <body>
 <h1>Schedules</h1>
-<!--<nav th:replace="~{fragments/navbar :: navbar}"></nav>-->
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <!--For searchType = movie-->
 <!--A table with each theatre and showing time-->
 <div class="table-responsive" th:if="${searchType} == 'movie'">
@@ -57,8 +22,8 @@
         <tbody>
         <tr th:each="showings : ${schedules}">
             <!--/*@thymesVar id="getTheater" type=""*/-->
-            <td th:text="${showings.theater.location.address.city} ?: 'N/A'"></td>
-            <td th:text="${showings.startTime} ?: 'N/A'"></td>
+            <td th:text="${showings.theater.location.address.city}"></td>
+            <td th:text="${showings.startTime}"></td>
         </tr>
         </tbody>
     </table>
@@ -76,8 +41,8 @@
         </thead>
         <tbody>
         <tr th:each="showings : ${schedules}">
-            <td th:text="${showings.movie.title} ?: 'N/A'"></td>
-            <td th:text="${showings.startTime} ?: 'N/A'"></td>
+            <td th:text="${showings.movie.title}"></td>
+            <td th:text="${showings.startTime}"></td>
         </tr>
         </tbody>
     </table>
@@ -99,9 +64,9 @@
         </thead>
         <tbody>
         <tr th:each="showing : ${schedules}">
-            <td th:text="${showing.movie.title} ?: 'N/A'"></td>
-            <td th:text="${showing.theater.location.address.city} ?: 'N/A'"></td>
-            <td th:text="${showing.startTime} ?: 'N/A'"></td>
+            <td th:text="${showing.movie.title}"></td>
+            <td th:text="${showing.theater.location.address.city}"></td>
+            <td th:text="${showing.startTime}"></td>
         </tr>
         </tbody>
     </table>
