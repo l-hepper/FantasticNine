@@ -1,44 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Create Theater</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Bebas Neue', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 4px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-group input[type="number"],
+        .form-group input[type="text"] {
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input[type="number"]:focus,
+        .form-group input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+    </style>
 </head>
 <body>
-<h1>Create New Theater</h1>
-<form action="/theaters/create" method="post">
-    <h2>Theater Details</h2>
-    <div>
-        <label for="theaterId">Theater ID:</label>
-        <input type="number" id="theaterId" name="theaterId" />
-    </div>
+<nav th:replace="~{fragments/navbar}"></nav>
 
-    <h2>Location Details</h2>
-    <h3>Address</h3>
-    <div>
-        <label for="addressStreet1">Street:</label>
-        <input type="text" id="addressStreet1" name="street1" />
-    </div>
-    <div>
-        <label for="addressCity">City:</label>
-        <input type="text" id="addressCity" name="city" />
-    </div>
-    <div>
-        <label for="addressState">State:</label>
-        <input type="text" id="addressState" name="state" />
-    </div>
-    <div>
-        <label for="addressZipcode">Zipcode:</label>
-        <input type="text" id="addressZipcode" name="zipcode" />
-    </div>
+<div class="container">
+    <h1>Create New Theater</h1>
 
-    <h3>Geographical Coordinates</h3>
-    <div>
-        <label for="geoCoordinates">Coordinates (latitude,longitude):</label>
-        <input type="text" id="geoCoordinates" name="coordinates" placeholder="e.g. 40.7128, -74.0060" />
-    </div>
+    <form action="/theaters/create" method="post">
+        <h2>Theater Details</h2>
 
-    <button type="submit">Create Theater</button>
-</form>
-<a href="/theaters">Back to List</a>
+        <div class="form-group">
+            <label for="theaterId">Theater ID:</label>
+            <input type="number" id="theaterId" name="theaterId" class="form-control" />
+        </div>
+
+        <h2>Location Details</h2>
+
+        <h3>Address</h3>
+        <div class="form-group">
+            <label for="addressStreet1">Street:</label>
+            <input type="text" id="addressStreet1" name="street1" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="addressCity">City:</label>
+            <input type="text" id="addressCity" name="city" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="addressState">State:</label>
+            <input type="text" id="addressState" name="state" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="addressZipcode">Zipcode:</label>
+            <input type="text" id="addressZipcode" name="zipcode" class="form-control" />
+        </div>
+
+        <h3>Geographical Coordinates</h3>
+        <div class="form-group">
+            <label for="geoCoordinates">Coordinates (latitude,longitude):</label>
+            <input type="text" id="geoCoordinates" name="coordinates" class="form-control" placeholder="e.g. 40.7128, -74.0060" />
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Create Theater</button>
+        </div>
+    </form>
+
+    <a href="/theaters" class="back-link">Back to List</a>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
