@@ -50,14 +50,15 @@ public class TheaterApiController {
     @DeleteMapping("/theaters/{theaterId}")
     public ResponseEntity<HttpStatus> deleteTheaterByTheaterId(@PathVariable Integer theaterId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-
-        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
-            theaterService.deleteTheaterByTheaterId(theaterId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
+        System.out.println(auth.getPrincipal());
+//        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+//
+//        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+//            theaterService.deleteTheaterByTheaterId(theaterId);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+//        }
     }
 
     @PostMapping("/theaters")
