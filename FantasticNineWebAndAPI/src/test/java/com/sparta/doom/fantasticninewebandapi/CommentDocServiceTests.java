@@ -1,6 +1,5 @@
 package com.sparta.doom.fantasticninewebandapi;
 
-import com.sparta.doom.fantasticninewebandapi.exceptions.CommentNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.CommentDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.CommentsRepository;
 import com.sparta.doom.fantasticninewebandapi.services.CommentsService;

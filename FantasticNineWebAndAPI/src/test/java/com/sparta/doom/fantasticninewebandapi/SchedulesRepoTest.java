@@ -28,7 +28,7 @@ public class SchedulesRepoTest {
         movie.setId("573a1390f29313caabcd42e8");
         ScheduleDoc scheduleDoc = new ScheduleDoc();
         scheduleDoc.setTheater(theatre);
-//        scheduleDoc.setMovie(movie);
+        scheduleDoc.setMovie(movie);
         scheduleDoc.setStartTime(LocalDateTime.now());
         schedulesRepository.save(scheduleDoc);
         Assertions.assertEquals(count +1, schedulesRepository.count());

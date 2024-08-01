@@ -21,7 +21,7 @@ public class ScheduleMvcController {
     }
     @GetMapping("/theatre/{id}/schedules/")
     public String getScheduleForTheatre(@PathVariable String id, Model model) {
-        model.addAttribute("schedules", ScheduleService.getSchedulesByTheatreId(id));
+        model.addAttribute("schedules", ScheduleService.getSchedulesByTheaterId(id));
         model.addAttribute("searchType", "theatre");
         return "schedules";
     }
