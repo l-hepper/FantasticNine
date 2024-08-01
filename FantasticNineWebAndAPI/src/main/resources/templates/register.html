@@ -9,6 +9,8 @@
     <link rel="stylesheet" th:href="@{/css/landingStyles.css}">
     <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
     <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/modalStyles.css}">
+
     <style>
         .header-background {
             background-image: url('/images/doom_head.jpg');
@@ -39,6 +41,16 @@
             width: 100%;
             text-align: center;
         }
+        .btn-primary {
+            background-color: #cc0000;
+            border-color: #cc0000;
+        }
+        .btn-primary:hover {
+            color: #ffffff;
+            background-color: #ff0006;
+            border-color: #ff0000;
+        }
+
     </style>
 </head>
 <body>
@@ -74,7 +86,7 @@
                     <input type="password" class="form-control" th:field="*{password}" id="confirmPassword" placeholder="Confirm Password">
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary btn-block">Register</button>
                 </div>
             </form>
         </div>
