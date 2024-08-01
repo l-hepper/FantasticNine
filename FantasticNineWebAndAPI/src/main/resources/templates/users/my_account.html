@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doomflix - Your Ultimate Movie Database</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/navbarStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/footerStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/userPageStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/myAccountStyles.css}">
+    <style>
+        .header-background {
+            background-image: url('/images/doom_head.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            color: white;
+        }
+
+        .header-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .header-background .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-card, .update-info {
+            margin-bottom: 1rem;
+        }
+
+        .profile-card img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        .separator {
+            border-top: 1px solid #ccc;
+            margin: 1rem 0;
+        }
+
+        .form-separator {
+            border-top: 1px solid #fff;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card, .update-info {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+
+<header class="jumbotron jumbotron-fluid bg-dark text-white text-center header-background">
+    <div class="container">
+        <h1 class="display-4">Account Name</h1>
+        <p class="lead">My profile</p>
+    </div>
+</header>
+
+<div class="container main-content">
+    <div class="row">
+        <div class="col-md-4 profile-card">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="/images/blank-profile.jpg" alt="Profile Picture" id="profile-picture">
+                    <h5 class="card-title">Username: JohnDoe</h5>
+                    <p class="card-text">Email: johndoe@example.com</p>
+                    <p class="card-text">Followers: 1234</p>
+                    <div class="separator"></div>
+                    <h6>Random Followers:</h6>
+                    <ul class="list-unstyled">
+                        <li>Follower 1</li>
+                        <li>Follower 2</li>
+                        <li>Follower 3</li>
+                        <li>Follower 4</li>
+                        <li>Follower 5</li>
+                        <li>Follower 6</li>
+                        <li>Follower 7</li>
+                        <li>Follower 8</li>
+                        <li>Follower 9</li>
+                        <li>Follower 10</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="update-info card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Update Information</h5>
+                    <div class="form-separator"></div>
+                    <form>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" placeholder="Enter new username">
+                            <button type="submit" class="btn btn-outline-success my-2 mt-2 btn-custom-width">Update Username</button>
+                        </div>
+                    </form>
+                    <div class="form-separator"></div>
+                    <form>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter new email">
+                            <button type="submit" class="btn btn-outline-success my-2 mt-2 btn-custom-width">Update Email</button>
+                        </div>
+                    </form>
+                    <div class="form-separator"></div>
+                    <form>
+                        <div class="form-group">
+                            <label for="current-password">Current Password</label>
+                            <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
+                        </div>
+                        <div>
+                            <input type="password" class="form-control" id="new-password-confirm" placeholder="Confirm new password">
+                        </div>
+                        <button type="submit" class="btn btn-outline-success my-2 mt-2 btn-custom-width">Update Password</button>
+                    </form>
+                    <div class="form-separator"></div>
+                    <button type="button" class="btn btn-danger mt-3 btn-custom-width">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
