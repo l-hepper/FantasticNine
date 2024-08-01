@@ -61,6 +61,7 @@ public class MoviesWebController {
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("search", false);
         return "movies/movies";
     }
 
@@ -80,6 +81,7 @@ public class MoviesWebController {
         }
 
         model.addAttribute("movies", moviesList);
+        model.addAttribute("search", true);
         return "movies/movies";
     }
 
