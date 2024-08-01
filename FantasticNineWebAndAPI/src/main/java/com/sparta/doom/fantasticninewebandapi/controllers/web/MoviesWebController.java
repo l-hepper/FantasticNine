@@ -1,8 +1,13 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +24,7 @@ public class MoviesWebController {
 
     public final WebClient webClient;
 
-//    @Value("${key}")
+    @Value("${key}")
     private String key;
 
     public MoviesWebController(WebClient webClient) {
@@ -28,9 +33,38 @@ public class MoviesWebController {
 
     @GetMapping
     public String getMovies(Model model) {
+        return "redirect:/movies/pages?page=0&size=20";
+    }
+
+//    @GetMapping()
+//    public String getMovies(Model model) {
+//        ResponseEntity<List<MovieDoc>> moviesResponse = webClient
+//                .get()
+//                .uri("/api/movies")
+//                .header("DOOM-API-KEY", key)
+//                .retrieve()
+//                .toEntityList(MovieDoc.class)
+//                .block();
+//
+//        ArrayList<MovieDoc> moviesList = new ArrayList<>();
+//        if (moviesResponse.hasBody()) {
+//            for (int i = 0; i<10; i++) {
+//                moviesList.add(moviesResponse.getBody().get(i));
+//            }
+//        }
+//
+//        model.addAttribute("movies", moviesList);
+//        return "movies/movies";
+//    }
+
+    @GetMapping("/pages")
+    public String getMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            Model model) {
         ResponseEntity<List<MovieDoc>> moviesResponse = webClient
                 .get()
-                .uri("/api/movies")
+                .uri("/api/movies/pages?page=" + page + "&size=" + size)
                 .header("DOOM-API-KEY", key)
                 .retrieve()
                 .toEntityList(MovieDoc.class)
@@ -46,6 +80,9 @@ public class MoviesWebController {
         model.addAttribute("movies", moviesList);
         return "movies/movies";
     }
+
+
+
 
 //    @GetMapping
 //    public String getTheatres(
