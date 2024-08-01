@@ -29,8 +29,8 @@ public class TheaterAPIController {
                 .body(theaters);
     }
 
-    @GetMapping("/theaters/cities/{cityName}")
-    public ResponseEntity<List<TheaterDoc>> getTheatersByCityName(@PathVariable String cityName) {
+    @GetMapping("/theaters/cities")
+    public ResponseEntity<List<TheaterDoc>> getTheatersByCityName(@RequestParam String cityName) {
         List<TheaterDoc> theaters = theaterService.getTheatersByCityName(cityName);
         return new ResponseEntity<>(theaters, HttpStatus.OK);
     }

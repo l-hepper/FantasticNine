@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Theaters</title>
+    <title>Theaters in City</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
@@ -10,12 +10,10 @@
             font-family: 'Bebas Neue', sans-serif;
             background-color: #f8f9fa;
         }
-
         .container {
             margin-top: 20px;
         }
-
-        .create-button {
+        .back-button {
             display: inline-block;
             margin-bottom: 20px;
             padding: 10px 20px;
@@ -25,12 +23,10 @@
             border-radius: 5px;
             text-decoration: none;
         }
-
-        .create-button:hover {
+        .back-button:hover {
             background-color: #0056b3;
             color: #fff;
         }
-
         .theater-card {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -40,63 +36,25 @@
             background-color: #fff;
             transition: background-color 0.3s ease;
         }
-
         .theater-card:hover {
             background-color: #f1f1f1;
         }
-
         .theater-card h2 {
             margin-top: 0;
             font-size: 1.5rem;
             color: #333;
         }
-
         .theater-card p {
             margin: 8px 0;
             color: #555;
         }
-
         .theater-card a {
             color: #007bff;
             text-decoration: none;
             font-weight: bold;
         }
-
         .theater-card a:hover {
             text-decoration: underline;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .pagination a {
-            margin: 0 5px;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #007bff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .pagination a.disabled {
-            color: #ccc;
-            border: 1px solid #ccc;
-            cursor: not-allowed;
-        }
-
-        .pagination a:hover:not(.disabled) {
-            background-color: #ddd;
-        }
-
-        .pagination .current-page {
-            margin: 0 5px;
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
         }
     </style>
 </head>
@@ -104,17 +62,12 @@
 <nav th:replace="~{fragments/navbar}"></nav>
 
 <div class="container">
-    <a class="create-button" href="/theaters/create">Create New Theater</a>
+    <a class="back-button" href="/theaters">Back to All Theaters</a>
 
+    <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <form action="/theaters/cities" method="get" class="mb-4">
-        <div class="form-group">
-            <label for="cityName">Search by City:</label>
-            <input type="text" name="cityName" id="cityName" class="form-control" placeholder="Enter city name">
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-
+    <h1>Theaters in <span th:text="${cityName}">City</span></h1>
 
     <div class="theater-list">
         <div class="theater-card" th:each="theater : ${theaters}">
@@ -125,19 +78,8 @@
                 <span th:text="${theater.location.address.state}"></span>
                 <span th:text="${theater.location.address.zipcode}"></span>
             </p>
-
             <a th:href="@{/theaters/{theaterId}(theaterId=${theater.theaterId})}">View Details</a>
         </div>
-    </div>
-
-    <div class="pagination">
-        <a th:if="${currentPage > 0}" th:href="@{/theaters(page=${currentPage - 1})}">&laquo; Previous</a>
-        <a th:if="${currentPage == 0}" class="disabled">&laquo; Previous</a>
-
-        <span class="current-page" th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
-
-        <a th:if="${currentPage < totalPages - 1}" th:href="@{/theaters(page=${currentPage + 1})}">Next &raquo;</a>
-        <a th:if="${currentPage == totalPages - 1}" class="disabled">Next &raquo;</a>
     </div>
 </div>
 

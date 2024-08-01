@@ -68,6 +68,37 @@ public class TheatersWebController {
         return "theaters/theater_details";
     }
 
+    @GetMapping("/cities")
+    public String searchTheatersByCityName(@RequestParam String cityName, Model model) {
+        try {
+            List<TheaterDoc> theaters = webClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/api/theaters/cities")
+                            .queryParam("cityName", cityName)
+                            .build())
+                    .header("DOOM-API-KEY", key)
+                    .retrieve()
+                    .bodyToFlux(TheaterDoc.class)
+                    .collectList()
+                    .block();
+
+            System.out.println("Received theaters: " + theaters);
+
+            if (theaters == null || theaters.isEmpty()) {
+                model.addAttribute("message", "No theaters found in " + cityName);
+            } else {
+                model.addAttribute("theaters", theaters);
+                model.addAttribute("cityName", cityName);
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred while searching for theaters.");
+            e.printStackTrace();
+        }
+
+        return "theaters/theaters_by_city";
+    }
+
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("theater", new TheaterDoc());
