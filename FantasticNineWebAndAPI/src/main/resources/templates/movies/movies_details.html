@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div class="container mt-5">
+<div sec:authorize="hasRole('ROLE_ADMIN')||hasRole('ROLE_USER')" class="container mt-5">
     <h2 class="text-center text-white">Leave a Comment</h2>
     <form th:action="@{/comment}" method="post" class="mb-5">
         <div class="form-group">
