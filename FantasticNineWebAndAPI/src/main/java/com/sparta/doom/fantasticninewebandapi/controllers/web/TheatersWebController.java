@@ -177,12 +177,15 @@ public class TheatersWebController {
         return "redirect:/theaters";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteTheater(@PathVariable Integer id, @CookieValue(name = "jwt", required = false) String jwtToken) {
+    @PostMapping("/delete/{id}")
+    public String deleteTheaterPost(@PathVariable Integer id, @CookieValue(name = "jwt", required = false) String jwtToken) {
         webClient
                 .delete()
                 .uri("/api/theaters/" + id)
-                .header(AUTH_HEADER, "Bearer " + jwtToken);
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
         return "redirect:/theaters";
     }
 }

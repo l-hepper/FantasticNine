@@ -125,7 +125,8 @@
 
     <div class="buttons">
         <a class="button" th:href="@{/theaters/edit/{id}(id=${theater.theaterId})}">Update</a>
-        <form th:action="@{/theaters/delete/{id}(id=${theater.theaterId})}" method="get" style="display:inline;">
+        <form th:action="@{/theaters/delete/{id}(id=${theater.theaterId})}" method="post" style="display:inline;">
+            <input type="hidden" name="_method" value="delete"/>
             <button type="submit" class="button delete">Delete</button>
         </form>
     </div>
