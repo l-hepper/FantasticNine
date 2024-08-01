@@ -9,11 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -58,6 +55,10 @@ public class CommentsService {
         return commentDocList;
     }
 
+    public Page<CommentDoc> getCommentsByMovie(ObjectId movieId, Pageable pageable) {
+        return commentsRepository.findByMovieId(movieId,pageable);
+    }
+
     public List<CommentDoc> getCommentsByUsernameAndMovie(String name, List<CommentDoc> comments) {
         List<CommentDoc> commentDocList = new ArrayList<>();
         for(CommentDoc comment : comments){
@@ -73,7 +74,7 @@ public class CommentsService {
     public List<CommentDoc> getCommentsByMovieId(ObjectId id){
         List<CommentDoc> commentDocList = new ArrayList<>();
         for(CommentDoc comment : commentsRepository.findAll()){
-            if (comment.getMovie_id().equals(id)){
+            if (comment.getMovieId().equals(id)){
                 commentDocList.add(comment);
             }
         }
