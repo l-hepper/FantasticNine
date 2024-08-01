@@ -1,6 +1,10 @@
 package com.sparta.doom.fantasticninewebandapi.models;
 
+import com.sparta.doom.fantasticninewebandapi.models.movie.Awards;
+import com.sparta.doom.fantasticninewebandapi.models.movie.Imdb;
+import com.sparta.doom.fantasticninewebandapi.models.movie.Tomatoes;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
@@ -25,6 +29,7 @@ public class MovieDoc {
     private String rated;
     private String released;
     private Integer runtime;
+    @Indexed
     private String title;
     private String tomatoes;
     private String type;
@@ -197,32 +202,5 @@ public class MovieDoc {
 
     public void setYear(String year) {
         this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "MoviesModel{" +
-                "id='" + id + '\'' +
-                ", awards='" + awards + '\'' +
-                ", cast=" + Arrays.toString(cast) +
-                ", countries=" + Arrays.toString(countries) +
-                ", directors=" + Arrays.toString(directors) +
-                ", fullplot='" + fullplot + '\'' +
-                ", genres='" + genres + '\'' +
-                ", imdb='" + imdb + '\'' +
-                ", languages=" + Arrays.toString(languages) +
-                ", lastupdated='" + lastupdated + '\'' +
-                ", num_mflix_comments=" + num_mflix_comments +
-                ", plot='" + plot + '\'' +
-                ", poster='" + poster + '\'' +
-                ", rated='" + rated + '\'' +
-                ", released='" + released + '\'' +
-                ", runtime=" + runtime +
-                ", title='" + title + '\'' +
-                ", tomatoes='" + tomatoes + '\'' +
-                ", type='" + type + '\'' +
-                ", writers=" + Arrays.toString(writers) +
-                ", year=" + year +
-                '}';
     }
 }
