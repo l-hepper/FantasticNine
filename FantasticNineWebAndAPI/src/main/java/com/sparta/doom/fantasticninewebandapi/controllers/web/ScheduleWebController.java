@@ -55,7 +55,6 @@ public class ScheduleWebController {
                 List<ScheduleDoc> schedules = webClient
                         .get()
                         .uri("api/theaters/"+id+"/schedules?page="+i)
-                        .header("DOOM-API-KEY", key)
                         .retrieve()
                         .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
                         .block()
@@ -76,7 +75,6 @@ public class ScheduleWebController {
                 List<ScheduleDoc> schedules = webClient
                         .get()
                         .uri("api/movies/"+id+"/schedules?page="+i)
-                        .header("DOOM-API-KEY", key)
                         .retrieve()
                         .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
                         .block()
@@ -95,7 +93,6 @@ public class ScheduleWebController {
             List<ScheduleDoc> schedules = webClient
                     .get()
                     .uri("api/schedules/" + id)
-                    .header("DOOM-API-KEY", key)
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
                     .block()
@@ -113,7 +110,6 @@ public class ScheduleWebController {
         List<ScheduleDoc> schedules = webClient
                 .get()
                 .uri("api/schedules")
-                .header("DOOM-API-KEY", key)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
                 .block()
@@ -134,26 +130,26 @@ public class ScheduleWebController {
     }
 
     @PostMapping("/schedules/create/")
-    public String createSchedule(@Valid @ModelAttribute ScheduleDoc schedule, Errors errors) {
+    public String createSchedule(@Valid @ModelAttribute ScheduleDoc schedule, Errors errors, @CookieValue(name = "jwt", required = false) String jwtToken) {
         if (errors.hasErrors()) {
             throw new IllegalArgumentException("Invalid schedule: " + errors);
         } else {
             webClient.post()
                     .uri("api/schedules/")
-                    .header("DOOM-API-KEY", key)
+                    .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .bodyValue(schedule);
             return "redirect:/schedules/schedule/" + schedule.getId() + "/";
         }
     }
 
     @PostMapping("/schedules/update/{id}/")
-    public String updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule, Model model, Errors errors) {
+    public String updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule, Model model, Errors errors, @CookieValue(name = "jwt", required = false) String jwtToken) {
         if (errors.hasErrors()) {
             throw new IllegalArgumentException("Invalid schedule: " + errors);
         } else {
             webClient.put()
                     .uri("api/schedules/" + schedule.getId())
-                    .header("DOOM-API-KEY", key)
+                    .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .bodyValue(schedule)
                     .retrieve()
                     .bodyToMono(ScheduleDoc.class)
@@ -163,11 +159,11 @@ public class ScheduleWebController {
     }
 
     @PostMapping("/schedules/delete/{id}/")
-    public String deleteSchedule(@PathVariable String id) {
+    public String deleteSchedule(@PathVariable String id, @CookieValue(name = "jwt", required = false) String jwtToken) {
         webClient
                 .delete()
                 .uri("api/schedules/" + id)
-                .header("DOOM-API-KEY", key);
+                .header(AUTH_HEADER, "Bearer " + jwtToken);
         return "redirect:/schedules/";
     }
 }
