@@ -20,15 +20,17 @@ import java.util.List;
 public class TheatersWebController {
 
     private final WebClient webClient;
+    private final TheaterService theaterService;
 
     @Value("${jwt.auth}")
     private String AUTH_HEADER;
 
     private static final int PAGE_SIZE = 15;
 
-    public TheatersWebController(WebClient webClient, TheaterService theaterService, TheaterRepository theaterRepository) {
+    public TheatersWebController(WebClient webClient, TheaterService theaterService, TheaterRepository theaterRepository, TheaterService theaterService1) {
         this.webClient = webClient;
 
+        this.theaterService = theaterService1;
     }
 
     @GetMapping
@@ -107,7 +109,7 @@ public class TheatersWebController {
             @RequestParam String state,
             @RequestParam String zipcode,
             @RequestParam String coordinates,
-            @CookieValue(name = "jwt", required = false) String jwtToken) {
+            @RequestParam Integer theaterId) {
 
         TheaterDoc theater = new TheaterDoc();
 
@@ -125,28 +127,20 @@ public class TheatersWebController {
             String[] coords = coordinates.split(",");
             if (coords.length == 2) {
                 try {
-                    double lat = Double.parseDouble(coords[0].trim());
-                    double lon = Double.parseDouble(coords[1].trim());
-                    geo.setCoordinates(new double[]{lat, lon});
+                    double lon = Double.parseDouble(coords[0].trim());
+                    double lat = Double.parseDouble(coords[1].trim());
+                    geo.setCoordinates(new double[]{lon, lat});
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
+                    System.err.println("Invalid coordinates format: " + e.getMessage());
                 }
             }
         }
         location.setGeo(geo);
         theater.setLocation(location);
+        theater.setTheaterId(theaterId);
 
-        try {
-            webClient.post()
-                    .uri("/api/theaters")
-                    .header(AUTH_HEADER, "Bearer " + jwtToken)
-                    .bodyValue(theater)
-                    .retrieve()
-                    .bodyToMono(Void.class)
-                    .block();
-        } catch (WebClientResponseException e) {
-            e.printStackTrace();
-        }
+        theaterService.createTheater(theater);
 
         return "redirect:/theaters";
     }

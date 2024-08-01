@@ -2,6 +2,7 @@ package com.sparta.doom.fantasticninewebandapi.dtos;
 
 public class MovieSummaryDTO {
 
+
     private String id;
     private String title;
     private String poster;

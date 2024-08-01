@@ -56,18 +56,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest -> authRequest
                         // Public pages
                         .requestMatchers("/", "/welcome/").permitAll()
-                        .requestMatchers("/css/", "/images/", "/javascript/").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/javascript/**").permitAll()
+                        .requestMatchers("/**").permitAll()
 
                         // API
-                        .requestMatchers("/api/").permitAll()
+                        .requestMatchers("/api/**").permitAll()
 
                         // Web
-                        .requestMatchers("/movies/", "/theaters/", "/users/").permitAll()
+                        .requestMatchers("/movies/**", "/theaters/**", "/users/**").permitAll()
                         .requestMatchers("/movies/create/", "/theaters/create/", "/users/create/").hasRole("ADMIN")
                         .requestMatchers("/movies/{id}/", "/theaters/{id}/", "/users/{id}/").hasRole("ADMIN")
                         .requestMatchers("/movies/{id}/comments/create/").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/movies/{id}/comments/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/movies/{id}/comments/{id}/").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -83,4 +83,14 @@ public class SecurityConfig {
         http.addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+    // dev chain
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(authRequest ->
+//                        authRequest.anyRequest().permitAll())
+//                .build();
+//    }
 }

@@ -82,7 +82,7 @@
 </section>
 
 <section id="top-ten-series" class="container my-5">
-    <h2 class="text-center mb-4">Top 10 Series</h2>
+    <h2 class="text-center mb-4">Top 10 TV Shows</h2>
     <div id="top-ten-series-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
         <div class="carousel-inner">
             <div th:each="chunk, iterStat : ${topRatedSeries}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">

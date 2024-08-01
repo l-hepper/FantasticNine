@@ -81,32 +81,38 @@
 <div class="container">
     <h1>Create New Theater</h1>
 
-    <form action="/theaters/create" method="post">
+    <form action="/theaters/create" method="post" id="createTheaterForm">
 
         <h2>Location Details</h2>
 
         <h3>Address</h3>
         <div class="form-group">
             <label for="addressStreet1">Street:</label>
-            <input type="text" id="addressStreet1" name="street1" class="form-control" />
+            <input type="text" id="addressStreet1" name="street1" class="form-control" required/>
         </div>
         <div class="form-group">
             <label for="addressCity">City:</label>
-            <input type="text" id="addressCity" name="city" class="form-control" />
+            <input type="text" id="addressCity" name="city" class="form-control" required/>
         </div>
         <div class="form-group">
             <label for="addressState">State:</label>
-            <input type="text" id="addressState" name="state" class="form-control" />
+            <input type="text" id="addressState" name="state" class="form-control" required/>
         </div>
         <div class="form-group">
             <label for="addressZipcode">Zipcode:</label>
-            <input type="text" id="addressZipcode" name="zipcode" class="form-control" />
+            <input type="text" id="addressZipcode" name="zipcode" class="form-control" required/>
         </div>
 
         <h3>Geographical Coordinates</h3>
         <div class="form-group">
-            <label for="geoCoordinates">Coordinates (latitude,longitude):</label>
-            <input type="text" id="geoCoordinates" name="coordinates" class="form-control" placeholder="e.g. 40.7128, -74.0060" />
+            <label for="geoCoordinates">Coordinates (longitude, latitude):</label>
+            <input type="text" id="geoCoordinates" name="coordinates" class="form-control" placeholder="e.g. -121.96328, 38.367649" required/>
+        </div>
+
+        <h3>Theater ID</h3>
+        <div class="form-group">
+            <label for="theaterId">Theater ID:</label>
+            <input type="number" id="theaterId" name="theaterId" class="form-control" required/>
         </div>
 
         <div class="text-center">
@@ -122,5 +128,27 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cityInput = document.getElementById('addressCity');
+
+        cityInput.addEventListener('input', function () {
+            const value = cityInput.value;
+            if (value.length > 0) {
+                cityInput.value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+            }
+        });
+
+        const form = document.getElementById('createTheaterForm');
+        form.addEventListener('submit', function () {
+            const value = cityInput.value;
+            if (value.length > 0) {
+                cityInput.value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
