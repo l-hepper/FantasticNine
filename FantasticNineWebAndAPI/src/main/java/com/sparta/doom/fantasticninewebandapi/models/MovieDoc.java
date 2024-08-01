@@ -4,6 +4,7 @@ import com.sparta.doom.fantasticninewebandapi.models.movie.Awards;
 import com.sparta.doom.fantasticninewebandapi.models.movie.Imdb;
 import com.sparta.doom.fantasticninewebandapi.models.movie.Tomatoes;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class MovieDoc {
     private String rated;
     private String released;
     private Integer runtime;
+    @Indexed
     private String title;
     private String tomatoes;
     private String type;

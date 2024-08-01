@@ -70,7 +70,7 @@ public class MoviesApiController {
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/movies/genre/{genre}")
+    @GetMapping("/movies/genres/{genre}")
     public ResponseEntity<List<MovieDoc>> getMoviesByGenre(@PathVariable String genre) {
         List<MovieDoc> movies = moviesService.getMoviesByGenre(genre);
         return ResponseEntity.ok(movies);
@@ -86,6 +86,18 @@ public class MoviesApiController {
     public ResponseEntity<List<MovieDoc>> getTop10ByImdbRating() {
         List<MovieDoc> topMovies = moviesService.getTop10ByImdbRating();
         return ResponseEntity.ok(topMovies);
+    }
+
+    @GetMapping("/movies/top-rated-movies")
+    public ResponseEntity<List<MovieDoc>> getTop10MoviesByImdbRating() {
+        List<MovieDoc> topMovies = moviesService.getTop10MoviesByImdbRating();
+        return ResponseEntity.ok(topMovies);
+    }
+
+    @GetMapping("/series/top-rated")
+    public ResponseEntity<List<MovieDoc>> getTop10SeriesByImdbRating() {
+        List<MovieDoc> topSeries = moviesService.getTop10SeriesByImdbRating();
+        return ResponseEntity.ok(topSeries);
     }
 
     @GetMapping("/series")

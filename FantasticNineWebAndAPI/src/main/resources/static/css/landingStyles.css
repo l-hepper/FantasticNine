@@ -6,9 +6,10 @@ body {
 .carousel-card {
     background-color: #1e1e1e;
     border: none;
-    height: 400px;
+    height: fit-content;
+    max-width: fit-content;
     flex: 1 1 20%;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .carousel-card img {
@@ -52,14 +53,21 @@ body {
     right: -5%;
 }
 
-#top-movies-all-time-carousel .carousel-inner, #top-movies-all-time-carousel .carousel-inner {
+#top-movies-all-time-carousel, #by-genre-carousel, .carousel-inner, #top-ten-series-carousel {
     display: flex;
+    width: fit-content;
+    max-width: 1050px;
+    margin: auto;
 }
 
 .card {
     background-color: #1e1e1e;
     border: none;
-    width: 100%;
+    width: fit-content;
+}
+
+.card:hover {
+    cursor: pointer;
 }
 
 .card-title, .card-text {
@@ -124,3 +132,190 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.5);
 }
 
+.movie-background {
+    background-image: url("../images/all_movies_and_series.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.theater-background {
+    background-image: url("../images/theater.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.card-body {
+    border-radius: 5px;
+}
+
+.header-background {
+    background-image: url('../images/doom_head.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    color: white;
+}
+
+.header-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.header-background .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* genre specific css*/
+
+.genre-card-container {
+    flex: 0 0 auto;
+    width: 20%;
+    margin-right: 10px;
+}
+
+.genre-carousel-container {
+    display: flex;
+    justify-content: center;
+}
+
+.genre-carousel-card {
+    width: 100%;
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+}
+
+.genre-card-title {
+    color: #ffffff;
+}
+
+#genre-card-body {
+    height: 100%;
+}
+
+.genre-short {
+    background-image: url('../images/genre_posters/short_genre.png');
+}
+
+.genre-western {
+    background-image: url('../images/genre_posters/western_genre.png');
+}
+
+.genre-drama {
+    background-image: url('../images/genre_posters/drama_genre.png');
+}
+
+.genre-animation {
+    background-image: url('../images/genre_posters/animation_genre.png');
+}
+
+.genre-comedy {
+    background-image: url('../images/genre_posters/comedy_genre.png');
+}
+
+.genre-crime {
+    background-image: url('../images/genre_posters/crime_genre.png');
+}
+
+.genre-history {
+    background-image: url('../images/genre_posters/history_genre.png');
+}
+
+.genre-action {
+    background-image: url('../images/genre_posters/action_genre.png');
+}
+
+.genre-biography {
+    background-image: url('../images/genre_posters/biography_genre.png');
+}
+
+.genre-family {
+    background-image: url('../images/genre_posters/family_genre.png');
+}
+
+.genre-romance {
+    background-image: url('../images/genre_posters/romance_genre.png');
+}
+
+.genre-fantasy {
+    background-image: url('../images/genre_posters/fantasy_genre.png');
+}
+
+.genre-mystery {
+    background-image: url('../images/genre_posters/mystery_genre.png');
+}
+
+.genre-war {
+    background-image: url('../images/genre_posters/war_genre.png');
+}
+
+.genre-adventure {
+    background-image: url('../images/genre_posters/adventure_genre.png');
+}
+
+.genre-thriller {
+    background-image: url('../images/genre_posters/thriller_genre.png');
+}
+
+.genre-documentary {
+    background-image: url('../images/genre_posters/documentary_genre.png');
+}
+
+.genre-musical {
+    background-image: url('../images/genre_posters/musical_genre.png');
+}
+
+.genre-music {
+    background-image: url('../images/genre_posters/music_genre.png');
+}
+
+.genre-film-noir {
+    background-image: url('../images/genre_posters/film-noir_genre.png');
+}
+
+.genre-sport {
+    background-image: url('../images/genre_posters/sport_genre.png');
+}
+
+.genre-horror {
+    background-image: url('../images/genre_posters/horror_genre.png');
+}
+
+.genre-sci-fi {
+    background-image: url('../images/genre_posters/sci-fi_genre.png');
+}
+
+.genre-talk-show {
+    background-image: url('../images/genre_posters/talk-show_genre.png');
+}
+
+.genre-news {
+    background-image: url('../images/genre_posters/news_genre.png');
+}
+
+
+.carousel-card-genre  {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#genre-card-title::first-letter {
+    text-transform: capitalize;
+}

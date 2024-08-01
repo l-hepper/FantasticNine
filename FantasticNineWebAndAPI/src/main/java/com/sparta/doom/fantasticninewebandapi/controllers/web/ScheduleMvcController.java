@@ -14,21 +14,21 @@ public class ScheduleMvcController {
     // TODO Theatre has one schedule with many showings
     // TODO movies have many schedules with many showings at many theatres
     // TODO searches are based off of what called it
-    private final SchedulesService schedulesService;
+    private final SchedulesService ScheduleService;
     @Autowired
-    public ScheduleMvcController(SchedulesService schedulesService) {
-        this.schedulesService = schedulesService;
+    public ScheduleMvcController(SchedulesService scheduleService) {
+        ScheduleService = scheduleService;
     }
     @GetMapping("/theatre/{id}/schedules/")
     public String getScheduleForTheatre(@PathVariable String id, Model model) {
-        model.addAttribute("schedules", schedulesService.getSchedulesByTheatreId(id));
+        model.addAttribute("schedules", ScheduleService.getSchedulesByTheatreId(id));
         model.addAttribute("searchType", "theatre");
         return "schedules";
     }
 
     @GetMapping("/movies/{id}/schedules/")
     public String getScheduleForMovie(@PathVariable String id, Model model) {
-        model.addAttribute("schedules", schedulesService.getSchedulesByMovieId(id));
+        model.addAttribute("schedules", ScheduleService.getSchedulesByMovieId(id));
         model.addAttribute("searchType", "movie");
         return "schedules";
     }
