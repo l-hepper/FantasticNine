@@ -50,6 +50,12 @@ public class MoviesService {
                 .findFirst();
     }
 
+    public List<MovieDoc> getMoviesOnly() {
+        return moviesRepository.findAll().stream()
+                .filter(movieDoc -> "movie".equalsIgnoreCase(movieDoc.getType()))
+                .collect(Collectors.toList());
+    }
+
     public List<MovieDoc> getAllSeries() {
         return moviesRepository.findAll().stream()
                 .filter(movieDoc -> "series".equalsIgnoreCase(movieDoc.getType()))
@@ -57,9 +63,12 @@ public class MoviesService {
     }
 
     public List<MovieDoc> getMoviesByPartialTitle(String title) {
-        return moviesRepository.findAll().stream()
-                .filter(movieDoc -> movieDoc.getTitle().toLowerCase().contains(title.toLowerCase()))
-                .collect(Collectors.toList());
+        if (title == null || title.isEmpty()) {
+            return List.of();
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i"));
+        return mongoTemplate.find(query, MovieDoc.class);
     }
 
     public MovieDoc createMovie(MovieDoc movieDoc) {
@@ -104,17 +113,34 @@ public class MoviesService {
                 .collect(Collectors.toList());
     }
 
-    public List<MovieDoc> getTop10ByImdbRating() {
+    private List<MovieDoc> getTop10ByImdbRatingAndType(String type) {
         Query query = new Query();
         query.addCriteria(Criteria.where("imdb.rating").ne(""));
+
+        if (type != null) {
+            query.addCriteria(Criteria.where("type").is(type));
+        }
+
         query.with(Sort.by(Sort.Order.desc("imdb.rating")));
 
-        List<MovieDoc> allMovies = mongoTemplate.find(query.limit(20), MovieDoc.class);
+        List<MovieDoc> allItems = mongoTemplate.find(query.limit(20), MovieDoc.class);
 
-        return allMovies.stream()
+        return allItems.stream()
                 .filter(distinctByKey(MovieDoc::getTitle))
                 .limit(10)
                 .collect(Collectors.toList());
+    }
+
+    public List<MovieDoc> getTop10ByImdbRating() {
+        return getTop10ByImdbRatingAndType(null);
+    }
+
+    public List<MovieDoc> getTop10MoviesByImdbRating() {
+        return getTop10ByImdbRatingAndType("movie");
+    }
+
+    public List<MovieDoc> getTop10SeriesByImdbRating() {
+        return getTop10ByImdbRatingAndType("series");
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {

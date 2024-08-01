@@ -26,7 +26,6 @@ public class UsersApiController {
 
     @PostMapping
     public ResponseEntity<UserDoc> createUser(@RequestBody UserDoc userDoc) {
-        // Check if the authenticated user has FULL_ACCESS
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
@@ -78,7 +77,6 @@ public class UsersApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        // Check if the authenticated user has FULL_ACCESS
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
 

@@ -29,7 +29,7 @@ public class ScheduleWebController {
     // TODO Delete
     // TODO Web Page design
     public final WebClient webClient;
-    @Value("${key}")
+//    @Value("${key}")
     private String key;
     @Autowired
     public ScheduleWebController(SchedulesService schedulesService, WebClient webClient) {
