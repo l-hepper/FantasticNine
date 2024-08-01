@@ -2,6 +2,8 @@ package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 public class SchedulesApiController {
 
     private final SchedulesService schedulesService;
+    private final Logger logger = LoggerFactory.getLogger(SchedulesApiController.class);
 
     public SchedulesApiController(SchedulesService schedulesService) {
         this.schedulesService = schedulesService;
@@ -31,6 +34,7 @@ public class SchedulesApiController {
 
     @GetMapping("/schedules")
     public CollectionModel<EntityModel<ScheduleDoc>> getSchedules() {
+        logger.info("getting Schedule Stream from service layer in controller");
         CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = getCollectionModelOf(schedulesService.getSchedules());
 
         return scheduleModel
@@ -39,12 +43,14 @@ public class SchedulesApiController {
 
     @GetMapping("/schedules/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> getScheduleById(@PathVariable String id) {
+        logger.info("Getting schedule by id in controller");
         return ResponseEntity.ok(schedulesService.getScheduleById(id).map(this::mapScheduleHateoas).orElseThrow(NoSuchElementException::new));
     }
 
     @PostMapping("/schedules")
     public ResponseEntity<EntityModel<ScheduleDoc>> addSchedule(@RequestBody ScheduleDoc newSchedule) {
         checkApiKey();
+        logger.info("Adding new schedules in controller");
         if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -55,6 +61,7 @@ public class SchedulesApiController {
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable String id) {
         checkApiKey();
+        logger.info("deleting schedule by Id in controller");
         schedulesService.removeSchedule(id);
         return ResponseEntity.noContent().build();
     }
@@ -62,6 +69,7 @@ public class SchedulesApiController {
     @PutMapping("/schedules/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule) {
         checkApiKey();
+        logger.info("Updating schedule in controller");
         if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -71,6 +79,7 @@ public class SchedulesApiController {
 
     @GetMapping("theaters/{Id}/schedules")
     public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getTheaterSchedules(@PathVariable String Id) {
+        logger.info("Getting schedules by Theater Id in controller");
         CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByTheaterId(Id));
         return ResponseEntity.ok(schedulesModel
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
@@ -78,12 +87,14 @@ public class SchedulesApiController {
 
     @GetMapping("movies/{Id}/schedules")
     public ResponseEntity<CollectionModel<EntityModel<ScheduleDoc>>> getMovieSchedules(@PathVariable String Id) {
+        logger.info("Getting schedules by Movie Id in controller");
         CollectionModel<EntityModel<ScheduleDoc>> schedulesModel = getCollectionModelOf(schedulesService.getSchedulesByMovieId(Id));
         return ResponseEntity.ok(schedulesModel
                 .add(linkTo(methodOn(SchedulesApiController.class).getSchedules()).withSelfRel()));
     }
 
     private CollectionModel<EntityModel<ScheduleDoc>> getCollectionModelOf(Stream<ScheduleDoc> schedules) {
+        logger.info("Mapping schedule stream to collection model");
         CollectionModel<EntityModel<ScheduleDoc>> scheduleModel = schedules
                 .map(this::mapScheduleHateoas)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), CollectionModel::of));
@@ -95,6 +106,7 @@ public class SchedulesApiController {
     }
 
     private EntityModel<ScheduleDoc> mapScheduleHateoas(ScheduleDoc doc) {
+        logger.info("Mapping schedule object to an appropriate hateoas response");
         Link selfLink = linkTo(methodOn(SchedulesApiController.class)
                 .getScheduleById(doc.getId()))
                 .withSelfRel();
@@ -109,6 +121,7 @@ public class SchedulesApiController {
     }
 
     private void checkApiKey() {
+        logger.info("Checking user is allowed to use method in controller");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
 

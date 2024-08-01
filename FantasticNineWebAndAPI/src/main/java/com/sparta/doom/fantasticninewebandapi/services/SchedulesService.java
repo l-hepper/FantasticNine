@@ -1,9 +1,12 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
+import com.sparta.doom.fantasticninewebandapi.controllers.api.SchedulesApiController;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import java.util.stream.Stream;
 public class SchedulesService {
 
     private final SchedulesRepository schedulesRepository;
+    private final Logger logger = LoggerFactory.getLogger(SchedulesService.class);
 
     @Autowired
     public SchedulesService(SchedulesRepository schedulesRepository) {
@@ -76,9 +80,5 @@ public class SchedulesService {
     public Optional<ScheduleDoc> updateSchedule(ScheduleDoc scheduleDoc) {
         return Optional.of(schedulesRepository.save(scheduleDoc));
     }
-
-
-
-
 
 }
