@@ -21,45 +21,47 @@
             <br>
         </div>
     </div>
-    <div id="schedules-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
+    <div id="schedules-carousel" class="carousel slide" data-ride="carousel" data-interval="false" th:if="${(searchType == 'theater') || (searchType == 'schedule')||(searchType == 'movies')}">
         <div class="carousel-inner">
-            <div class="carousel-container">
-                <div th:if="${searchType} == 'movie'">
-                    <div th:each="showings : ${schedules}" class="carousel-card">
-                        <a th:href="@{/theaters/{id}(id=${showings.theater.id})}">
-                            <div class="card" th:style="|background-image: url('${showings.movie.poster}'); background-size: cover; background-position: center;|"
-                                 th:if="${showings.movie.getPoster() != null}">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${showings.theater.location.address.city}">Theater City</h5>
-                                    <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+            <div th:each="chunk, iterStat : ${schedules}" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                <div class="carousel-container">
+                    <div th:if="${searchType} == 'movie'">
+                        <div th:each="showings : ${chunk}" class="carousel-card">
+                            <a th:href="@{/theaters/{id}(id=${showings.theater.id})}">
+                                <div class="card" th:style="|background-image: url('${showings.movie.poster}'); background-size: cover; background-position: center;|"
+                                     th:if="${showings.movie.getPoster() != null}">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${showings.theater.location.address.city}">Theater City</h5>
+                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card" th:unless="${showings.movie.getPoster() != null}">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${showings.theater.location.address.city}">Theater City</h5>
-                                    <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                <div class="card" th:unless="${showings.movie.getPoster() != null}">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${showings.theater.location.address.city}">Theater City</h5>
+                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div th:if="${(searchType == 'theater') || (searchType == 'schedule')}">
-                    <div th:each="showings : ${schedules}" class="carousel-card">
-                        <a th:href="@{/movies/{id}(id=${showings.movie.id})}">
-                            <div class="card" th:style="|background-image: url('${showings.movie.poster}'); background-size: cover; background-position: center;|"
-                                 th:if="${showings.movie.getPoster() != null}">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
-                                    <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                    <div th:if="${(searchType == 'theater') || (searchType == 'schedule')}">
+                        <div th:each="showings : ${chunk}" class="carousel-card">
+                            <a th:href="@{/movies/{id}(id=${showings.movie.id})}">
+                                <div class="card" th:style="|background-image: url('${showings.movie.poster}'); background-size: cover; background-position: center;|"
+                                     th:if="${showings.movie.getPoster() != null}">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
+                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card" th:unless="${showings.movie.getPoster() != null}">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
-                                    <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                <div class="card" th:unless="${showings.movie.getPoster() != null}">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${showings.movie.title}">Movie Title</h5>
+                                        <p class="card-text" th:text="${#temporals.format(showings.startTime, 'HH:mm, dd-MMM')}">Show Time</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

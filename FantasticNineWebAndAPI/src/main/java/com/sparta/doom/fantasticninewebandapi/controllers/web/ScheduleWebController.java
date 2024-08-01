@@ -45,47 +45,48 @@ public class ScheduleWebController {
     public String getSchedulesForMovie(@PathVariable String id, Model model) {
         return "redirect:/schedules/movie/" +id+"/";
     }
+
     @GetMapping("/schedules/{searchType}/{id}/")
     public String getSchedulesSearch(@PathVariable String searchType,@PathVariable String id, Model model) {
         if (Objects.equals(searchType, "theater")) {
             //schedules by theater id
-            List<ScheduleDoc> schedules = webClient
-                    .get()
-                    .uri("api/schedules")
-                    .header("DOOM-API-KEY", key)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
-                    .block()
-                    .getContent()
-                    .stream()
-                    .map(EntityModel::getContent)
-                    .toList();
-            ArrayList <ScheduleDoc> returnSchedules = new ArrayList<>();
-            assert schedules != null;
-            for (ScheduleDoc schedule : schedules) {
-                if (schedule.getTheater().getId().equals(id)) {
-                    returnSchedules.add(schedule);
+            List<List<ScheduleDoc>> returnSchedules = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                List<ScheduleDoc> schedules = webClient
+                        .get()
+                        .uri("api/theaters/"+id+"/schedules?page="+i)
+                        .header("DOOM-API-KEY", key)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                        .block()
+                        .getContent()
+                        .stream()
+                        .map(EntityModel::getContent)
+                        .toList();
+                returnSchedules.add(schedules);
+                if (schedules.size() < 10) {
+                    break;
                 }
             }
             model.addAttribute("schedules", returnSchedules);
         } else if (Objects.equals(searchType, "movie")) {
             //schedules by movie id
-            List<ScheduleDoc> schedules = webClient
-                    .get()
-                    .uri("api/schedules")
-                    .header("DOOM-API-KEY", key)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
-                    .block()
-                    .getContent()
-                    .stream()
-                    .map(EntityModel::getContent)
-                    .toList();
-            ArrayList <ScheduleDoc> returnSchedules = new ArrayList<>();
-            assert schedules != null;
-            for (ScheduleDoc schedule : schedules) {
-                if (schedule.getMovie().getId().equals(id)) {
-                    returnSchedules.add(schedule);
+            List<List<ScheduleDoc>> returnSchedules = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                List<ScheduleDoc> schedules = webClient
+                        .get()
+                        .uri("api/movies/"+id+"/schedules?page="+i)
+                        .header("DOOM-API-KEY", key)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<CollectionModel<EntityModel<ScheduleDoc>>>() {})
+                        .block()
+                        .getContent()
+                        .stream()
+                        .map(EntityModel::getContent)
+                        .toList();
+                returnSchedules.add(schedules);
+                if (schedules.size() < 10) {
+                    break;
                 }
             }
             model.addAttribute("schedules", returnSchedules);
@@ -161,7 +162,7 @@ public class ScheduleWebController {
         }
     }
 
-    @GetMapping("/schedules/delete/{id}/")
+    @PostMapping("/schedules/delete/{id}/")
     public String deleteSchedule(@PathVariable String id) {
         webClient
                 .delete()
