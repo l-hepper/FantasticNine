@@ -61,8 +61,15 @@ public class TheaterApiController {
 
     @PostMapping("/theaters")
     public ResponseEntity<HttpStatus> createTheater(@RequestBody TheaterDoc theater) {
-        theaterService.createTheater(theater);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            theaterService.createTheater(theater);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PutMapping("/theaters")
