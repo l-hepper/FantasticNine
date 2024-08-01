@@ -23,8 +23,8 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link">
-                    <span sec:authorize="hasRole('ROLE_ADMIN')" class="badge badge-primary">Admin</span>
-                    <span sec:authorize="hasRole('ROLE_USER') and !hasRole('ROLE_ADMIN')" class="badge badge-secondary">User</span>
+                    <span sec:authorize="hasRole('ADMIN')" class="badge badge-primary">Admin</span>
+                    <span sec:authorize="hasRole('USER') and !hasRole('ADMIN')" class="badge badge-secondary">User</span>
                 </a>
             </li>
             <li class="nav-item" sec:authorize="hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')">

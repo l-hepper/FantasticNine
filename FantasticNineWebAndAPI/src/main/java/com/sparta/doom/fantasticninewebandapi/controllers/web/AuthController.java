@@ -2,6 +2,8 @@ package com.sparta.doom.fantasticninewebandapi.controllers.web;
 
 import com.sparta.doom.fantasticninewebandapi.security.api.JwtUtils;
 import com.sparta.doom.fantasticninewebandapi.services.SecurityService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,12 +31,12 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest, HttpServletResponse response) throws Exception {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
             );
-            // Set the authentication context
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AuthenticationException e) {
             throw new Exception("Incorrect username or password", e);
@@ -42,6 +44,14 @@ public class AuthController {
 
         final UserDetails userDetails = securityService.loadUserByUsername(authRequest.getEmail());
         final String jwt = jwtUtils.generateToken(userDetails);
+
+        Cookie cookie = new Cookie("jwt", jwt);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/"); // Cookie available to the entire application
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+        response.addCookie(cookie);
 
         return ResponseEntity.ok(new AuthResponse(jwt));
     }

@@ -158,25 +158,35 @@
 
             const form = event.target;
             const formData = new FormData(form);
+            const loginData = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
 
-            fetch('/login', {
+            fetch('/authenticate', {
                 method: 'POST',
-                body: formData,
                 headers: {
+                    'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                } else {
-                    return response.json().then(data => {
-                        console.error('Login failed:', data);
-                    });
-                }
-            }).catch(error => {
-                console.error('Network error:', error);
-            });
+                },
+                body: JSON.stringify(loginData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        response.json().then(data => {
+                            console.log('Login successful:', data);
+                            window.location.reload();
+                        });
+                    } else {
+                        response.json().then(data => {
+                            console.error('Login failed:', data);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Network error:', error);
+                });
         });
     });
 </script>
