@@ -7,6 +7,9 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -41,6 +44,7 @@ public class SchedulesApiController {
 
     @PostMapping("/schedules")
     public ResponseEntity<EntityModel<ScheduleDoc>> addSchedule(@RequestBody ScheduleDoc newSchedule) {
+        checkApiKey();
         if(newSchedule == null ||newSchedule.getMovie() == null || newSchedule.getTheater() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -50,12 +54,14 @@ public class SchedulesApiController {
 
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable String id) {
+        checkApiKey();
         schedulesService.removeSchedule(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/schedules/{id}")
     public ResponseEntity<EntityModel<ScheduleDoc>> updateSchedule(@PathVariable String id, @RequestBody ScheduleDoc schedule) {
+        checkApiKey();
         if(schedule == null || schedule.getMovie() == null || schedule.getTheater() == null || !id.equals(schedule.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -100,6 +106,15 @@ public class SchedulesApiController {
                 .slash(doc.getTheater().getId())
                 .withRel("theater");
         return EntityModel.of(doc, selfLink, movieLink, theaterLink);
+    }
+
+    private void checkApiKey() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+
+        if (userDetails.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "only Admins are allowed to perform this action");
+        }
     }
 
 }

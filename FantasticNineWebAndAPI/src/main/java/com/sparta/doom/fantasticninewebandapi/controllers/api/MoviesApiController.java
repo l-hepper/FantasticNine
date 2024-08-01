@@ -3,8 +3,13 @@ package com.sparta.doom.fantasticninewebandapi.controllers.api;
 import com.sparta.doom.fantasticninewebandapi.dtos.MoviesDTO;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -82,4 +87,5 @@ public class MoviesApiController {
         List<MoviesDTO> topMovies = moviesService.getTop10ByImdbRating();
         return ResponseEntity.ok(topMovies);
     }
+
 }
