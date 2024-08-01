@@ -1,5 +1,7 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
+import com.sparta.doom.fantasticninewebandapi.exceptions.ResourceNotFoundException;
+import com.sparta.doom.fantasticninewebandapi.exceptions.UnableToDeleteException;
 import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
 import com.sparta.doom.fantasticninewebandapi.repositories.TheaterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,8 @@ public class TheaterService {
 
     public TheaterDoc getTheaterByTheaterId(int theaterId) {
         Optional<TheaterDoc> theater = theaterRepository.findTheaterModelByTheaterId(theaterId);
-        if (!theater.isPresent()) {
-            throw new ResourceAccessException("Theater with id " + theaterId + " not found");
+        if (theater.isEmpty()) {
+            throw new ResourceNotFoundException("Theater with id " + theaterId + " not found");
         }
 
         return theater.get();
@@ -39,9 +41,13 @@ public class TheaterService {
     }
 
     public void deleteTheaterByTheaterId(int theaterId) {
+        if (!theaterRepository.findTheaterModelByTheaterId(theaterId).isPresent()) {
+            throw new ResourceNotFoundException("Theater with id " + theaterId + " not found");
+        }
+
         theaterRepository.deleteTheaterDocByTheaterId(theaterId);
         if (theaterRepository.findTheaterModelByTheaterId(theaterId).isPresent()) {
-            throw new ResourceAccessException("Theater with id " + theaterId + " unable to delete");
+            throw new UnableToDeleteException("Theater with id " + theaterId + " unable to delete");
         }
     }
 
@@ -53,7 +59,7 @@ public class TheaterService {
     public TheaterDoc updateTheater(TheaterDoc theaterDoc) {
         Optional<TheaterDoc> foundTheater = theaterRepository.findTheaterModelByTheaterId(theaterDoc.getTheaterId());
         if (!foundTheater.isPresent()) {
-            throw new ResourceAccessException("Theater with id " + theaterDoc.getId() + " does not exist. Unable to update.");
+            throw new ResourceNotFoundException("Theater with id " + theaterDoc.getId() + " does not exist. Unable to update.");
         }
         TheaterDoc toReturn = theaterRepository.save(theaterDoc);
         return toReturn;
