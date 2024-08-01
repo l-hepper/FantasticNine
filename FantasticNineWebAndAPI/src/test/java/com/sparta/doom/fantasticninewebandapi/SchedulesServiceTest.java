@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -38,7 +39,7 @@ public class SchedulesServiceTest {
 
     @Test
     public void testGetSchedules() {
-        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1, schedule2));
+        when(scheduleRepository.findAllBy()).thenReturn(Stream.of(schedule1, schedule2));
 
         List<ScheduleDoc> schedules = scheduleService.getSchedules().toList();
 
@@ -93,7 +94,7 @@ public class SchedulesServiceTest {
         TheaterDoc theatre = mock(TheaterDoc.class);
         when(theatre.getId()).thenReturn("1");
         schedule1.setTheater(theatre);
-        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
+        when(scheduleRepository.findAllBy()).thenReturn(Stream.of(schedule1));
 
         List<ScheduleDoc> schedules = scheduleService.getSchedulesByTheatre(theatre).toList();
 
@@ -107,7 +108,7 @@ public class SchedulesServiceTest {
         MovieDoc movie = mock(MovieDoc.class);
         when(movie.getId()).thenReturn("1");
         schedule1.setMovie(movie);
-        when(scheduleRepository.findAll()).thenReturn(Arrays.asList(schedule1));
+        when(scheduleRepository.findAllBy()).thenReturn(Stream.of(schedule1));
 
         List<ScheduleDoc> schedules = scheduleService.getSchedulesByMovie(movie).toList();
 
