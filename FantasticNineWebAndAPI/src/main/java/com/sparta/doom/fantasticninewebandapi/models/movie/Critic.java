@@ -2,12 +2,13 @@ package com.sparta.doom.fantasticninewebandapi.models.movie;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "critic")
+@Document
 public class Critic {
     private Integer meter;
     private Integer numReviews;
     private Double rating;
 
+    // Getters and Setters
     public Integer getMeter() {
         return meter;
     }

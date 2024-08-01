@@ -1,6 +1,6 @@
 package com.sparta.doom.fantasticninewebandapi.controllers.api;
 
-import com.sparta.doom.fantasticninewebandapi.dtos.MovieSummaryDTO;
+import com.sparta.doom.fantasticninewebandapi.dtos.*;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
 import com.sparta.doom.fantasticninewebandapi.services.MoviesService;
 import org.springframework.data.domain.Page;
@@ -106,9 +106,30 @@ public class MoviesApiController {
         return ResponseEntity.ok(series);
     }
 
-    @GetMapping("/movies/details/{id}")
+    @GetMapping("/movies/summary/{id}")
     public ResponseEntity<MovieSummaryDTO> getMovieSummary(@PathVariable String id) {
         Optional<MovieSummaryDTO> movieSummaryDTO = moviesService.getMovieSummary(id);
         return movieSummaryDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/movies/details/{id}")
+    public ResponseEntity<MovieDetailsDTO> getMovieDetails(@PathVariable String id) {
+        return moviesService.getMovieDetails(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/movies/awards/{id}")
+    public ResponseEntity<MovieAwardsDTO> getMovieAwards(@PathVariable String id) {
+        Optional<MovieAwardsDTO> movieAwardsDTO = moviesService.getMovieAwards(id);
+        return movieAwardsDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/movies/imdb-ratings/{id}")
+    public ResponseEntity<MoviesImdbRatingsDTO> getImdbRatings(@PathVariable("id") String id) {
+        Optional<MoviesImdbRatingsDTO> imdbDTO = moviesService.getImdbRatings(id);
+        return imdbDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -1,8 +1,10 @@
 package com.sparta.doom.fantasticninewebandapi.services;
 
-import com.sparta.doom.fantasticninewebandapi.dtos.MovieSummaryDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.doom.fantasticninewebandapi.dtos.*;
 import com.sparta.doom.fantasticninewebandapi.exceptions.MovieNotFoundException;
 import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
+import com.sparta.doom.fantasticninewebandapi.models.movie.*;
 import com.sparta.doom.fantasticninewebandapi.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,11 +27,13 @@ public class MoviesService {
 
     private final MoviesRepository moviesRepository;
     private final MongoTemplate mongoTemplate;
+    private final ObjectMapper jacksonObjectMapper;
 
     @Autowired
-    public MoviesService(MoviesRepository moviesRepository, MongoTemplate mongoTemplate) {
+    public MoviesService(MoviesRepository moviesRepository, MongoTemplate mongoTemplate, ObjectMapper jacksonObjectMapper) {
         this.moviesRepository = moviesRepository;
         this.mongoTemplate = mongoTemplate;
+        this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
     public Page<MovieDoc> getAllMovies(int page, int size) {
@@ -159,4 +163,63 @@ public class MoviesService {
                 )
         );
     }
+
+    public Optional<MovieDetailsDTO> getMovieDetails(String id) {
+        return Optional.ofNullable(moviesRepository.findById(id).map(movie ->
+                new MovieDetailsDTO(
+                        movie.getId(),
+                        movie.getTitle(),
+                        movie.getCast(),
+                        movie.getCountries(),
+                        movie.getDirectors(),
+                        movie.getFullplot(),
+                        movie.getPlot(),
+                        movie.getRated(),
+                        movie.getReleased(),
+                        movie.getRuntime(),
+                        movie.getWriters(),
+                        movie.getYear(),
+                        movie.getLastupdated()
+                )
+        ).orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + id)));
+    }
+
+    public Optional<MovieAwardsDTO> getMovieAwards(String movieId) {
+        return moviesRepository.findById(movieId).map(movie -> {
+            String awardsJson = movie.getAwards();
+            if (awardsJson != null && !awardsJson.isEmpty()) {
+                try {
+                    Awards awards = jacksonObjectMapper.readValue(awardsJson, Awards.class);
+                    return new MovieAwardsDTO(movie.getId(), movie.getTitle(), awards.getNominations(), awards.getWins(), awards.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        });
+    }
+
+    public Optional<MoviesImdbRatingsDTO> getImdbRatings(String movieId) {
+        return moviesRepository.findById(movieId).map(movie -> {
+            String imdbJson = movie.getImdb();
+            if (imdbJson != null && !imdbJson.isEmpty()) {
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    MoviesImdbRatingsDTO moviesImdbRatingsDTO = objectMapper.readValue(imdbJson, MoviesImdbRatingsDTO.class);
+                    return new MoviesImdbRatingsDTO(
+                            movie.getId(),
+                            movie.getTitle(),
+                            moviesImdbRatingsDTO.getId(),
+                            moviesImdbRatingsDTO.getRating(),
+                            moviesImdbRatingsDTO.getVotes()
+                    );
+                } catch (Exception e) {
+                    // Handle parsing exception if needed
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        });
+    }
+
 }
