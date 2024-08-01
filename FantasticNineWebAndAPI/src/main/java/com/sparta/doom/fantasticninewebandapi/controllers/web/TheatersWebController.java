@@ -24,7 +24,7 @@ public class TheatersWebController {
     @Value("${jwt.auth}")
     private String AUTH_HEADER;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 15;
 
     public TheatersWebController(WebClient webClient, TheaterService theaterService, TheaterRepository theaterRepository) {
         this.webClient = webClient;
@@ -33,13 +33,11 @@ public class TheatersWebController {
 
     @GetMapping
     public String getTheatres(
-            @CookieValue(name = "jwt", required = false) String jwtToken,
             @RequestParam(defaultValue = "0") int page,
             Model model) {
         List<TheaterDoc> theaters = webClient
                 .get()
                 .uri("/api/theaters")
-                .header(AUTH_HEADER, "Bearer " + jwtToken)
                 .retrieve()
                 .bodyToFlux(TheaterDoc.class)
                 .collectList()
@@ -57,11 +55,10 @@ public class TheatersWebController {
     }
 
     @GetMapping("/{id}")
-    public String getTheaterDetails(@PathVariable Integer id, Model model, @CookieValue(name = "jwt", required = false) String jwtToken) {
+    public String getTheaterDetails(@PathVariable Integer id, Model model) {
         TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
-                .header(AUTH_HEADER, "Bearer " + jwtToken)
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
                 .block();
@@ -70,15 +67,13 @@ public class TheatersWebController {
     }
 
     @GetMapping("/cities")
-    public String searchTheatersByCityName(@RequestParam String cityName, Model model, @CookieValue(name = "jwt", required = false) String jwtToken) {
+    public String searchTheatersByCityName(@RequestParam String cityName, Model model) {
         try {
             List<TheaterDoc> theaters = webClient
                     .get()
                     .uri(uriBuilder -> uriBuilder
-                            .path("/api/theaters/cities")
-                            .queryParam("cityName", cityName)
-                            .build())
-                    .header(AUTH_HEADER, "Bearer " + jwtToken)
+                            .path("/api/theaters/cities/{cityName}")
+                            .build(cityName))
                     .retrieve()
                     .bodyToFlux(TheaterDoc.class)
                     .collectList()

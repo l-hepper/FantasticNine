@@ -35,6 +35,7 @@ public class TheaterApiController {
     @GetMapping("/theaters/cities/{cityName}")
     public ResponseEntity<List<TheaterDoc>> getTheatersByCityName(@PathVariable String cityName) {
         List<TheaterDoc> theaters = theaterService.getTheatersByCityName(cityName);
+        System.out.println("Found theaters: " + theaters);
         return new ResponseEntity<>(theaters, HttpStatus.OK);
     }
 
