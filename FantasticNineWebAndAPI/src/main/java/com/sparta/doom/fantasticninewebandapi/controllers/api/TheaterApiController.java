@@ -74,7 +74,14 @@ public class TheaterApiController {
 
     @PutMapping("/theaters")
     public ResponseEntity<TheaterDoc> updateTheater(@RequestBody TheaterDoc theater) {
-        TheaterDoc updatedTheater = theaterService.updateTheater(theater);
-        return new ResponseEntity<>(updatedTheater, HttpStatus.OK);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            TheaterDoc updatedTheater = theaterService.updateTheater(theater);
+            return new ResponseEntity<>(updatedTheater, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 }
