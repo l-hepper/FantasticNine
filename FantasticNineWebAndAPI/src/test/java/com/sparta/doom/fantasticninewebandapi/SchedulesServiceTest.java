@@ -1,9 +1,18 @@
 package com.sparta.doom.fantasticninewebandapi;
 
+import com.sparta.doom.fantasticninewebandapi.models.MovieDoc;
+import com.sparta.doom.fantasticninewebandapi.models.ScheduleDoc;
+import com.sparta.doom.fantasticninewebandapi.models.theater.TheaterDoc;
+import com.sparta.doom.fantasticninewebandapi.repositories.SchedulesRepository;
+import com.sparta.doom.fantasticninewebandapi.services.SchedulesService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -102,5 +111,6 @@ public class SchedulesServiceTest {
         when(scheduleRepository.findAllBy()).thenReturn(Stream.of(schedule1));
 
         List<ScheduleDoc> schedules = scheduleService.getSchedulesByMovie(movie).toList();
+    }
 
 }
