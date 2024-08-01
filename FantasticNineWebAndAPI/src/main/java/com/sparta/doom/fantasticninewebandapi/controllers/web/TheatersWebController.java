@@ -33,12 +33,13 @@ public class TheatersWebController {
 
     @GetMapping
     public String getTheatres(
+            @CookieValue(name = "jwt", required = false) String jwtToken,
             @RequestParam(defaultValue = "0") int page,
             Model model) {
         List<TheaterDoc> theaters = webClient
                 .get()
                 .uri("/api/theaters")
-                .header(AUTH_HEADER, )
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
                 .retrieve()
                 .bodyToFlux(TheaterDoc.class)
                 .collectList()
@@ -56,11 +57,11 @@ public class TheatersWebController {
     }
 
     @GetMapping("/{id}")
-    public String getTheaterDetails(@PathVariable Integer id, Model model) {
+    public String getTheaterDetails(@PathVariable Integer id, Model model, @CookieValue(name = "jwt", required = false) String jwtToken) {
         TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
-                .header(AUTH_HEADER, )
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
                 .block();
@@ -69,7 +70,7 @@ public class TheatersWebController {
     }
 
     @GetMapping("/cities")
-    public String searchTheatersByCityName(@RequestParam String cityName, Model model) {
+    public String searchTheatersByCityName(@RequestParam String cityName, Model model, @CookieValue(name = "jwt", required = false) String jwtToken) {
         try {
             List<TheaterDoc> theaters = webClient
                     .get()
@@ -77,7 +78,7 @@ public class TheatersWebController {
                             .path("/api/theaters/cities")
                             .queryParam("cityName", cityName)
                             .build())
-                    .header(AUTH_HEADER, )
+                    .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .retrieve()
                     .bodyToFlux(TheaterDoc.class)
                     .collectList()
@@ -99,22 +100,21 @@ public class TheatersWebController {
 
 
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(@CookieValue(name = "jwt", required = false) String jwtToken, Model model) {
         model.addAttribute("theater", new TheaterDoc());
         return "theaters/theater_create";
     }
 
     @PostMapping("/create")
     public String createTheater(
-            @RequestParam Integer theaterId,
             @RequestParam String street1,
             @RequestParam String city,
             @RequestParam String state,
             @RequestParam String zipcode,
-            @RequestParam String coordinates) {
+            @RequestParam String coordinates,
+            @CookieValue(name = "jwt", required = false) String jwtToken) {
 
         TheaterDoc theater = new TheaterDoc();
-        theater.setTheaterId(theaterId);
 
         Location location = new Location();
         Address address = new Address();
@@ -144,7 +144,7 @@ public class TheatersWebController {
         try {
             webClient.post()
                     .uri("/api/theaters")
-                    .header(AUTH_HEADER, )
+                    .header(AUTH_HEADER, "Bearer " + jwtToken)
                     .bodyValue(theater)
                     .retrieve()
                     .bodyToMono(Void.class)
@@ -157,11 +157,11 @@ public class TheatersWebController {
     }
 
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable Integer id, Model model) {
+    public String showUpdateForm(@PathVariable Integer id, Model model, @CookieValue(name = "jwt", required = false) String jwtToken) {
         TheaterDoc theater = webClient
                 .get()
                 .uri("/api/theaters/" + id)
-                .header(AUTH_HEADER,)
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
                 .block();
@@ -170,11 +170,11 @@ public class TheatersWebController {
     }
 
     @PostMapping("/update")
-    public String updateTheater(@ModelAttribute TheaterDoc theater) {
+    public String updateTheater(@ModelAttribute TheaterDoc theater, @CookieValue(name = "jwt", required = false) String jwtToken) {
         webClient
                 .put()
                 .uri("/api/theaters")
-                .header(AUTH_HEADER, )
+                .header(AUTH_HEADER, "Bearer " + jwtToken)
                 .bodyValue(theater)
                 .retrieve()
                 .bodyToMono(TheaterDoc.class)
@@ -183,11 +183,11 @@ public class TheatersWebController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteTheater(@PathVariable Integer id) {
+    public String deleteTheater(@PathVariable Integer id, @CookieValue(name = "jwt", required = false) String jwtToken) {
         webClient
                 .delete()
                 .uri("/api/theaters/" + id)
-                .header(AUTH_HEADER, );
+                .header(AUTH_HEADER, "Bearer " + jwtToken);
         return "redirect:/theaters";
     }
 }
