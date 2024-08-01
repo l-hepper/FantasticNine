@@ -30,3 +30,43 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const loginData = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            fetch('/authenticate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        response.json().then(data => {
+                            console.log('Login successful:', data);
+                            window.location.reload();
+                        });
+                    } else {
+                        response.json().then(data => {
+                            console.error('Login failed:', data);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Network error:', error);
+                });
+        });
+    });
+</script>
