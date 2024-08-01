@@ -4,16 +4,53 @@
     <meta charset="UTF-8">
     <title>Showings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/sandstone/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            width: fit-content;
+            background-color: black;
+        }
+
+        .card::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, black, transparent 50%);
+            z-index: 1;
+        }
+
+        .card-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            z-index: 2;
+            color: white;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
+<h1>Schedules</h1>
 <!--<nav th:replace="~{fragments/navbar :: navbar}"></nav>-->
 <!--For searchType = movie-->
 <!--A table with each theatre and showing time-->
 <div class="table-responsive" th:if="${searchType} == 'movie'">
+    <h2 th:text="'Showing Schedules for: '+${schedules[0].movie.title}"></h2>
     <table class = "table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
-            <th>Theatre</th>
+            <th>Theater</th>
             <th>Show Time</th>
         </tr>
         </thead>
@@ -28,9 +65,10 @@
 </div>
 <!--For searchType = theater-->
 <!--List each film next to its (multiple) show times-->
-<div class="table-responsive" th:if="${searchType} == 'theater'">
-    <table>
-        <thead>
+<div class="table-responsive" th:if="${searchType} == 'theater'||${searchType} == 'schedule'">
+    <h2 th:text="'Showing Schedules at: '+${schedules[0].theater.location.address.city}+' theater'"></h2>
+    <table class = "table table-bordered table-striped">
+        <thead class="table-dark">
         <tr>
             <th>Movie</th>
             <th>Show Times</th>
@@ -47,26 +85,12 @@
 <div
 <!--    For searchType = schedule-->
 <!--Show singular schedule-->
-<div class="table-responsive" th:if="${searchType} == 'schedule'">
-    <table>
-        <thead>
-        <tr>
-            <th>Movie</th>
-            <th>Show Times</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
 <!--For searchType = all-->
 <!--List all schedules in a table-->
 <div class="table-responsive" th:if="${searchType} == 'all'">
-    <table>
-        <thead>
+    <h2>Showing All Schedules</h2>
+    <table class = "table table-bordered table-striped">
+        <thead class="table-dark">
         <tr>
             <th>Movie</th>
             <th>Theater</th>
