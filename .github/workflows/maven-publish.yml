@@ -39,9 +39,6 @@ jobs:
 
     - name: Build Docker images
       run: docker build -t lhepper1/fantastic9:latest -t lhepper1/fantastic9:${{ github.sha }} .
-      
-    - name: Push Docker image
-      run: docker push lhepper1/fantastic9:latest
 
     - name: Push Docker images
       run: |
