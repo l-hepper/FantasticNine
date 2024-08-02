@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Developer branch
         run: |
           git checkout Developer
-          git pull origin Developer  # Ensure you're up-to-date with your fork
+          git pull origin Developer
 
       - name: Merge upstream Developer into Developer
         run: |
